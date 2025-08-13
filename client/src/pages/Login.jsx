@@ -1,0 +1,144 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Box } from "@mui/material";
+import LoginForm from "../components/auth/LoginForm";
+import LoginFooter from "../components/auth/LoginFooter";
+import useUserStore from "../stores/userStore";
+import config from "../constants/config";
+import { jwtDecode } from "jwt-decode";
+
+const Login = () => {
+  const { setUser, clearUser } = useUserStore();
+  const navigate = useNavigate();
+
+  // Normalize API base (add protocol if missing, strip trailing slash)
+  const API_BASE = React.useMemo(() => {
+    const raw = import.meta.env.VITE_APP_API_URL?.trim() || "";
+    if (!raw) return "";
+    if (/^https?:\/\//i.test(raw)) return raw.replace(/\/$/, "");
+    return `https://${raw.replace(/\/$/, "")}`; // assume https in production
+  }, []);
+
+  const safeFetchJson = async (resp) => {
+    const text = await resp.text();
+    if (!text) return {};
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error("Invalid JSON from server");
+    }
+  };
+
+  const handleLogin = async (
+    username,
+    password,
+    setLoading,
+    setErrorMessage
+  ) => {
+    setLoading(true);
+    setErrorMessage("");
+    try {
+      if (!API_BASE) throw new Error("API base URL not configured");
+      if (!username || !password) {
+        setErrorMessage("Please fill in all fields");
+        toast.error("Please fill in all fields");
+        return;
+      }
+
+      // Timeout (15s) to avoid infinite loading
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+      let response;
+      try {
+        response = await fetch(`${API_BASE}/api/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+          signal: controller.signal,
+        });
+      } catch (e) {
+        if (e.name === "AbortError") throw new Error("Request timed out");
+        throw new Error("Network error");
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
+      const data = await safeFetchJson(response);
+      if (!response.ok)
+        throw new Error(data.message || `Login failed (${response.status})`);
+
+      const { token, id, role, houseId, package: pkg } = data;
+      if (!token) throw new Error("Missing token");
+
+      let decoded;
+      try {
+        decoded = jwtDecode(token);
+      } catch {
+        throw new Error("Invalid token");
+      }
+      const expirationTime = decoded.exp * 1000;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", id);
+      localStorage.setItem("role", role);
+      localStorage.setItem("houseId", houseId || "");
+      localStorage.setItem("tokenExpiration", expirationTime);
+      setUser({ id, username, role, houseId, package: pkg });
+
+      // Validate session
+      const meResp = await fetch(`${API_BASE}/api/me`, {
+        headers: { "x-auth-token": token },
+      });
+      const meData = await safeFetchJson(meResp).catch(() => ({}));
+      if (!meResp.ok)
+        throw new Error(meData.message || "Session validation failed");
+
+      toast.success("Login successful!");
+      switch (role) {
+        case "super_admin":
+          navigate("/super_admin", { replace: true });
+          break;
+        case "house_admin":
+          navigate("/admin", { replace: true });
+          break;
+        case "cashier":
+          navigate("/dashboard", { replace: true });
+          break;
+        case "agent":
+          navigate("/agent", { replace: true });
+          break;
+        default:
+          throw new Error("Invalid user role");
+      }
+    } catch (err) {
+      clearUser();
+      localStorage.clear();
+      const msg = err.message || "Unexpected error";
+      toast.error(msg);
+      setErrorMessage(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Box
+      className="dynamic-bg"
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 2,
+      }}
+    >
+      <LoginForm handleLogin={handleLogin} config={config} />
+      <LoginFooter phoneNumber={config.phoneNumber} />
+    </Box>
+  );
+};
+
+export default Login;
