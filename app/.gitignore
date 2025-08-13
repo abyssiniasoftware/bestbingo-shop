@@ -1,0 +1,10 @@
+.env
+*.zip
+*.http
+pnpm-lock.yaml
+pnpm-workspace.yaml
+*.tgz
+*.log
+*.lock
+*.local
+*.env
