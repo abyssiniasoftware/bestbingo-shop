@@ -119,6 +119,9 @@ export const voiceOptions = [
   { value: "f", label: "አማርኛ 6" },
   { value: "i", label: "አማርኛ 9" },
   { value: "s", label: "አማርኛ 16" },
+  { value: "y", label: "አማርኛ 17" },
+  { value: "z", label: "አማርኛ 18" },
+
 
   // amharic voices
   { value: "b", label: "አማርኛ 2" },
@@ -143,7 +146,13 @@ export const voiceOptions = [
   { value: "u", label: "ትግረኛ 2" },
 
   // tigrigna male
-  { value: "u", label: "ትግረኛ 3" },
+  { value: "v", label: "ትግረኛ 3" },
+
+  // wolayta voice
+    { value: "w", label: "ወላይታ" },
+
+      // sidama voice
+    { value: "x", label: "ሲዳማ" },
 ];
 
 //constants for the game
