@@ -11,6 +11,7 @@ import {
   META_PATTERNS,
 } from "../constants/constants";
 import { cellToGridIndex, formatPatternName } from "../utils/gameUtils";
+import { shuffle } from "../voice/utilVoice";
 
 // Precompute pattern indices for faster win checking
 const PRECOMPUTED_PATTERNS = Object.keys(BINGO_PATTERNS).reduce(
@@ -485,8 +486,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     }
 
     try {
-      const audioModule = await import(`../voice/utilVoice.shuffle`);
-      const audio = new Audio(audioModule.default);
+      const audio = new Audio(shuffle);
       currentAudioRef.current = audio;
       audio.play().catch((error) => {
         if (error.name === "AbortError") return;
