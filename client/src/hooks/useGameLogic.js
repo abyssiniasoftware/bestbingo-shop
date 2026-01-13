@@ -64,7 +64,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
   );
   const [patternAnchorEl, setPatternAnchorEl] = useState(null);
   const [voiceOption, setVoiceOption] = useState(
-    () => localStorage.getItem("selectedVoice") || "am"
+    () => localStorage.getItem("selectedVoice") || "a"
   );
   const [prefixedNumber, setPrefixedNumber] = useState(null);
   const [patternAnimationIndex, setPatternAnimationIndex] = useState(0);

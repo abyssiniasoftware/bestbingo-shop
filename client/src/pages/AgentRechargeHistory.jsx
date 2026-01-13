@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import {
   Box,
   Table,
@@ -68,7 +68,6 @@ const AgentRechargeHistory = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -77,12 +76,8 @@ const AgentRechargeHistory = () => {
     const fetchData = async () => {
       try {
         const [rechargeResponse, houseResponse] = await Promise.all([
-          axios.get(`${baseURL}/api/house/recharge-history`, {
-            headers: { "x-auth-token": token },
-          }),
-          axios.get(`${baseURL}/api/house/my-house`, {
-            headers: { "x-auth-token": token },
-          }),
+          api.get(`/api/house/recharge-history`),
+          api.get(`/api/house/my-house`),
         ]);
 
         if (rechargeResponse.status === 200) {
@@ -117,14 +112,12 @@ const AgentRechargeHistory = () => {
         payload.rechargeId = selectedRechargeId;
       }
 
-      const response = await axios.post(
-        `${baseURL}/api/house/${
+      const response = await api.post(
+        `/api/house/${
           modalMode === "create" ? "recharge" : "update-recharge"
         }`,
         payload,
-        {
-          headers: { "x-auth-token": token },
-        }
+       
       );
 
       if (response.status === 200 || response.status === 201) {
@@ -135,11 +128,9 @@ const AgentRechargeHistory = () => {
         );
         setError(false);
         // Refresh recharges
-        const rechargeResponse = await axios.get(
-          `${baseURL}/api/house/recharge-history`,
-          {
-            headers: { "x-auth-token": token },
-          }
+        const rechargeResponse = await api.get(
+          `/api/house/recharge-history`,
+          
         );
         if (rechargeResponse.status === 200) {
           setRecharges(rechargeResponse.data.recharges);

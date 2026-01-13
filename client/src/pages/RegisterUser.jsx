@@ -8,7 +8,7 @@ import {
   Alert,
   CircularProgress,
 } from "@mui/material";
-import axios from "axios";
+import api from "../utils/api";
 import handleBulkSubmission from "../services/cardsInsert";
 
 const roles = ["super_admin", "house_admin", "cashier"];
@@ -36,13 +36,9 @@ const RegisterUser = () => {
     const fetchHouses = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/house/`,
-          {
-            headers: {
-              "x-auth-token": token,
-            },
-          }
+        const res = await api.get(
+          `/api/house/`,
+         
         );
 
         if (res.data && Array.isArray(res.data.house)) {
@@ -79,15 +75,10 @@ const RegisterUser = () => {
     }
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}/api/auth/register`,
+      const response = await api.post(
+        `/api/auth/register`,
         formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        }
+        
       );
 
       if (response.status === 200 || response.status === 201) {

@@ -7,18 +7,12 @@ import LoginFooter from "../components/auth/LoginFooter";
 import useUserStore from "../stores/userStore";
 import config from "../constants/config";
 import { jwtDecode } from "jwt-decode";
+import api from "../utils/api";
 
 const Login = () => {
   const { setUser, clearUser } = useUserStore();
   const navigate = useNavigate();
-
-  // Normalize API base (add protocol if missing, strip trailing slash)
-  const API_BASE = React.useMemo(() => {
-    const raw = import.meta.env.VITE_APP_API_URL?.trim() || "";
-    if (!raw) return "";
-    if (/^https?:\/\//i.test(raw)) return raw.replace(/\/$/, "");
-    return `https://${raw.replace(/\/$/, "")}`; // assume https in production
-  }, []);
+  
 
   const safeFetchJson = async (resp) => {
     const text = await resp.text();
@@ -39,7 +33,6 @@ const Login = () => {
     setLoading(true);
     setErrorMessage("");
     try {
-      if (!API_BASE) throw new Error("API base URL not configured");
       if (!username || !password) {
         setErrorMessage("Please fill in all fields");
         toast.error("Please fill in all fields");
@@ -52,12 +45,7 @@ const Login = () => {
 
       let response;
       try {
-        response = await fetch(`${API_BASE}/api/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-          signal: controller.signal,
-        });
+        response = await api.post(`/api/auth/login`, { username, password });
       } catch (e) {
         if (e.name === "AbortError") throw new Error("Request timed out");
         throw new Error("Network error");
@@ -88,9 +76,7 @@ const Login = () => {
       setUser({ id, username, role, houseId, package: pkg });
 
       // Validate session
-      const meResp = await fetch(`${API_BASE}/api/me`, {
-        headers: { "x-auth-token": token },
-      });
+      const meResp = await api.get(`/api/me`,);
       const meData = await safeFetchJson(meResp).catch(() => ({}));
       if (!meResp.ok)
         throw new Error(meData.message || "Session validation failed");

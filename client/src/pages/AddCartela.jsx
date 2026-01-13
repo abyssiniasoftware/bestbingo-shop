@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import SideMenu from "../components/common/SideMenu";
 import useUserStore from "../stores/userStore";
+import api from "../utils/api";
 
 const AddCartela = () => {
   const initialCartelaData = {
@@ -38,9 +39,7 @@ const AddCartela = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch(`${import.meta.env.VITE_APP_API_URL}/api/me`, {
-        headers: { "x-auth-token": token },
-      })
+      api.get(`/api/me`)
         .then((response) => response.json())
         .then((userData) => {
           setUser({ id: userData.id, username: userData.username });
@@ -59,16 +58,11 @@ const AddCartela = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch(
-        `${import.meta.env.VITE_APP_API_URL}/api/bingo-card/create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-          body: JSON.stringify({ ...cartelaData, userId }),
-        }
+      const response = await api.post(
+        `/api/bingo-card/create`,
+       { ...cartelaData, userId },
+        
+        
       );
       if (!response.ok) throw new Error("Failed to create cartela");
       await response.json();

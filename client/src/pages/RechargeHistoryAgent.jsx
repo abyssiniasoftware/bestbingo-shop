@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import {
   Box,
   Table,
@@ -69,7 +69,6 @@ const RechargeHistoryAgent = () => {
   const [searchInput, setSearchInput] = useState("");
   const [userRole, setUserRole] = useState("");
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -79,15 +78,9 @@ const RechargeHistoryAgent = () => {
       try {
         const [rechargeResponse, agentResponse, userResponse] =
           await Promise.all([
-            axios.get(`${baseURL}/api/house/agent-recharge-history`, {
-              headers: { "x-auth-token": token },
-            }),
-            axios.get(`${baseURL}/api/user/role/agent`, {
-              headers: { "x-auth-token": token },
-            }),
-            axios.get(`${baseURL}/api/me`, {
-              headers: { "x-auth-token": token },
-            }),
+            api.get(`/api/house/agent-recharge-history`),
+            api.get(`/api/user/role/agent`),
+            api.get(`/api/me`),
           ]);
 
         if (rechargeResponse.status === 200) {
@@ -124,21 +117,18 @@ const RechargeHistoryAgent = () => {
       if (modalMode === "create") {
         payload.agentId = selectedAgentId;
         payload.rechargeBy = (
-          await axios.get(`${baseURL}/api/me`, {
-            headers: { "x-auth-token": token },
-          })
+          await api.get(`/api/me`)
         ).data.id;
       } else {
         payload.rechargeId = selectedRechargeId;
       }
 
-      const response = await axios({
+      const response = await api({
         method: modalMode === "create" ? "post" : "put",
-        url: `${baseURL}/api/house/${
+        url: `/api/house/${
           modalMode === "create" ? "recharge-agent" : "update-agent-recharge"
         }`,
         data: payload,
-        headers: { "x-auth-token": token },
       });
 
       if (response.status === 200 || response.status === 201) {
@@ -149,11 +139,9 @@ const RechargeHistoryAgent = () => {
         );
         setError(false);
         // Refresh recharges
-        const rechargeResponse = await axios.get(
-          `${baseURL}/api/house/agent-recharge-history`,
-          {
-            headers: { "x-auth-token": token },
-          }
+        const rechargeResponse = await api.get(
+          `/api/house/agent-recharge-history`,
+          
         );
         if (rechargeResponse.status === 200) {
           setRecharges(rechargeResponse.data.recharges);

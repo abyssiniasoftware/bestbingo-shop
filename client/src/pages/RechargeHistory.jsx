@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, Suspense, lazy } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import debounce from "lodash.debounce";
 import {
   Box,
@@ -86,7 +86,6 @@ const RechargeHistory = React.memo(() => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL || "http://localhost:5000"; // Fallback URL
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400));
@@ -128,14 +127,11 @@ const RechargeHistory = React.memo(() => {
       if (search) params.search = search;
 
       const [rechargeResponse, houseResponse] = await Promise.all([
-        axios.get(`${baseURL}/api/house/recharge-history`, {
-          headers: { "x-auth-token": token },
+        api.get(`/api/house/recharge-history`, {
           params,
         }),
         houses.length === 0
-          ? axios.get(`${baseURL}/api/house/`, {
-              headers: { "x-auth-token": token },
-            })
+          ? api.get(`/api/house/`)
           : Promise.resolve({ status: 200, data: { houses } }),
       ]);
 
@@ -197,12 +193,11 @@ const RechargeHistory = React.memo(() => {
         payload.rechargeId = selectedRechargeId;
       }
 
-      const response = await axios.post(
-        `${baseURL}/api/house/${
+      const response = await api.post(
+        `/api/house/${
           modalMode === "create" ? "recharge" : "update-recharge"
         }`,
         payload,
-        { headers: { "x-auth-token": token } }
       );
 
       if (response.status === 200 || response.status === 201) {

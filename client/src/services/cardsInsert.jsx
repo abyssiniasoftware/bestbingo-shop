@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 
 const handleBulkSubmission = async (userId, setMessage = () => {}) => {
   const dataToPost = [
@@ -5805,8 +5805,8 @@ const handleBulkSubmission = async (userId, setMessage = () => {}) => {
   ];
 
   try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_APP_API_URL}/api/user/register-cards`,
+    const response = await api.post(
+      `/api/user/register-cards`,
       dataToPost
     );
     if (response.status === 200 || response.status === 201) {

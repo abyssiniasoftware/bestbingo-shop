@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import api from "../utils/api";
 import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
 
 const HouseBonusList = () => {
@@ -21,11 +21,9 @@ const HouseBonusList = () => {
         if (!houseId) {
           throw new Error('House ID not found in local storage');
         }
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/game/house/${houseId}/bonuses`,
-          {
-            headers: { 'x-auth-token': token },
-          }
+        const response = await api.get(
+          `/api/game/house/${houseId}/bonuses`,
+         
         );
         setBonuses(response.data.bonuses || []);
         setError(null);

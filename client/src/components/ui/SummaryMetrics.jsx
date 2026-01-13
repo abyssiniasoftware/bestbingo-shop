@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
+import api from "../../utils/api";
 
 const SummaryMetrics = ({ filters, stats }) => {
   const [paymentData, setPaymentData] = useState({
@@ -12,8 +13,8 @@ const SummaryMetrics = ({ filters, stats }) => {
     const fetchPaymentData = async () => {
       try {
         setLoadingPayment(true);
-        const response = await fetch(
-          `${import.meta.env.VITE_APP_API_URL}/api/payment`
+        const response = await api.get(
+          `/api/payment`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

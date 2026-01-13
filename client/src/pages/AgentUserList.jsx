@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import {
   Table,
   TableBody,
@@ -38,7 +38,6 @@ const AgentUserList = () => {
   const [errorMsg, setErrorMsg] = useState("");
 
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -46,9 +45,7 @@ const AgentUserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${baseURL}/api/user/agent`, {
-          headers: { "x-auth-token": token },
-        });
+        const response = await api.get(`/api/user/agent`);
         if (response.status === 200) {
           setUsers(response.data);
         } else {
@@ -81,10 +78,9 @@ const AgentUserList = () => {
   const handleBanChange = async () => {
     try {
       const bannedBy = "admin";
-      const res = await axios.put(
-        `${baseURL}/api/user/ban/${selectedUser._id}`,
+      const res = await api.put(
+        `/api/user/ban/${selectedUser._id}`,
         { bannedBy },
-        { headers: { "x-auth-token": token } }
       );
 
       await fetchUsers();

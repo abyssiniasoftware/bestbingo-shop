@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import { toast } from "react-toastify";
 import {
   FaChartLine,
@@ -65,10 +65,9 @@ const AgentReports = () => {
           throw new Error("Authentication token not found. Please log in.");
         }
 
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/stats/agent`,
+        const response = await api.get(
+          `/api/stats/agent`,
           {
-            headers: { "x-auth-token": token },
             params: {
               month: filters.month || undefined,
               startDate: filters.dateRange.start

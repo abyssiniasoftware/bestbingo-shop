@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import { toast } from "react-toastify";
 import {
   FaChartLine,
@@ -40,11 +40,9 @@ const Reports = () => {
           throw new Error("የማረጋገጫ ቶከን አልተገኘም። እባክዎ ይግቡ");
         }
 
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/stats/daily`,
-          {
-            headers: { "x-auth-token": token },
-          }
+        const response = await api.get(
+          `/api/stats/daily`,
+          
         );
 
         setStats(response.data);

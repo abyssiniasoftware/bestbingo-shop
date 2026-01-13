@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import {
   Box,
   Table,
@@ -34,11 +34,9 @@ const AgentBonusList = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/game/agent-bonuses`,
-          {
-            headers: { "x-auth-token": token },
-          }
+        const response = await api.get(
+          `/api/game/agent-bonuses`,
+         
         );
         setBonuses(response.data.bonuses || []);
         setError(null);

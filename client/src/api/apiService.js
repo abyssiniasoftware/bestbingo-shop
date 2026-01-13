@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../utils/api";
 
 const apiService = {
   fetchSuperStats: async (month) => {
@@ -8,10 +8,9 @@ const apiService = {
         throw new Error("Authentication token not found. Please log in.");
       }
 
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/stats/super`,
+      const response = await api.get(
+        `/api/stats/super`,
         {
-          headers: { "x-auth-token": token },
           params: month ? { month } : {},
         }
       );
@@ -24,11 +23,8 @@ const apiService = {
   },
   getCutAmountSetting: async (cashierId, token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/cut-amount/${cashierId}`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.get(
+        `/api/cut-amount/${cashierId}`,
       );
       return response.data;
     } catch (error) {
@@ -40,15 +36,10 @@ const apiService = {
 
   updateCutAmountSetting: async (cashierId, cutAmount, token) => {
     try {
-      const response = await axios.patch(
-        `${import.meta.env.VITE_APP_API_URL}/api/cut-amount/${cashierId}`,
+      const response = await api.patch(
+        `/api/cut-amount/${cashierId}`,
         { cutAmount },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        }
+       
       );
       return response.data;
     } catch (error) {
@@ -59,11 +50,8 @@ const apiService = {
   },
   fetchWalletData: async (token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/me`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.get(
+        `/api/me`,
       );
       return response.data;
     } catch (error) {
@@ -74,11 +62,9 @@ const apiService = {
   },
   fetchCardIds: async (userId, token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/bingo-card/${userId}/card-ids`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.get(
+        `/api/bingo-card/${userId}/card-ids`,
+       
       );
       return response.data;
     } catch (error) {
@@ -89,15 +75,10 @@ const apiService = {
   },
   createGame: async (payload, token) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}/api/game/create`,
+      const response = await api.post(
+        `/api/game/create`,
         payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        }
+       
       );
       return response.data;
     } catch (error) {
@@ -108,11 +89,8 @@ const apiService = {
   },
   fetchCardNumbers: async (cardId, userId, token) => {
     try {
-      const response = await axios.get(
-        `${
-          import.meta.env.VITE_APP_API_URL
-        }/api/user/user-card-bycardId/${userId}/${cardId}`,
-        { headers: { "x-auth-token": token } }
+      const response = await api.get(
+        `/api/user/user-card-bycardId/${userId}/${cardId}`,
       );
       if (!response.data.cards || response.data.cards.length === 0) {
         throw new Error("No card data found");
@@ -133,11 +111,8 @@ const apiService = {
   },
   fetchCartelaData: async (cardId, userId, token) => {
     try {
-      const response = await axios.get(
-        `${
-          import.meta.env.VITE_APP_API_URL
-        }/api/bingo-card/${userId}/${cardId}`,
-        { headers: { "x-auth-token": token } }
+      const response = await api.get(
+        `/api/bingo-card/${userId}/${cardId}`,
       );
       if (response.status !== 200) throw new Error("Failed to fetch cartela");
       const data = response.data;
@@ -159,9 +134,8 @@ const apiService = {
   },
   fetchGameDetails: async (userId, token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/game/last/${userId}`,
-        { headers: { "x-auth-token": token } }
+      const response = await api.get(
+        `/api/game/last/${userId}`,
       );
       if (response.status !== 200)
         throw new Error("Failed to fetch game details");
@@ -178,15 +152,10 @@ const apiService = {
   },
   declareWinner: async (houseId, gameId, winnerCardId, token) => {
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_APP_API_URL}/api/game/update-winner`,
+      const response = await api.put(
+        `/api/game/update-winner`,
         { houseId, gameId, winnerCardId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        }
+        
       );
       if (response.status !== 200) throw new Error("Failed to declare winner");
       return true;
@@ -198,15 +167,10 @@ const apiService = {
   },
   awardBonus: async (cashierId, gameId, houseId, bonusAmount, token) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}/api/game/award`,
+      const response = await api.post(
+        `/api/game/award`,
         { cashierId, gameId, houseId, bonusAmount },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        }
+       
       );
       if (response.status !== 201) throw new Error("Failed to award bonus");
       return response.data;
@@ -216,11 +180,9 @@ const apiService = {
   },
   fetchActiveDynamicBonus: async (token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/game/active-dynamic`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.get(
+        `/api/game/active-dynamic`,
+        
       );
       return response.data;
     } catch (error) {
@@ -231,12 +193,10 @@ const apiService = {
   },
   markBonusInactive: async (houseId, cashierId, token) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}/api/game/mark-inactive`,
+      const response = await api.post(
+        `/api/game/mark-inactive`,
         { houseId, cashierId },
-        {
-          headers: { "x-auth-token": token },
-        }
+      
       );
       return response.data;
     } catch (error) {
@@ -247,11 +207,9 @@ const apiService = {
   },
   fetchUserDetails: async (userId, token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/me`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.get(
+        `/api/me`,
+        
       );
       return response.data;
     } catch (error) {
@@ -263,12 +221,8 @@ const apiService = {
   // Update getCashiers to support search
   getCashiers: async (token, { search = "" } = {}) => {
     const params = new URLSearchParams({ search }).toString();
-    const response = await fetch(
-      `${import.meta.env.VITE_APP_API_URL}/api/user/cashiers?${params}`,
-      {
-        headers: { "x-auth-token": token },
-        method: "GET",
-      }
+    const response = await api.get(
+      `/api/user/cashiers?${params}`
     );
     if (!response.ok) {
       const error = await response.json();
@@ -279,16 +233,11 @@ const apiService = {
 
   // Existing updateDynamicBonus
   updateDynamicBonus: async (userId, enableDynamicBonus, token) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_APP_API_URL}/api/user/${userId}/dynamic-bonus`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": token,
-        },
-        body: JSON.stringify({ enableDynamicBonus }),
-      }
+    const response = await api.patch(
+      `/api/user/${userId}/dynamic-bonus`,
+      
+        { enableDynamicBonus }
+      
     );
     if (!response.ok) {
       const error = await response.json();
@@ -298,15 +247,10 @@ const apiService = {
   },
   createBingoCard: async (cardData, token) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}/api/bingo-card/create`,
+      const response = await api.post(
+        `/api/bingo-card/create`,
         cardData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        }
+        
       );
       return response.data;
     } catch (error) {
@@ -317,15 +261,10 @@ const apiService = {
   },
   bulkUploadCards: async (userId, cardsData, token) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_APP_API_URL}/api/user/bulk-upload`,
+      const response = await api.post(
+        `/api/user/bulk-upload`,
         { userId, cardsData },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        }
+        
       );
       return response.data;
     } catch (error) {
@@ -336,15 +275,9 @@ const apiService = {
   },
   deleteBingoCard: async (userId, cardId, token) => {
     try {
-      const response = await axios.delete(
-        `${
-          import.meta.env.VITE_APP_API_URL
-        }/api/bingo-card/${userId}/${cardId}`,
-        {
-          headers: {
-            "x-auth-token": token,
-          },
-        }
+      const response = await api.delete(
+        `/api/bingo-card/${userId}/${cardId}`,
+       
       );
       return response.data;
     } catch (error) {
@@ -355,17 +288,10 @@ const apiService = {
   },
   updateBingoCard: async (userId, cardId, cardData, token) => {
     try {
-      const response = await axios.put(
-        `${
-          import.meta.env.VITE_APP_API_URL
-        }/api/bingo-card/${userId}/${cardId}`,
+      const response = await api.put(
+        `/api/bingo-card/${userId}/${cardId}`,
         cardData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-auth-token": token,
-          },
-        }
+        
       );
       return response.data;
     } catch (error) {

@@ -4,6 +4,7 @@ import { MdCancel } from "react-icons/md";
 import classNames from "classnames";
 import { toast } from "react-toastify";
 import { BINGO_PATTERNS, META_PATTERNS } from "../../utils/patterns";
+import api from "../../utils/api";
 
 const CheckCartela = ({
   checkCardId,
@@ -29,10 +30,8 @@ const CheckCartela = ({
     const fetchCartelaData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `${
-            import.meta.env.VITE_APP_API_URL
-          }/api/bingo/get/${userId}/${checkCardId}`
+        const response = await api.get(
+          `/api/bingo/get/${userId}/${checkCardId}`
         );
         if (!response.ok) throw new Error("ካርቴላ ማግኘት አልተቻለም");
         const data = await response.json();
@@ -124,15 +123,9 @@ const CheckCartela = ({
       isRegularPattern && patternTypes.includes(selectedPattern);
     if (!selectedPattern || !(metaSatisfied || regularSatisfied)) return;
     try {
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_APP_API_URL
-        }/api/game/${gameNo}/${userId}/updateWinnerCartela`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ checkCardId }),
-        }
+      const response = await api.put(
+        `/api/game/${gameNo}/${userId}/updateWinnerCartela`,
+        { checkCardId }
       );
       if (!response.ok) throw new Error("አሸናፊን ማውጣት አልተቻለም");
       toast.success("አሸናፊ ተገልጿል!");

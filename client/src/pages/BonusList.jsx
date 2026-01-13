@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
+import api from "../utils/api";
 import {
   Box,
   Table,
@@ -51,11 +51,9 @@ const BonusList = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/game/bonuses`,
-          {
-            headers: { "x-auth-token": token },
-          }
+        const response = await api.get(
+          `/api/game/bonuses`,
+          
         );
         setBonuses(response.data.bonuses || []);
         setError(null);

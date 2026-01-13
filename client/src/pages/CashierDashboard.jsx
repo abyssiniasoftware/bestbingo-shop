@@ -6,18 +6,16 @@ import NewGame from "./NewGame";
 import ViewCartela from "./ViewCartela";
 import Reports from "./Reports";
 import useUserStore from "../stores/userStore";
-import axios from "axios";
+import api from "../utils/api";
 import config from "../constants/config";
 
 // API service layer
 const apiService = {
   fetchUserData: async (token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/me`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.get(
+        `/api/me`,
+        
       );
       return response.data;
     } catch (error) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import {
   Box,
   Table,
@@ -41,7 +41,6 @@ const HouseList = () => {
   const [isVerified, setIsVerified] = useState(false);
 
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -49,9 +48,7 @@ const HouseList = () => {
   useEffect(() => {
     const fetchHouses = async () => {
       try {
-        const response = await axios.get(`${baseURL}/api/house/`, {
-          headers: { "x-auth-token": token },
-        });
+        const response = await api.get(`/api/house/`);
         if (response.status === 200) {
           setHouses(response.data.house);
         } else {
@@ -125,25 +122,21 @@ const HouseList = () => {
     setRechargeError(false);
 
     try {
-      const response = await axios.post(
-        `${baseURL}/api/house/recharge`,
+      const response = await api.post(
+        `/api/house/recharge`,
         {
           houseId: selectedHouseId,
           amount: Number(rechargeAmount),
           superAdminCommission: Number(superAdminCommission) / 100,
         },
-        {
-          headers: { "x-auth-token": token },
-        }
+        
       );
 
       if (response.status === 200 || response.status === 201) {
         setRechargeMessage("Recharge submitted successfully!");
         setRechargeError(false);
         // Refresh house list
-        const houseResponse = await axios.get(`${baseURL}/api/house/`, {
-          headers: { "x-auth-token": token },
-        });
+        const houseResponse = await api.get(`/api/house/`);
         if (houseResponse.status === 200) {
           setHouses(houseResponse.data.house);
         }

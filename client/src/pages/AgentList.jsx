@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import debounce from "lodash.debounce";
 import {
   Table,
@@ -45,7 +45,6 @@ const AgentList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -54,8 +53,7 @@ const AgentList = () => {
   const fetchAgents = async (page = 1, search = "") => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/api/user/role/agent`, {
-        headers: { "x-auth-token": token },
+      const response = await api.get(`/api/user/role/agent`, {
         params: { page, limit: rowsPerPage, search },
       });
       if (response.status === 200) {
@@ -78,9 +76,7 @@ const AgentList = () => {
   // Fetch super admin ID
   const fetchSuperAdminId = async () => {
     try {
-      const response = await axios.get(`${baseURL}/api/me`, {
-        headers: { "x-auth-token": token },
-      });
+      const response = await api.get(`/api/me`);
       setSuperAdminId(response.data.id);
     } catch (err) {
       toast.error("Failed to fetch super admin data");
@@ -110,9 +106,7 @@ const AgentList = () => {
   const fetchAgentUsers = async (agentId) => {
     setModalLoading(true);
     try {
-      const response = await axios.get(`${baseURL}/api/user/agent/${agentId}`, {
-        headers: { "x-auth-token": token },
-      });
+      const response = await api.get(`/api/user/agent/${agentId}`);
       if (response.status === 200) {
         setAgentUsers(response.data);
       } else {
@@ -140,15 +134,15 @@ const AgentList = () => {
       return;
     }
     try {
-      const response = await axios.post(
-        `${baseURL}/api/house/recharge-agent`,
+      const response = await api.post(
+        `/api/house/recharge-agent`,
         {
           agentId: selectedAgent._id,
           amount: parseFloat(rechargeAmount),
           superAdminCommission: parseFloat(superAdminCommission / 100),
           rechargeBy: superAdminId,
         },
-        { headers: { "x-auth-token": token } }
+        
       );
       toast.success("Agent recharged successfully");
       setRechargeModalOpen(false);

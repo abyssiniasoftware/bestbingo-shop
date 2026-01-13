@@ -17,16 +17,14 @@ import AddCartela from "./AddCartela";
 import ViewCartela from "./ViewCartela";
 import AgentReports from "./AgentReports";
 import AgentBonusList from "./AgentBonusList";
-import axios from "axios";
+import api from "../utils/api";
 
 const apiService = {
   fetchUserData: async (token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/me`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.get(
+        `/api/me`,
+       
       );
       return response.data;
     } catch (error) {

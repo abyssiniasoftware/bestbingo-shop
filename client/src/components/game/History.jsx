@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import api from "../../utils/api";
 
 const History = ({ userId }) => {
   const [winners, setWinners] = useState([]);
@@ -11,7 +12,7 @@ const History = ({ userId }) => {
     const fetchWinners = async () => {
       if (!userId) return;
       try {
-        const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/api/game/${userId}/last-winners`);
+        const response = await api.get(`/api/game/${userId}/last-winners`);
         if (!response.ok) throw new Error("Failed to fetch winners");
         const data = await response.json();
         setWinners(data);

@@ -19,16 +19,14 @@ import SuperReports from "./SuperReports";
 import BonusList from "./BonusList";
 import AgentList from "./AgentList";
 import RechargeHistoryAgent from "./RechargeHistoryAgent";
-import axios from "axios";
+import api from "../utils/api";
 
 const apiService = {
   fetchUserData: async (token) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/me`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.get(
+        `/api/me`
+        
       );
       return response.data;
     } catch (error) {

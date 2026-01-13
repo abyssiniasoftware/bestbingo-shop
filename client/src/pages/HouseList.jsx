@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import debounce from "lodash.debounce";
 import {
   Box,
@@ -37,15 +37,13 @@ const HouseList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
 
   const fetchHouses = async (page = 1, search = "") => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/api/house/`, {
-        headers: { "x-auth-token": token },
+      const response = await api.get(`/api/house/`, {
         params: { page, limit: rowsPerPage, search },
       });
       if (response.status === 200) {
@@ -100,16 +98,14 @@ const HouseList = () => {
     setRechargeError(false);
 
     try {
-      const response = await axios.post(
-        `${baseURL}/api/house/recharge`,
+      const response = await api.post(
+        `/api/house/recharge`,
         {
           houseId: selectedHouseId,
           amount: Number(rechargeAmount),
           superAdminCommission: Number(superAdminCommission) / 100,
         },
-        {
-          headers: { "x-auth-token": token },
-        }
+       
       );
 
       if (response.status === 200 || response.status === 201) {

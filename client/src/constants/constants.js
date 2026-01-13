@@ -111,19 +111,39 @@ export const backgroundButtonColors = {
 // green, blue, default,
 
 export const voiceOptions = [
-  { value: "r", label: `${config.bingoCallerName} 1` },
-  { value: "q", label: `${config.bingoCallerName} 2` },
-  { value: "b", label: `${config.bingoCallerName} 3` },
-  { value: "c", label: `${config.bingoCallerName} 4` },
-  { value: "g", label: `${config.bingoCallerName} 5` },
-  { value: "e", label: `${config.bingoCallerName} 6` },
-  { value: "n", label: `${config.bingoCallerName} 7` },
-  { value: "am", label: "ሜሮን" },
-  { value: "f", label: "ማህሌት" },
-  { value: "m", label: "ቢንያም" },
-  { value: "k", label: "አቤ" },
-  { value: "or", label: "ኦሮምኛ" },
-  { value: "t", label: "ትግረኛ" },
+  // ai voice
+  { value: "l", label: "ሮቦት" },
+
+  // amharic females
+  { value: "a", label: "አማርኛ 1" },
+  { value: "f", label: "አማርኛ 6" },
+  { value: "i", label: "አማርኛ 9" },
+  { value: "s", label: "አማርኛ 16" },
+
+  // amharic voices
+  { value: "b", label: "አማርኛ 2" },
+  { value: "c", label: "አማርኛ 3" },
+  { value: "d", label: "አማርኛ 4" },
+  { value: "e", label: "አማርኛ 5" },
+  { value: "g", label: "አማርኛ 7"},
+  { value: "h", label: "አማርኛ 8" },
+  { value: "j", label: "አማርኛ 10" },
+  { value: "k", label: "አማርኛ 11" },
+  { value: "m", label: "አማርኛ 12" },
+  { value: "n", label: "አማርኛ 13" },
+  { value: "q", label: "አማርኛ 14" },
+  { value: "r", label: "አማርኛ 15" },
+
+  // oromiffa voices
+  { value: "o", label: "ኦሮምኛ 1" },
+  { value: "p", label: "ኦሮምኛ 2" },
+
+  // tigrigna voices
+  { value: "t", label: "ትግረኛ 1" },
+  { value: "u", label: "ትግረኛ 2" },
+
+  // tigrigna male
+  { value: "u", label: "ትግረኛ 3" },
 ];
 
 //constants for the game

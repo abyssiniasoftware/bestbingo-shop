@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../stores/userStore";
+import api from "../utils/api";
 
 const useAuth = () => {
   const navigate = useNavigate();
@@ -13,9 +14,7 @@ const useAuth = () => {
     const currentTime = new Date().getTime();
 
     if (token && storedExpiration && currentTime < storedExpiration) {
-      fetch(`${import.meta.env.VITE_APP_API_URL}/api/me`, {
-        headers: { "x-auth-token": token },
-      })
+      api.get(`/api/me`)
         .then((response) => response.json())
         .then((userData) => {
           setUser({

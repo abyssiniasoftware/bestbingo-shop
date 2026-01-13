@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import { toast } from "react-toastify";
 import {
   FaChartLine,
@@ -69,10 +69,9 @@ const HouseReports = () => {
           params.month = filters.month;
         }
 
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/stats/house`,
+        const response = await api.get(
+          `/api/stats/house`,
           {
-            headers: { "x-auth-token": token },
             params,
           }
         );
@@ -99,10 +98,9 @@ const HouseReports = () => {
         const token = localStorage.getItem("token");
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/stats/house`,
+        const response = await api.get(
+          `/api/stats/house`,
           {
-            headers: { "x-auth-token": token },
             params: {
               startDate: todayStart.toISOString().slice(0, 10),
               endDate: new Date().toISOString().slice(0, 10),

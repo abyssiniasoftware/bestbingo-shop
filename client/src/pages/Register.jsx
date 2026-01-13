@@ -9,7 +9,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import axios from "axios";
+import api from "../utils/api";
 import handleBulkSubmission from "../services/cardsInsert";
 import useUserStore from "../stores/userStore";
 
@@ -59,8 +59,8 @@ const RegisterUser = () => {
 
     try {
       const endpoint = formData.isAgent
-        ? `${import.meta.env.VITE_APP_API_URL}/api/auth/register/agent`
-        : `${import.meta.env.VITE_APP_API_URL}/api/auth/register`;
+        ? `/api/auth/register/agent`
+        : `/api/auth/register`;
 
       const payload = formData.isAgent
         ? {
@@ -78,12 +78,7 @@ const RegisterUser = () => {
             phone: formData.phone,
           };
 
-      const response = await axios.post(endpoint, payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": token,
-        },
-      });
+      const response = await api.post(endpoint, payload);
 
       if (response.status === 201) {
         const { message, users, house } = response.data;

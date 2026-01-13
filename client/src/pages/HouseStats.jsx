@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
+import api from "../utils/api";
 import {
   FaChartLine,
   FaSort,
@@ -54,10 +54,9 @@ const HouseStats = () => {
         params.minStake = filters.minStake;
       }
 
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_API_URL}/api/cases/house-cases`,
+      const response = await api.get(
+        `/api/cases/house-cases`,
         {
-          headers: { "x-auth-token": token },
           params,
         }
       );
@@ -85,10 +84,9 @@ const HouseStats = () => {
         const token = localStorage.getItem("token");
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
-        const response = await axios.get(
-          `${import.meta.env.VITE_APP_API_URL}/api/cases/house-cases`,
+        const response = await api.get(
+          `/api/cases/house-cases`,
           {
-            headers: { "x-auth-token": token },
             params: {
               startDate: todayStart,
               endDate: new Date(),

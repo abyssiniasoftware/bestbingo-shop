@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import {
   Box,
   Typography,
@@ -128,16 +128,13 @@ const CreateHouseForm = () => {
   const [errorMsg, setErrorMsg] = useState("");
 
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL;
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${baseURL}/api/user`, {
-          headers: { "x-auth-token": token },
-        });
+        const response = await api.get(`/api/user`);
         setUsers(response.data);
       } catch (error) {
         setErrorMsg("Failed to load users");
@@ -167,12 +164,10 @@ const CreateHouseForm = () => {
       setSuccessMsg("");
 
       try {
-        const response = await axios.post(
-          `${baseURL}/api/house/create`,
+        const response = await api.post(
+          `/api/house/create`,
           formData,
-          {
-            headers: { "x-auth-token": token },
-          }
+          
         );
 
         setSuccessMsg("House created successfully!");

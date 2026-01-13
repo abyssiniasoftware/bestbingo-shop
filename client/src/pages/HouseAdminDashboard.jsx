@@ -7,16 +7,14 @@ import UserList from "../pages/UserList";
 import AddCartela from "../pages/AddCartela";
 import ViewCartela from "../pages/ViewCartela";
 import HouseReports from "./HouseReports";
-import axios from "axios";
+import api from "../utils/api";
 import HouseStats from './HouseStats';
 import HouseBonusList from './HouseBonusList';
 
 const apiService = {
   fetchUserData: async (token) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_APP_API_URL}/api/me`, {
-        headers: { "x-auth-token": token },
-      });
+      const response = await api.get(`/api/me`);
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || "Failed to fetch user data");

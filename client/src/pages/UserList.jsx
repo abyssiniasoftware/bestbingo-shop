@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import debounce from "lodash.debounce";
 import {
   Table,
@@ -49,7 +49,6 @@ const UserList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const token = localStorage.getItem("token");
-  const baseURL = import.meta.env.VITE_APP_API_URL || "http://localhost:5000";
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400));
@@ -57,8 +56,7 @@ const UserList = () => {
   const fetchUsers = async (page = 1, search = "") => {
     try {
       setLoading(true);
-      const response = await axios.get(`${baseURL}/api/user`, {
-        headers: { "x-auth-token": token },
+      const response = await api.get(`/api/user`, {
         params: { page, limit: rowsPerPage, search },
       });
       if (response.status === 200) {
@@ -115,10 +113,9 @@ const UserList = () => {
   const handleBanChange = async () => {
     try {
       const bannedBy = "admin";
-      const res = await axios.put(
-        `${baseURL}/api/user/ban/${selectedUser._id}`,
+      const res = await api.put(
+        `/api/user/ban/${selectedUser._id}`,
         { bannedBy },
-        { headers: { "x-auth-token": token } }
       );
       await fetchUsers(currentPage, searchTerm);
       setModalOpen(false);
@@ -136,11 +133,8 @@ const UserList = () => {
     if (!userToDelete) return;
 
     try {
-      const response = await axios.delete(
-        `${baseURL}/api/user/${userToDelete._id}`,
-        {
-          headers: { "x-auth-token": token },
-        }
+      const response = await api.delete(
+        `/api/user/${userToDelete._id}`
       );
       if (response.status === 200) {
         await fetchUsers(currentPage, searchTerm);
@@ -169,10 +163,9 @@ const UserList = () => {
     }
 
     try {
-      const response = await axios.put(
-        `${baseURL}/api/user/update-password/${userToUpdatePassword._id}`,
+      const response = await api.put(
+        `/api/user/update-password/${userToUpdatePassword._id}`,
         { password: newPassword },
-        { headers: { "x-auth-token": token } }
       );
       if (response.status === 200) {
         alert("Password updated successfully.");
