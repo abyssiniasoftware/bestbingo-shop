@@ -106,7 +106,7 @@ const CheckCartela = ({
           (winnerType === "2" && (metaSatisfied || patternTypes.length > 1)))
       ) {
         const audio = new Audio(
-          (await import(`../../assets/${voiceOption}winner.mp3`)).default
+          (await import(`../../voice/utilVoice.winner`)).default
         );
         audio.play();
       }

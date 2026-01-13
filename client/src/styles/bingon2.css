@@ -1,0 +1,768 @@
+body{
+    background-color: #1e2229;
+    font-family:Robot,'Segoe UI',Thahoma, sans-serif;
+    color: #444;
+     width: 100%;
+     margin-left: 0px;
+     
+    }
+    h1{
+        margin: 0;
+    }
+    .goodbingo{
+      height: 40px;
+      width: 22%;
+      background-color:#790918;
+     color: white;
+       font-family: "Helvetica Neue", Helvetica, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 1px;
+     margin-left: 0.5%;
+    }
+    .column1{
+      height: 18rem;
+        display: flex;
+        justify-content:space-around;
+    }
+    .col3txt{
+      display: flex;
+        justify-content:space-between;
+        color: #ffffff;
+        margin: 1rem;
+        letter-spacing: 2px;
+        text-align: left;
+    }
+    .column2{
+   display: flex;
+   justify-content: space-around;
+    }
+    .board{
+        height: auto;
+        margin-top: 0.3rem;
+        width: 90%;  
+    }
+    .bonus-area {
+      position: relative;
+      width: 10%;
+      background-color: #2a0000; /* Deep red background */
+      border: 4px solid #ff3333; /* Vibrant red border */
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      color: #ffffff;
+      letter-spacing: 2px;
+      font-size: 18px;
+      font-weight: 900;
+      opacity: 0.9;
+      box-shadow: 
+        0 0 12px rgba(255, 50, 50, 0.5), /* Outer red glow */
+        inset 0 0 8px rgba(255, 0, 0, 0.3); /* Inner subtle glow */
+      transition: all 0.3s ease;
+    }
+    
+    .bonus-area:hover {
+      opacity: 1;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+    }
+    
+    /* Bingo Container */
+    .bingo-container {
+      font-size: 0.5rem;
+      font-weight: bold;
+      text-align: center;
+      display: none;
+      color: #ff5555; /* Soft red for visibility */
+    }
+    
+    /* Celebration Text */
+    .celebration {
+      font-size: 1.2rem;
+      color: #ff1a1a; /* Bright red */
+      text-shadow: 0 0 8px rgba(255, 50, 50, 0.6); /* Glow effect */
+      font-weight: bold;
+    }
+    
+    /* Table Styling */
+    .table-container {
+      display: inline-block;
+    }
+    
+    .styled-table {
+      width: 100%;
+      min-width: 100%;
+      margin: 0;
+      border-collapse: collapse;
+    }
+    
+    .styled-table th, .styled-table td {
+      font-size: 16px;
+      text-align: center;
+      border: 1px solid #5a0000; /* Dark red borders */
+    }
+    
+    .styled-table td {
+      background-color: #1e0000; /* Slightly lighter than bonus area */
+      color: #ffffff;
+    }
+    
+    .styled-table th {
+      background: linear-gradient(145deg, #8b0000, #600000); /* Dark red gradient */
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      border-bottom: 2px solid #ff3333;
+    }
+    
+    /* Optional: Add hover effects for table cells */
+    .styled-table td:hover {
+      background-color: #3a0000;
+      transition: background-color 0.2s;
+    }
+    .animated-text {
+      display: flex;
+      flex-direction: column; /* Stack elements in a column */
+      align-items: center; /* Center items horizontally */
+      justify-content: center; 
+    }
+    
+    .animated-text span {
+      margin: 5px 0; /* Adds spacing between the elements */
+    }
+  
+    
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+    
+  /* FontAwesome icon styling inside bonus-area */
+  .bonus-area i {
+      font-size: 24px; /* Bigger icon */
+      color: #ffcc00; /* Gold color for the icon */
+  }
+  
+    .bonus-title {
+        color: #ffcc00; /* Gold color for premium look */
+        font-size: 28px; /* Bigger size for impact */
+        font-weight: bold; /* Bold text */
+        margin-bottom: 10px; /* Space below the title */
+        text-align: center; /* Centered text */
+        text-transform: uppercase; /* Uppercase for emphasis */
+        letter-spacing: 2px; /* Spacing for better readability */
+        background: linear-gradient(45deg, #ffd700, #ffcc00, #ffb300); /* Gold gradient */
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: block;
+        animation: glow 1.5s infinite alternate;
+    }
+    
+    /* Animated glow effect */
+    @keyframes glow {
+        from {
+            text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffd700;
+        }
+        to {
+            text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffd700;
+        }
+    }
+    
+    .prize-amount {
+        color: #ffffff; /* White text for contrast */
+        font-size: 22px; /* Big enough for visibility */
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        background: linear-gradient(45deg, #ff4e00, #ff8700); /* Fiery orange gradient */
+        border-radius: 8px;
+        display: inline-block;
+        box-shadow: 0px 4px 10px rgba(255, 136, 0, 0.5);
+        animation: bounce 1.5s infinite;
+    }
+    
+    /* Bouncing animation */
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-5px);
+        }
+    }
+    
+    .bonus-area::before,
+    .bonus-area::after {
+        content: '🎉'; /* Party popper emoji */
+        font-size: 24px; /* Adjust icon size */
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .bonus-area::before {
+        top: -20px; /* Position above border */
+    }
+    
+    .bonus-area::after {
+        bottom: -20px; /* Position below border */
+    }
+    
+    
+    .brow{
+       display: flex;
+        align-items: baseline;
+        justify-content:space-around;
+        width: 100%;
+     
+    }
+    .irow{
+         display: flex;
+        align-items: baseline;
+        justify-content:space-around;
+         width: 100%;
+         
+    }
+    
+    
+    
+         .col1{
+          max-width: 25%;
+          border: solid 1px #828282;
+          height: 100%;
+        }
+          .col2{
+          width: 24%;
+          border: solid 1px;
+          border-color:#828282;
+            height: 100%;
+        }
+          .col3{
+              
+            text-align: left;
+            width: 37%;
+          border: solid 1px;
+          border-color:#828282;
+          height: 100%;
+          background: rgb(2,0,36);
+          background: rgb(2,0,36);
+          background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,24,1) 100%, rgba(0,212,255,1) 100%);   }
+        .col4{
+          width: 26%;
+        border: solid 1px #ccc;
+        border: none; 
+        height: 100%;
+        background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,24,1) 100%, rgba(0,212,255,1) 100%);    }
+    
+   .bingo-call{
+  width: 6rem;  /* Larger size for a clock-like appearance */
+              height: 6rem;  /* Equal width and height to maintain the circular shape */
+              border: 4px solid #fff;  /* A clean white border */
+              border-radius: 50%;  /* Fully round to make it a circle */
+              background: linear-gradient(
+                90deg,
+                rgba(255, 165, 0, 1) 0%, /* Orange */
+                rgba(255, 204, 102, 1) 8%, /* Light Orange */
+                rgba(255, 153, 51, 1) 47%, /* Medium Orange */
+                rgba(255, 127, 0, 1) 77%, /* Dark Orange */
+                rgba(255, 0, 0, 1) 100% /* Reddish Orange */
+            );
+             color: #444;	
+              font-size: 2rem;  /* Larger font size for visibility */
+              font-weight: bold;
+              text-align: center;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);  /* Soft shadow for depth */
+              transition: all 0.3s ease;  /* Smooth transition on hover */
+              position: relative;
+              z-index: 2;
+              margin-left: 1rem;
+    }
+     
+     
+      .table-container {
+        display: inline-block;
+      }
+      
+      #bingo-table {
+        border-collapse: collapse;
+        margin: 0 auto; /* This centers the table */
+      }
+    .lastcall{
+  font-size: 2.6rem;
+    font-weight: 900;
+    color: #fff; 
+    text-align: center;
+  }
+    .prize{
+      font-size: 4.6rem;
+        font-weight: 900;
+        color: #fff;
+        text-align: center;
+      }
+    .callus{
+      width:100%;
+      height: 60px;
+    }
+        
+        img{
+          width: 100%;
+          height: 100%;
+          margin: auto;
+        }
+        .box1{
+          background-color: #0983ec;
+          width: 100%;
+          height: 100%;
+          position: relative;
+        }
+        .box2{
+            background-color: #fff;
+            
+        }
+        .txtbox{
+          width: 4rem;
+          height: 4rem;
+          color: #fff;
+          text-align: center;
+          font-weight: bold;
+          font-size: 3rem;
+           margin: 0;
+        }
+    
+    
+             .numrow{
+            display: flex;
+        justify-content:space-around;
+         }
+   .numbox {
+      width: 4rem;
+      height: 4rem;
+      background-color:#555;
+      color: #f0f0f0;
+    background-image: url("num4.png"); /* Adjust the path as needed */
+  background-size: contain;
+
+      opacity:0.5;
+      text-align: center;
+      font-weight: bold;
+      font-size: 2.6rem; /* Fixed font size */
+      margin: 0;
+      margin-left: 0.5rem;
+      display: flex; /* For centering */
+      align-items: center; /* For centering */
+      justify-content: center; /* For centering */
+      overflow: hidden; /* Prevent overflow from scaling */
+  }
+        .callb{
+            display: flex;
+        justify-content:space-between;	
+        }
+    .callnum{
+          text-align: center;
+           animation: effect ;
+                animation-duration: 6s;
+           background: linear-gradient(90deg, rgba(22,11,209,1) 0%, rgba(0,212,255,1) 0%, rgba(9,9,121,1) 0%, rgba(6,49,113,1) 8%, rgba(9,82,190,1) 47%, rgba(6,44,102,1) 77%, rgba(3,14,34,1) 100%, rgba(9,131,236,1) 100%);
+          color: white;		
+    }
+    
+    @keyframes effect {
+      50% {
+      background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(255, 212, 0, 1) 0%, rgba(255, 9, 121, 1) 0%, rgba(255, 49, 6, 1) 8%, rgba(255, 82, 9, 1) 47%, rgba(255, 44, 6, 1) 77%, rgba(255, 14, 3, 1) 100%, rgba(255, 131, 9, 1) 100%);
+       border-radius: 50%;
+       color: #fff; 
+       transform: scale(3, 3);
+     }
+     
+     
+     0% {
+       background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%, rgba(255, 212, 0, 1) 0%, rgba(255, 9, 121, 1) 0%, rgba(255, 49, 6, 1) 8%, rgba(255, 82, 9, 1) 47%, rgba(255, 44, 6, 1) 77%, rgba(255, 14, 3, 1) 100%, rgba(255, 131, 9, 1) 100%);
+   
+        color: #fff;
+       transform: scale(1, 1);
+     }
+   
+   }
+    .callnum1 { 
+        animation: blink 1s infinite !important;
+        color: rgba(255, 255, 255, 1)!important;
+        opacity: 1;
+        z-index: 100;
+    }
+    
+    @keyframes effect1 {
+        0% {
+            transform: scale(1); /* Normal size */
+        }
+        25% {
+            transform: scale(1.2); /* Scale up */
+        }
+        50% {
+            transform: scale(1.4); /* Scale up further */
+        }
+        75% {
+            transform: scale(1.2); /* Scale down */
+        }
+        100% {
+            transform: scale(1); /* Back to normal size */
+        }
+    }
+    /* Animations */
+  @keyframes blink {
+    0% {
+      color: white;
+    }
+    50% {
+      color: #3c3c3c;
+    }
+    100% {
+      color: white;
+    }
+  }
+  
+  @keyframes bounce {
+    0% {
+      bottom: 2rem;
+    }
+    50% {
+      bottom: 2.5rem;
+    }
+    100% {
+      bottom: 2rem;
+    }
+  }
+  /* Battery Body */
+.battery {
+  width: 100px;
+  height: 40px;
+  border: 3px solid #333;
+  border-radius: 5px;
+  position: relative;
+  background-color: #f0f0f0;
+  margin-left: 50%;
+}
+#called-number {
+  position: fixed; /* Fixed position to center on the screen */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%) scale(5); /* Start large and centered */
+  width: 5rem; /* Slightly larger for emphasis */
+  height: 5rem; /* Slightly larger for emphasis */
+  border-radius: 50%; /* Circular shape */
+  border: 4px solid #ffd700; /* Gold border */
+  text-align: center;
+  background: linear-gradient(90deg, rgba(22,11,209,1) 0%, rgba(0,212,255,1) 0%, rgba(9,9,121,1) 0%, rgba(6,49,113,1) 8%, rgba(9,82,190,1) 47%, rgba(6,44,102,1) 77%, rgba(3,14,34,1) 100%, rgba(9,131,236,1) 100%); /* Blue gradient */
+  color: white;
+  font-size: 3.5rem; /* Larger font size */
+  font-weight: bold;
+  font-family: 'Arial', sans-serif; /* Classic font */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure it's on top of everything */
+  opacity: 0; /* Start invisible */
+  transition: all 1.5s ease-in-out; /* Smooth transition for movement */
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.8), 
+              0 0 40px rgba(9, 82, 190, 0.6), 
+              0 0 60px rgba(6, 49, 113, 0.4); 
+ 
+}
+@keyframes bl {
+  50% {
+    opacity: 0;
+  }
+}
+#status-container {
+  font-size: 18px;
+  font-weight: bold;
+  color: orange;
+  display: flex;
+  align-items: center;
+}
+
+.dot {
+  animation: blink 1.5s infinite;
+  font-size: 18px;
+}
+
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+.dot:nth-child(4) { animation-delay: 0.6s; }
+
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.balancewarn {
+  font-size: 28px;
+  color: red;
+  animation: bl 1s step-start infinite;
+  text-align: center;
+ 
+}
+
+/* Battery Tip */
+.battery-tip {
+  width: 5px;
+  height: 15px;
+  background-color: #333;
+  border-radius: 0 2px 2px 0;
+  margin-left: 2px;
+}
+
+/* Battery Level Indicator */
+.battery-level {
+  height: 100%;
+  width: 0;
+  background-color: green; /* Default color */
+  transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+/* Battery Status Text */
+.battery-status {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}   
+    .btnbingo{
+        height: 40px;
+        background-color:#790918;
+       color: white;
+         font-family: "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        margin-left: 1%;
+     
+    }
+    .btnstart{
+      height: 40px;
+      width: 30%;
+      background-color:#790918;
+     color: white;
+       font-family: "Helvetica Neue", Helvetica, sans-serif;
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-left: 30%;
+      margin-top: 20px;
+  }
+    .btnshuffle{
+        height: 40px;
+        border-radius: 4px; /* Slightly rounded corners */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        box-shadow: 
+            0 2px 4px rgba(0, 0, 0, 0.2),
+            inset 0 1px 3px rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+         font-family: "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 1px;
+       
+    }
+    .pattern{
+      max-height: 500px;
+      max-width: 500px;
+    align-items: center;
+    margin-left: 10%;
+      
+    }
+    table{
+           font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+           width: 100%;
+        }
+    
+             td,  th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                   font-size: 48px;
+        letter-spacing: 1px;
+        font-weight: bolder;
+        text-align: center;
+        
+            }
+            td{
+              text-align: center;
+            
+            }
+    .boom{
+    animation: move 5s infinite;
+    }
+    
+    @keyframes move{
+    50%{font-size: 72px;}
+    }
+           
+          tr:nth-child(even) {background-color: #fff;}
+           th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+              font-size: 48px;
+        letter-spacing: 1px;
+        font-weight: bolder;
+        text-align: center;
+                background-color: #4CAF50;
+                color: white;
+                height: 30px;
+                 width: 100%;
+    
+    
+            }
+            .tablecontainer{
+              display: flex;
+    
+            }
+            #b{
+              width: 20%;
+    
+            }
+          #i{
+                width: 20%;
+            }
+              #n{
+                width: 20%;
+            }  #g{
+                width: 20%;
+            }  #o{
+                width: 20%;
+            }
+            .b{
+              background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+            }
+            .i{
+            background: rgb(2,0,36);
+          background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(121,9,13,1) 100%, rgba(0,212,255,1) 100%);
+            }
+            .o{
+             background: linear-gradient(178.6deg, rgb(20, 36, 50) 11.8%, rgb(124, 143, 161) 83.8%); 
+            }
+            .g{
+            background: rgb(36,26,0);
+            background: linear-gradient(90deg, rgba(36,26,0,1) 0%, rgba(91,60,6,1) 1%, rgba(232,148,22,1) 100%, rgba(0,212,255,1) 100%);
+            }
+     .bingo{
+              background: blue;
+              color: white;
+               
+            }
+        
+            .container-game {
+              display: block;
+              position: relative;
+              padding-left: 35px;
+              margin-bottom: 12px;
+              cursor: pointer;
+              font-size: 20px;
+              margin-top: 10px;
+              user-select: none;
+              color: white;
+            }
+            
+            .container-game .checkmark {
+              position: absolute;
+              top: 0;
+              left: 0;
+              height: 20px;
+              width: 20px;
+              background-color: #ccc;
+              border-radius: 3px;
+            }
+            
+            .container-game input {
+              position: absolute;
+              opacity: 0;
+              cursor: pointer;
+              height: 0;
+              width: 0;
+            }
+            
+            .container-game .checkmark:after {
+              content: "";
+              position: absolute;
+              display: none;
+            }
+            
+            .container-game input:checked ~ .checkmark {
+              background-color: #4caf50;
+            }
+            
+            .container-game input:checked ~ .checkmark:after {
+              display: block;
+            }
+            
+            .container-game .checkmark:after {
+              left: 7px;
+              top: 3px;
+              width: 6px;
+              height: 10px;
+              border: solid white;
+              border-width: 0 2px 2px 0;
+              transform: rotate(45deg);
+            }
+            
+            .toggle-container {
+              display: flex;
+              gap: 20px; /* Add spacing between labels */
+            }
+            .bingo-call1 {
+              width: 6rem;  /* Larger size for a clock-like appearance */
+              height: 6rem;  /* Equal width and height to maintain the circular shape */
+              border: 4px solid #fff;  /* A clean white border */
+              border-radius: 50%;  /* Fully round to make it a circle */
+              background: linear-gradient(
+                90deg,
+                rgba(255, 165, 0, 1) 0%, /* Orange */
+                rgba(255, 204, 102, 1) 8%, /* Light Orange */
+                rgba(255, 153, 51, 1) 47%, /* Medium Orange */
+                rgba(255, 127, 0, 1) 77%, /* Dark Orange */
+                rgba(255, 0, 0, 1) 100% /* Reddish Orange */
+            );
+             color: #444;	
+              font-size: 2rem;  /* Larger font size for visibility */
+              font-weight: bold;
+              text-align: center;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);  /* Soft shadow for depth */
+              transition: all 0.3s ease;  /* Smooth transition on hover */
+              position: relative;
+              z-index: 2;
+              margin-left: 1rem;
+          }
+          
+          
+          .bingo-call1 span {
+              display: block;
+              font-size: 2rem;  /* Adjusted font size for the "count" part */
+              margin-bottom: 0.2rem;  /* Space between the count and "0/75" */
+          }
+          
+    
+          .bingo-call1 .count {
+              font-size: 2rem;  /* Larger font size for the dynamic number */
+              font-family: 'Arial', sans-serif;  /* Modern font for the clock numbers */
+          }
+          
+                  .derash {
+  width: 100%;
+      height: 70px;
+ 
+      background-color: #f0f0f0; /* Example background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+}
+          

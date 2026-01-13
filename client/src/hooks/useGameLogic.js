@@ -376,7 +376,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         currentAudioRef.current = null;
       }
 
-      import(`../assets/${voiceOption}Voice/index.js`)
+      import(`../voice/utilVoice.js`)
         .then((voiceModule) => {
           const specialAudioBaseKeys = [
             "start",
@@ -390,14 +390,12 @@ const useGameLogic = ({ stake, players, winAmount }) => {
 
           const isSpecialAudio = specialAudioBaseKeys.some(
             (baseKey) =>
-              audioKey === baseKey || audioKey === `${voiceOption}${baseKey}`
+              audioKey === baseKey
           );
 
           if (isSpecialAudio) {
-            finalAudioKey = audioKey.startsWith(voiceOption)
-              ? audioKey
-              : `${voiceOption}${audioKey}`;
-            audioFile = voiceModule[finalAudioKey];
+            
+            audioFile = voiceModule[audioKey];
           } else {
             let prefix = "";
             const speakNumber = parseInt(audioKey, 10);
@@ -487,7 +485,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     }
 
     try {
-      const audioModule = await import(`../assets/shuffle.wav`);
+      const audioModule = await import(`../voice/utilVoice.shuffle`);
       const audio = new Audio(audioModule.default);
       currentAudioRef.current = audio;
       audio.play().catch((error) => {

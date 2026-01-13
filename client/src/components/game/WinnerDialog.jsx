@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Confetti from "react-confetti";
-import bonusAudio from "../../assets/bonus.mp3";
+import {bonus} from "../../voice/utilVoice";
 import { formatPatternName } from "../../utils/gameUtils";
 
 const blinkFadeInAnimation = `
@@ -52,7 +52,7 @@ const WinnerDialog = ({
     if (openModal && bonusAwarded) {
       const playBonusAudio = async () => {
         try {
-          const audio = new Audio(bonusAudio);
+          const audio = new Audio(bonus);
           await audio.play().catch((error) => {});
         } catch (error) {}
       };

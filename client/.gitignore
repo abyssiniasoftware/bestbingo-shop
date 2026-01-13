@@ -11,8 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-*.backup
-*.backup.jsx
 
 # Editor directories and files
 .vscode/*
@@ -24,11 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-.env
-*.zip
-*.tgz
-*.lock
-pnpm-lock.yaml
-pnpm-workspace.yaml
-src/pages/new.jsx
-src/components/game/tp.jsx
