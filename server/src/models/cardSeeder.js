@@ -42,7 +42,6 @@ async function insertBingoCards(userId) {
     // Connect to MongoDB (replace with your MongoDB connection string)
 
     await mongoose.connect(process.env.MONGOURL, {
-      useNewUrlParser: true,
     });
 
     // Validate userId
