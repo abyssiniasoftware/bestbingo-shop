@@ -1,19 +1,12 @@
 
 
 import { useState } from "react";
-
 import { useParams, useNavigate } from "react-router-dom";
-
 import { Box, IconButton, Button } from "@mui/material";
-
 import GameStartModal from "../components/game/GameStartModal";
-
 import GameTopSection from "../components/game/GameTopSection";
-
 import GameControlsBar from "../components/game/GameControlsBar";
-
 import BingoGrid from "../components/game/BingoGrid";
-
 import WinnerDialog from "../components/game/WinnerDialog";
 
 
@@ -26,11 +19,11 @@ import useGameStore from "../stores/gameStore";
 
 import {
 
-backgroundOptions,
+    backgroundOptions,
 
-voiceOptions,
+    voiceOptions,
 
-BINGO_PATTERNS,
+    BINGO_PATTERNS,
 
 } from "../constants/constants";
 
@@ -40,303 +33,303 @@ import "../styles/game-redesign.css";
 
 const Game = () => {
 
-const { stake, players, winAmount } = useParams();
+    const { stake, players, winAmount } = useParams();
 
-const navigate = useNavigate();
+    const navigate = useNavigate();
 
-const { gameData } = useGameStore();
+    const { gameData } = useGameStore();
 
-const [showStartModal, setShowStartModal] = useState(false);
+    const [showStartModal, setShowStartModal] = useState(false);
 
 
 
-const {
+    const {
 
-calledNumbers,
+        calledNumbers,
 
-recentCalls,
+        recentCalls,
 
-currentNumber,
+        currentNumber,
 
-callCount,
+        callCount,
 
-isPlaying,
+        isPlaying,
 
-isShuffling,
+        isShuffling,
 
-cardIdInput,
+        cardIdInput,
 
-setCardIdInput,
+        setCardIdInput,
 
-openModal,
+        openModal,
 
-cardNumbers,
+        cardNumbers,
 
-cartelaData,
+        cartelaData,
 
-bingoState,
+        bingoState,
 
-patternTypes,
+        patternTypes,
 
-lockedCards,
+        lockedCards,
 
-drawSpeed,
+        drawSpeed,
 
-setDrawSpeed,
+        setDrawSpeed,
 
-voiceOption,
+        voiceOption,
 
-patternAnimationIndex,
+        patternAnimationIndex,
 
-isGameEnded,
+        isGameEnded,
 
-selectedBackground,
+        selectedBackground,
 
-hasGameStarted,
+        hasGameStarted,
 
-checkWinner,
+        checkWinner,
 
-handleVoiceChange,
+        handleVoiceChange,
 
-possiblePatterns,
+        possiblePatterns,
 
-handleEndGame,
+        handleEndGame,
 
-handleShuffleClick,
+        handleShuffleClick,
 
-handleCloseModal,
+        handleCloseModal,
 
-clearLockedCards,
+        clearLockedCards,
 
-togglePlayPause,
+        togglePlayPause,
 
-bonusAwarded,
+        bonusAwarded,
 
-bonusAmountGiven,
+        bonusAmountGiven,
 
-dynamicBonusAmount,
+        dynamicBonusAmount,
 
-enableDynamicBonus,
+        enableDynamicBonus,
 
-primaryPattern,
+        primaryPattern,
 
-setLockedCards,
+        setLockedCards,
 
-bonusAmount,
+        bonusAmount,
 
-bonusPattern,
+        bonusPattern,
 
-} = useGameLogic({ stake, players, winAmount });
+    } = useGameLogic({ stake, players, winAmount });
 
 
 
-const backgroundStyle = backgroundOptions.find(
+    const backgroundStyle = backgroundOptions.find(
 
-(bg) => bg.value === selectedBackground
+        (bg) => bg.value === selectedBackground
 
-)?.style || { backgroundColor: "#111827" };
+    )?.style || { backgroundColor: "#111827" };
 
 
 
-const handleBack = () => {
+    const handleBack = () => {
 
-navigate("/dashboard", { state: { gameId: gameData?.game.gameId } });
+        navigate("/dashboard", { state: { gameId: gameData?.game.gameId } });
 
-};
+    };
 
 
 
-const handleStartGame = () => {
+    const handleStartGame = () => {
 
-setShowStartModal(false);
+        setShowStartModal(false);
 
-togglePlayPause();
+        togglePlayPause();
 
-};
+    };
 
 
 
-// Check if there's a reservation (cards selected)
+    // Check if there's a reservation (cards selected)
 
-const hasReservation = gameData?.cartela?.length > 0;
+    const hasReservation = gameData?.cartela?.length > 0;
 
 
 
-return (
+    return (
 
-<Box
+        <Box
 
-sx={{
+            sx={{
 
-minHeight: "100vh",
+                minHeight: "100vh",
 
-color: "#fff",
+                color: "#fff",
 
-display: "flex",
+                display: "flex",
 
-flexDirection: "column",
+                flexDirection: "column",
 
-...backgroundStyle,
+                ...backgroundStyle,
 
-}}
+            }}
 
->
+        >
 
-<style>{pulseAnimation}</style>
+            <style>{pulseAnimation}</style>
 
 
 
-{/* Game Start Modal - shows over the game background */}
+            {/* Game Start Modal - shows over the game background */}
 
-<GameStartModal
+            <GameStartModal
 
-isOpen={showStartModal && !hasGameStarted}
+                isOpen={showStartModal && !hasGameStarted}
 
-onClose={() => setShowStartModal(false)}
+                onClose={() => setShowStartModal(false)}
 
-onStart={handleStartGame}
+                onStart={handleStartGame}
 
-hasReservation={hasReservation}
+                hasReservation={hasReservation}
 
-roundNumber={1}
+                roundNumber={1}
 
-/>
+            />
 
 
 
-{/* Main game content */}
+            {/* Main game content */}
 
-<Box sx={{ flex: 1, p: { xs: 1, sm: 2 } }}>
+            <Box sx={{ flex: 1, p: { xs: 1, sm: 2 } }}>
 
-{/* Top Section: Comprehensive Header */}
+                {/* Top Section: Comprehensive Header */}
 
-<GameTopSection
+                <GameTopSection
 
-calledNumbers={calledNumbers}
+                    calledNumbers={calledNumbers}
 
-currentNumber={currentNumber}
+                    currentNumber={currentNumber}
 
-recentCalls={recentCalls}
+                    recentCalls={recentCalls}
 
-callCount={callCount}
+                    callCount={callCount}
 
-gameDetails={gameData?.game}
+                    gameDetails={gameData?.game}
 
-patterns={possiblePatterns}
+                    patterns={possiblePatterns}
 
-patternAnimationIndex={patternAnimationIndex}
+                    patternAnimationIndex={patternAnimationIndex}
 
-enableDynamicBonus={enableDynamicBonus}
+                    enableDynamicBonus={enableDynamicBonus}
 
-dynamicBonusAmount={dynamicBonusAmount}
+                    dynamicBonusAmount={dynamicBonusAmount}
 
-bonusAmount={bonusAmount}
+                    bonusAmount={bonusAmount}
 
-bonusPattern={bonusPattern}
+                    bonusPattern={bonusPattern}
 
-winAmount={winAmount}
+                    winAmount={winAmount}
 
-/>
+                />
 
 
 
 
 
-{/* BINGO Grid */}
+                {/* BINGO Grid */}
 
-<Box sx={{ mb: 2 }}>
+                <Box sx={{ mb: 2 }}>
 
-<BingoGrid calledNumbers={calledNumbers} shuffling={isShuffling} />
+                    <BingoGrid calledNumbers={calledNumbers} shuffling={isShuffling} />
 
-</Box>
+                </Box>
 
 
 
-{/* Bottom Controls Bar */}
+                {/* Bottom Controls Bar */}
 
-<GameControlsBar
+                <GameControlsBar
 
-isPlaying={isPlaying}
+                    isPlaying={isPlaying}
 
-isShuffling={isShuffling}
+                    isShuffling={isShuffling}
 
-togglePlayPause={togglePlayPause}
+                    togglePlayPause={togglePlayPause}
 
-handleShuffleClick={handleShuffleClick}
+                    handleShuffleClick={handleShuffleClick}
 
-voiceOptions={voiceOptions}
+                    voiceOptions={voiceOptions}
 
-voiceOption={voiceOption}
+                    voiceOption={voiceOption}
 
-handleVoiceChange={handleVoiceChange}
+                    handleVoiceChange={handleVoiceChange}
 
-drawSpeed={drawSpeed}
+                    drawSpeed={drawSpeed}
 
-setDrawSpeed={setDrawSpeed}
+                    setDrawSpeed={setDrawSpeed}
 
-cardIdInput={cardIdInput}
+                    cardIdInput={cardIdInput}
 
-setCardIdInput={setCardIdInput}
+                    setCardIdInput={setCardIdInput}
 
-checkWinner={checkWinner}
+                    checkWinner={checkWinner}
 
-handleBack={handleBack}
+                    handleBack={handleBack}
 
-isGameEnded={isGameEnded}
+                    isGameEnded={isGameEnded}
 
-hasGameStarted={hasGameStarted}
+                    hasGameStarted={hasGameStarted}
 
-handleEndGame={handleEndGame}
+                    handleEndGame={handleEndGame}
 
-/>
+                />
 
-</Box>
+            </Box>
 
 
 
-{/* Winner Dialog */}
+            {/* Winner Dialog */}
 
-<WinnerDialog
+            <WinnerDialog
 
-openModal={openModal}
+                openModal={openModal}
 
-handleCloseModal={handleCloseModal}
+                handleCloseModal={handleCloseModal}
 
-cardIdInput={cardIdInput}
+                cardIdInput={cardIdInput}
 
-cardNumbers={cardNumbers}
+                cardNumbers={cardNumbers}
 
-calledNumbers={calledNumbers}
+                calledNumbers={calledNumbers}
 
-cartelaData={cartelaData}
+                cartelaData={cartelaData}
 
-bingoState={bingoState}
+                bingoState={bingoState}
 
-patternTypes={patternTypes}
+                patternTypes={patternTypes}
 
-selectedPattern={primaryPattern}
+                selectedPattern={primaryPattern}
 
-lockedCards={lockedCards}
+                lockedCards={lockedCards}
 
-setLockedCards={setLockedCards}
+                setLockedCards={setLockedCards}
 
-clearLockedCards={clearLockedCards}
+                clearLockedCards={clearLockedCards}
 
-BINGO_PATTERNS={BINGO_PATTERNS}
+                BINGO_PATTERNS={BINGO_PATTERNS}
 
-isGameEnded={isGameEnded}
+                isGameEnded={isGameEnded}
 
-bonusAwarded={bonusAwarded}
+                bonusAwarded={bonusAwarded}
 
-bonusAmount={bonusAmountGiven.toFixed(0)}
+                bonusAmount={bonusAmountGiven.toFixed(0)}
 
-handleEndGame={handleEndGame}
+                handleEndGame={handleEndGame}
 
-/>
+            />
 
-</Box>
+        </Box>
 
-);
+    );
 
 };
 

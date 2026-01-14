@@ -27,6 +27,8 @@ import restarted from "/utilVoice/continue.mp3";
 import finished from "/utilVoice/finished.mp3";
 import finished2 from "/utilVoice/finished2.mp3";
 import finished3 from "/utilVoice/finished3.mp3";
+import notRegistered from "/utilVoice/notreg.wav";
+
 
 
 export { 
@@ -59,4 +61,5 @@ restarted,
 finished,
 finished2,
 finished3,
+notRegistered,
 }

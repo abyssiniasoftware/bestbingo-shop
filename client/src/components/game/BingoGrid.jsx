@@ -68,7 +68,9 @@ const letterColors = {
 
 
 
-const StyledBingoLetter = styled(Box)(({ theme, letter }) => ({
+const StyledBingoLetter = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "letter",
+})(({ theme, letter }) => ({
   width: "100%", // Fill the column width
   height: "50px",
   display: "flex",
@@ -85,7 +87,9 @@ const StyledBingoLetter = styled(Box)(({ theme, letter }) => ({
 
 
 
-const StyledNumberCell = styled(Box)(({ theme, called, isShuffling }) => ({
+const StyledNumberCell = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "called" && prop !== "isShuffling",
+})(({ theme, called, isShuffling }) => ({
   // Dimensions: Set width to fill the grid column, fixed height for the "bar" look
   width: "100%",
   height: "65px", // Increased height to match the tall rectangular look in screenshot

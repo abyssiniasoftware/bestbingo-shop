@@ -55,7 +55,10 @@ const BlowerAnimation = ({
                     height: { xs: 150, sm: 180, md: 250 },
                 }}
             >
-                {/* Main blower image */}
+                
+                {/* Main blower image 
+                reason for rotate the image is due tube is to be horizontal the image had tube
+                */}
                 <Box
                     component="img"
                     src="/images/blower.png"
@@ -133,20 +136,6 @@ const BlowerAnimation = ({
                 )}
             </Box>
 
-            {/* Ball tube - connects to recent calls */}
-            <Box
-                sx={{
-                    position: "absolute",
-                    right: { xs: -40, sm: -50, md: -60 },
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    width: { xs: 50, sm: 60, md: 80 },
-                    height: { xs: 35, sm: 40, md: 50 },
-                    background: "linear-gradient(to right, #444 0%, #666 50%, #444 100%)",
-                    borderRadius: "10px",
-                    boxShadow: "inset 0 5px 10px rgba(0,0,0,0.5)",
-                }}
-            />
         </Box>
     );
 };

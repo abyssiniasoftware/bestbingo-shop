@@ -323,6 +323,11 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     localStorage.setItem("bonusAmount", bonusAmount.toString());
     localStorage.setItem("bonusPattern", bonusPattern);
     localStorage.setItem("isManualMode", isManual.toString());
+    localStorage.setItem("calledNumbers", JSON.stringify(calledNumbers));
+    localStorage.setItem("recentCalls", JSON.stringify(recentCalls));
+    localStorage.setItem("currentNumber", currentNumber);
+    localStorage.setItem("previousNumber", previousNumber);
+    localStorage.setItem("callCount", callCount.toString());
   }, [
     allCardNumbers,
     drawSpeed,
@@ -336,6 +341,11 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     bonusAmount,
     bonusPattern,
     isManual,
+    calledNumbers,
+    recentCalls,
+    currentNumber,
+    previousNumber,
+    callCount,
   ]);
 
   // Fetch card numbers
@@ -377,82 +387,94 @@ const useGameLogic = ({ stake, players, winAmount }) => {
 
   // Audio playback
   const playAudio = (audioKey) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (currentAudioRef.current) {
         currentAudioRef.current.pause();
         currentAudioRef.current.currentTime = 0;
         currentAudioRef.current = null;
       }
 
-      import(`../voice/utilVoice.js`)
-        .then((voiceModule) => {
-          const specialAudioBaseKeys = [
-            "start",
-            "stop",
-            "winner",
-            "lose",
-            "blocked",
-          ];
-          let audioFile;
-          let finalAudioKey;
+      try {
+        // Always import utilVoice for special keys and structure
+        const utilVoiceModule = await import(`../voice/utilVoice.js`);
 
-          const isSpecialAudio = specialAudioBaseKeys.some(
-            (baseKey) =>
-              audioKey === baseKey
-          );
+        const specialAudioBaseKeys = [
+          "start",
+          "stop",
+          "winner",
+          "lose",
+          "blocked",
+          "notRegistered",
+        ];
 
-          if (isSpecialAudio) {
+        const isSpecialAudio = specialAudioBaseKeys.some(
+          (baseKey) => audioKey === baseKey
+        );
 
-            audioFile = voiceModule[audioKey];
-          } else {
-            let prefix = "";
-            const speakNumber = parseInt(audioKey, 10);
-            if (speakNumber >= 1 && speakNumber <= 15) prefix = "b";
-            else if (speakNumber >= 16 && speakNumber <= 30) prefix = "i";
-            else if (speakNumber >= 31 && speakNumber <= 45) prefix = "n";
-            else if (speakNumber >= 46 && speakNumber <= 60) prefix = "g";
-            else if (speakNumber >= 61 && speakNumber <= 75) prefix = "o";
-            const prefixedNumber = prefix + speakNumber;
-            finalAudioKey = voiceOption + prefixedNumber;
-            setPrefixedNumber(prefixedNumber);
+        let audioFile;
+        let finalAudioKey;
+
+        if (isSpecialAudio) {
+          audioFile = utilVoiceModule[audioKey];
+        } else {
+          // Load specific voice module for numbered calls
+          let prefix = "";
+          const speakNumber = parseInt(audioKey, 10);
+          if (speakNumber >= 1 && speakNumber <= 15) prefix = "b";
+          else if (speakNumber >= 16 && speakNumber <= 30) prefix = "i";
+          else if (speakNumber >= 31 && speakNumber <= 45) prefix = "n";
+          else if (speakNumber >= 46 && speakNumber <= 60) prefix = "g";
+          else if (speakNumber >= 61 && speakNumber <= 75) prefix = "o";
+
+          const prefixedNumber = prefix + speakNumber;
+          finalAudioKey = voiceOption + prefixedNumber;
+          setPrefixedNumber(prefixedNumber);
+
+          // Dynamically load the voice-specific module
+          try {
+            const voiceModule = await import(`../voice/${voiceOption}Voice.js`);
             audioFile = voiceModule[finalAudioKey];
+          } catch (err) {
+            console.warn(`Voice file for ${voiceOption} not found, falling back to utilVoice`);
+            audioFile = utilVoiceModule[finalAudioKey];
           }
+        }
 
-          if (!audioFile) {
-            throw new Error(`Audio file not found for ${finalAudioKey}`);
-          }
+        if (!audioFile) {
+          throw new Error(`Audio file not found for ${finalAudioKey || audioKey}`);
+        }
 
-          const audio = new Audio(audioFile);
-          currentAudioRef.current = audio;
+        const audio = new Audio(audioFile);
+        currentAudioRef.current = audio;
 
-          if (finalAudioKey === `${voiceOption}start`) {
-            setIsStartAudioFinished(false);
-            audio.onended = () => {
-              setIsStartAudioFinished(true);
-              currentAudioRef.current = null;
-              resolve();
-            };
-          } else {
-            audio.onended = () => {
-              currentAudioRef.current = null;
-              resolve();
-            };
-          }
-
-          audio.play().catch((error) => {
-            if (error.name === "AbortError") {
-              resolve();
-              return;
-            }
+        if (finalAudioKey === `${voiceOption}start`) {
+          setIsStartAudioFinished(false);
+          audio.onended = () => {
             setIsStartAudioFinished(true);
             currentAudioRef.current = null;
-            reject(error);
-          });
-        })
-        .catch((error) => {
+            resolve();
+          };
+        } else {
+          audio.onended = () => {
+            currentAudioRef.current = null;
+            resolve();
+          };
+        }
+
+        audio.play().catch((error) => {
+          if (error.name === "AbortError") {
+            resolve();
+            return;
+          }
           setIsStartAudioFinished(true);
+          currentAudioRef.current = null;
           reject(error);
         });
+      } catch (error) {
+        setIsStartAudioFinished(true);
+        console.error("Audio playback failed:", error);
+        reject(error);
+      }
     });
   };
 
@@ -483,6 +505,10 @@ const useGameLogic = ({ stake, players, winAmount }) => {
 
   const playBlockedAudio = async () => {
     await playAudio("blocked");
+  };
+
+  const playNotRegisteredAudio = async () => {
+    await playAudio("notRegistered");
   };
 
   const playShuffleSound = async () => {
@@ -623,6 +649,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     }
 
     if (!gameDetails.cartela.includes(cardIdInput)) {
+      playNotRegisteredAudio();
       toast.error(`Card ${cardIdInput} is not part of this game.`);
       return;
     }
@@ -930,7 +957,11 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     isBonusGloballyActive,
     isBadBingoActive,
     bonusPattern,
-    bonusAmount,
+    calledNumbers.length,
+    playBlockedAudio,
+    playLoseAudio,
+    playNotRegisteredAudio,
+    playWinnerAudio,
   ]);
 
   // Handle end game
