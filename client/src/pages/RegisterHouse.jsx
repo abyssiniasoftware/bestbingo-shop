@@ -142,7 +142,7 @@ const CreateHouseForm = () => {
     };
 
     fetchUsers();
-  }, [baseURL, token]);
+  }, [ token]);
 
   const houseAdmins = useMemo(() => {
     return users.filter((user) => user.role === "house_admin");
@@ -183,7 +183,7 @@ const CreateHouseForm = () => {
         setLoading(false);
       }
     },
-    [baseURL, token, formData]
+    [ token, formData]
   );
 
   return (

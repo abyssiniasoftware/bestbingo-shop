@@ -113,6 +113,11 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     const stored = localStorage.getItem("isBadBingoActive");
     return stored === "true";
   });
+  // Manual mode for win checking - when true, user must manually declare winners
+  const [isManual, setIsManual] = useState(() => {
+    const stored = localStorage.getItem("isManualMode");
+    return stored === "true";
+  });
   // Hooks and refs
   const { userId } = useUserStore();
   const { gameData, resetGame } = useGameStore();
@@ -287,7 +292,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         const response = await apiService.fetchUserDetails(userId, token);
 
         setEnableDynamicBonus(response.enableDynamicBonus || false);
-      } catch (error) {}
+      } catch (error) { }
     };
     fetchCashierSettings();
   }, [userId]);
@@ -299,7 +304,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       try {
         const response = await apiService.fetchActiveDynamicBonus(token);
         setDynamicBonus(Number(response.bonusAmount) || 0);
-      } catch (error) {}
+      } catch (error) { }
     };
     fetchDynamicBonus();
   }, [gameDetails]);
@@ -317,6 +322,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     localStorage.setItem("hasGameStarted", JSON.stringify(hasGameStarted));
     localStorage.setItem("bonusAmount", bonusAmount.toString());
     localStorage.setItem("bonusPattern", bonusPattern);
+    localStorage.setItem("isManualMode", isManual.toString());
   }, [
     allCardNumbers,
     drawSpeed,
@@ -329,6 +335,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     hasGameStarted,
     bonusAmount,
     bonusPattern,
+    isManual,
   ]);
 
   // Fetch card numbers
@@ -395,7 +402,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
           );
 
           if (isSpecialAudio) {
-            
+
             audioFile = voiceModule[audioKey];
           } else {
             let prefix = "";
@@ -1301,6 +1308,8 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     setBonusAmount: debouncedSetBonusAmount,
     bonusPattern,
     setBonusPattern: debouncedSetBonusPattern,
+    isManual,
+    setIsManual,
   };
 };
 

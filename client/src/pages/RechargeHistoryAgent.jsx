@@ -102,7 +102,7 @@ const RechargeHistoryAgent = () => {
     };
 
     fetchData();
-  }, [baseURL, token]);
+  }, [token]);
 
   const handleRechargeSubmit = async () => {
     setModalLoading(true);

@@ -57,7 +57,7 @@ const AgentHouseList = () => {
     };
 
     fetchHouses();
-  }, [baseURL, token]);
+  }, [ token]);
 
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 

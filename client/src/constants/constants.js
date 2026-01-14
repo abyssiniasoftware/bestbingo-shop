@@ -149,10 +149,10 @@ export const voiceOptions = [
   { value: "v", label: "ትግረኛ 3" },
 
   // wolayta voice
-    { value: "w", label: "ወላይታ" },
+  { value: "w", label: "ወላይታ" },
 
-      // sidama voice
-    { value: "x", label: "ሲዳማ" },
+  // sidama voice
+  { value: "x", label: "ሲዳማ" },
 ];
 
 //constants for the game

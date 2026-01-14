@@ -7,13 +7,25 @@ import {
   TextField,
   Typography,
   Grid,
+  InputAdornment,
+  Paper,
 } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import LockIcon from "@mui/icons-material/Lock";
 
 const LoginForm = ({ handleLogin, config }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const themeColors = {
+    primaryRed: "#8C3B3B",
+    lightInputBg: "#F0F4F8", 
+    highlightGrey: "#D1D5DB", 
+    darkBlue: "#1a237e",
+    gold: "#FFD700",
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -25,31 +37,46 @@ const LoginForm = ({ handleLogin, config }) => {
       <Box
         sx={{
           minHeight: "100vh",
-          backgroundImage: `url(${config.logo})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          position: "relative",
+          backgroundColor: "#fff",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to bottom right, rgba(30, 58, 138, 0.85), rgba(0,0,0,0.7))",
-            backdropFilter: "blur(10px)",
-            zIndex: 1,
-          },
+          flexDirection: "column",
+          width: "100%", // Ensures full width
         }}
       >
-        <Container
-          maxWidth="lg"
-          sx={{ position: "relative", zIndex: 2, px: { xs: 2, md: 4 } }}
+        {/* 1. TOP HEADER (Full Width) */}
+        <Box
+          component="header"
+          sx={{
+            width: "100%",
+            height: "80px", // Fixed height for header
+            px: { xs: 2, md: 5 },
+            borderBottom: "1px solid #e0e0e0",
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "#fff",
+          }}
         >
-          <Grid container spacing={4} alignItems="center">
-            {/* Logo and Text Section for Desktop */}
+          <img
+            src={config.logo}
+            alt="Logo"
+            style={{ height: "50px", objectFit: "contain" }}
+          />
+        </Box>
+
+        {/* 2. MAIN CONTENT AREA */}
+        <Container 
+          maxWidth="xl" // Changed to xl for wider spread
+          sx={{ 
+            flexGrow: 1, 
+            display: "flex", 
+            alignItems: "center", 
+            justifyContent: "center",
+            py: 4 
+          }}
+        >
+          <Grid container spacing={8} alignItems="center" justifyContent="center">
+            
+            {/* LEFT SIDE: Marketing Text & Image */}
             <Grid
               item
               xs={12}
@@ -62,144 +89,199 @@ const LoginForm = ({ handleLogin, config }) => {
                 textAlign: "center",
               }}
             >
-              <Box>
-                <img
-                  src={config.logo}
-                  alt={`${config.bingoName} ሎጎ`}
-                  style={{
-                    width: "300px",
-                    height: "auto",
-                    marginBottom: "2rem",
-                    borderRadius: "16px",
-                    boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+              <Box sx={{ maxWidth: 500, mx: "auto" }}>
+                {/* Bingo Name Text - Adjusted for better contrast */}
+                <Typography
+                  variant="h3"
+                  sx={{
+                    color: themeColors.gold,
+                    fontWeight: 900,
+                    fontSize: { xs: "2.5rem", md: "3.5rem" },
+                    textTransform: "uppercase",
+                    letterSpacing: "0.2em",
+                    textShadow: "3px 3px 0 rgba(0,0,0,0.3), 6px 6px 0 rgba(0,0,0,0.1)",
+                    mb: 2,
+                    lineHeight: 1.2,
                   }}
-                />
+                >
+                  {config.bingoName}
+                </Typography>
+                
+                {/* BINGO Text - Darker shadow for better contrast */}
+                <Typography
+                  variant="h1"
+                  sx={{
+                    color: themeColors.darkBlue,
+                    fontWeight: 900,
+                    fontSize: { xs: "3rem", md: "4.5rem" },
+                    textTransform: "uppercase",
+                    letterSpacing: "0.15em",
+                    textShadow: `3px 3px 0 ${themeColors.gold}, 6px 6px 0 rgba(0,0,0,0.2)`,
+                    mb: 3,
+                    lineHeight: 1,
+                  }}
+                >
+                  BINGO
+                </Typography>
 
+                {/* Subtitle - Changed from white to dark blue for contrast */}
+                <Typography
+                  variant="h6"
+                  sx={{
+                    color: themeColors.darkBlue,
+                    fontWeight: 700,
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.1em",
+                    textTransform: "uppercase",
+                    mb: 4,
+                    opacity: 0.9,
+                    backgroundColor: "rgba(255, 215, 0, 0.1)",
+                    px: 3,
+                    py: 1,
+                    borderRadius: "8px",
+                    border: `2px solid ${themeColors.gold}`,
+                  }}
+                >
+                  ETHIOPIA'S BEST BINGO SOFTWARE
+                </Typography>
+
+                {/* Tagline in Amharic - Darker blue for better readability */}
                 <Typography
                   variant="subtitle1"
                   sx={{
-                    color: "#cbd5e1",
+                    color: "#1e40af", // Darker blue for better contrast
                     maxWidth: 400,
-                    lineHeight: 1.6,
+                    lineHeight: 1.8,
                     mx: "auto",
+                    fontSize: "1.1rem",
+                    fontWeight: 500,
+                    borderLeft: `3px solid ${themeColors.gold}`,
+                    pl: 2,
+                    py: 1,
+                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                    borderRadius: "0 8px 8px 0",
+                    textShadow: "0 1px 2px rgba(255,255,255,0.8)",
                   }}
                 >
-                  ከ{config.bingoName} ጋር የቢንጎ ጨዋታዎችን በተሻለ ሁኔታ ያግኙ። አሁኑኑ ይቀላቀሉ እና
-                  የማይተመኑ ደስታና ተደጋጋሚ እድሎችን ያግኙ።
+                  ከ{config.bingoName} Bingo ጋር የቢንጎ ጨዋታዎችን በተሻለ ሁኔታ ያግኙ። አሁኑኑ ይቀላቀሉ!
                 </Typography>
 
-                {/* Improved Designer Credit */}
-                <Box sx={{ mt: 5 }}>
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      display: "flex",
-                      flexDirection: { xs: "column", sm: "row" },
-                      alignItems: "center",
-                      justifyContent: "center",
-                      gap: 1,
-                      letterSpacing: ".08em",
-                      fontWeight: 500,
-                      color: "#e2e8f0",
-                      textTransform: "uppercase",
-                      fontSize: { xs: "0.65rem", sm: "0.7rem" },
-                      opacity: 0.85,
-                    }}
-                  >
-                    <Box component="span" aria-hidden sx={{ color: "#f87171" }}>
-                      ♥
-                    </Box>
-                    Crafted by
-                    <Box
-                      component="span"
-                      sx={{
-                        background: "linear-gradient(90deg,#60a5fa,#c084fc)",
-                        WebkitBackgroundClip: "text",
-                        color: "transparent",
-                        fontWeight: 700,
-                        px: 0.5,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      Abyssinia Software Technology PLC
-                    </Box>
-                    • © {new Date().getFullYear()}
-                  </Typography>
+                {/* Optional: Add decorative elements for visual interest */}
+                <Box sx={{ mt: 4, display: "flex", justifyContent: "center", gap: 2 }}>
+                  <Box sx={{ width: 20, height: 20, backgroundColor: themeColors.gold, borderRadius: "50%" }} />
+                  <Box sx={{ width: 20, height: 20, backgroundColor: themeColors.darkBlue, borderRadius: "50%" }} />
+                  <Box sx={{ width: 20, height: 20, backgroundColor: themeColors.primaryRed, borderRadius: "50%" }} />
                 </Box>
               </Box>
             </Grid>
 
-            {/* Form Section */}
-            <Grid item xs={12} md={6}>
-              <Box
+            {/* RIGHT SIDE: Login Card */}
+            <Grid item xs={12} md={5} lg={4}>
+              <Paper
+                elevation={4}
                 sx={{
-                  maxWidth: 480,
-                  mx: "auto",
-                  backgroundColor: "rgba(255, 255, 255, 0.08)",
-                  borderRadius: 4,
-                  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.3)",
-                  padding: { xs: 3, sm: 5 },
-                  backdropFilter: "blur(16px)",
-                  border: "1px solid rgba(255,255,255,0.2)",
+                  p: { xs: 3, md: 5 },
+                  borderRadius: "16px",
+                  border: "1px solid #f0f0f0",
+                  width: "100%",
+                  backgroundColor: "#fff",
+                  boxShadow: "0px 4px 20px rgba(0,0,0,0.08)",
+                  position: "relative",
+                  overflow: "hidden",
+                  "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: "4px",
+                    background: `linear-gradient(90deg, ${themeColors.darkBlue}, ${themeColors.gold}, ${themeColors.primaryRed})`,
+                  },
                 }}
               >
                 <Box textAlign="center" mb={4}>
                   <Typography
-                    variant="h3"
+                    variant="h6"
                     sx={{
-                      color: "#fff",
-                      fontWeight: 700,
-                      textShadow: "0 2px 4px rgba(0,0,0,0.5)",
-                      letterSpacing: "0.1em",
+                      color: themeColors.primaryRed,
+                      fontWeight: "bold",
+                      fontFamily: '"Times New Roman", serif',
+                      letterSpacing: "0.05em",
                       textTransform: "uppercase",
+                      fontSize: "1.25rem",
+                      mb: 1,
                     }}
                   >
-                    {config.bingoName}
+                    PLEASE LOGIN
                   </Typography>
-                  <Typography
-                    variant="subtitle1"
-                    sx={{ color: "#cbd5e1", mt: 1 }}
-                  >
-                    ወደ ማስተር ቢንጎ ይግቡ
-                  </Typography>
+                  <Box 
+                    sx={{ 
+                      width: 60, 
+                      height: 2, 
+                      backgroundColor: themeColors.darkBlue,
+                      mx: "auto",
+                      opacity: 0.7,
+                    }} 
+                  />
                 </Box>
 
                 <form onSubmit={onSubmit}>
+                  {/* Username */}
                   <Box sx={{ mb: 3 }}>
                     <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 500, color: "#f1f5f9", mb: 1 }}
+                      variant="subtitle2"
+                      sx={{
+                        color: "#374151",
+                        fontWeight: 600,
+                        mb: 1,
+                        fontSize: "0.875rem",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                      }}
                     >
-                      የተጠቃሚ ስም
+                      Username
                     </Typography>
                     <TextField
                       fullWidth
                       required
-                      id="username"
-                      type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      placeholder="የተጠቃሚ ስምህን አስገባ"
+                      placeholder="Enter your username"
                       variant="outlined"
-                      sx={{
-                        input: { color: "#fff" },
-                        "& .MuiOutlinedInput-root": {
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <PersonIcon sx={{ color: themeColors.darkBlue }} />
+                          </InputAdornment>
+                        ),
+                        sx: {
+                          backgroundColor: themeColors.lightInputBg,
                           borderRadius: "8px",
-                          backgroundColor: "rgba(255,255,255,0.1)",
-                          "& fieldset": { borderColor: "#e0e7ff" },
-                          "&:hover fieldset": { borderColor: "#3b82f6" },
-                          "&.Mui-focused fieldset": { borderColor: "#60a5fa" },
+                          "& fieldset": { border: "none" },
+                          fontSize: "0.95rem",
+                          "&::placeholder": {
+                            color: "#6b7280",
+                            opacity: 0.8,
+                          },
                         },
                       }}
                     />
                   </Box>
 
-                  <Box sx={{ mb: 3 }}>
+                  {/* Password */}
+                  <Box sx={{ mb: 4 }}>
                     <Typography
-                      variant="body2"
-                      sx={{ fontWeight: 500, color: "#f1f5f9", mb: 1 }}
+                      variant="subtitle2"
+                      sx={{
+                        color: "#374151",
+                        fontWeight: 600,
+                        mb: 1,
+                        fontSize: "0.875rem",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.05em",
+                      }}
                     >
-                      የይለፍ ቃል
+                      Password
                     </Typography>
                     <TextField
                       fullWidth
@@ -208,16 +290,23 @@ const LoginForm = ({ handleLogin, config }) => {
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="የይለፍ ቃልህን አስገባ"
+                      placeholder="Enter your password"
                       variant="outlined"
-                      sx={{
-                        input: { color: "#fff" },
-                        "& .MuiOutlinedInput-root": {
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <LockIcon sx={{ color: themeColors.darkBlue }} />
+                          </InputAdornment>
+                        ),
+                        sx: {
+                          backgroundColor: themeColors.lightInputBg,
                           borderRadius: "8px",
-                          backgroundColor: "rgba(255,255,255,0.1)",
-                          "& fieldset": { borderColor: "#e0e7ff" },
-                          "&:hover fieldset": { borderColor: "#3b82f6" },
-                          "&.Mui-focused fieldset": { borderColor: "#60a5fa" },
+                          "& fieldset": { border: "none" },
+                          "&::placeholder": {
+                            color: "#6b7280",
+                            opacity: 0.8,
+                            letterSpacing: "0.2em",
+                          },
                         },
                       }}
                     />
@@ -227,7 +316,14 @@ const LoginForm = ({ handleLogin, config }) => {
                     <Typography
                       color="error"
                       align="center"
-                      sx={{ mb: 3, fontSize: "0.875rem" }}
+                      sx={{ 
+                        mb: 3, 
+                        fontSize: "0.875rem",
+                        fontWeight: 600,
+                        backgroundColor: "#fee2e2",
+                        py: 1,
+                        borderRadius: "4px",
+                      }}
                     >
                       {errorMessage}
                     </Typography>
@@ -235,27 +331,63 @@ const LoginForm = ({ handleLogin, config }) => {
 
                   <Button
                     type="submit"
-                    variant="contained"
                     fullWidth
                     disabled={loading}
+                    variant="contained"
                     sx={{
-                      backgroundColor: "#1e3a8a",
+                      backgroundColor: themeColors.primaryRed,
                       paddingY: 1.5,
                       borderRadius: "8px",
                       fontSize: "1rem",
-                      fontWeight: 600,
-                      textTransform: "none",
-                      "&:hover": { backgroundColor: "#3b82f6" },
-                      "&:disabled": {
-                        backgroundColor: "#9ca3af",
-                        cursor: "not-allowed",
+                      fontWeight: "bold",
+                      textTransform: "uppercase",
+                      boxShadow: "0 4px 12px rgba(140, 59, 59, 0.3)",
+                      letterSpacing: "0.05em",
+                      transition: "all 0.3s ease",
+                      position: "relative",
+                      overflow: "hidden",
+                      "&:hover": {
+                        backgroundColor: "#6e2e2e",
+                        boxShadow: "0 6px 16px rgba(110, 46, 46, 0.4)",
+                        transform: "translateY(-2px)",
+                      },
+                      "&:active": {
+                        transform: "translateY(0)",
+                      },
+                      "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: "-100%",
+                        width: "100%",
+                        height: "100%",
+                        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
+                        transition: "left 0.7s",
+                      },
+                      "&:hover::before": {
+                        left: "100%",
                       },
                     }}
                   >
-                    {loading ? "በመግባት ላይ..." : "ግባ"}
+                    {loading ? "LOGGING IN..." : "LOGIN"}
                   </Button>
+
+                  {/* Footer note */}
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "block",
+                      textAlign: "center",
+                      mt: 3,
+                      color: "#6b7280",
+                      fontSize: "0.75rem",
+                      opacity: 0.8,
+                    }}
+                  >
+                    Secure login powered by Abyssinia Software
+                  </Typography>
                 </form>
-              </Box>
+              </Paper>
             </Grid>
           </Grid>
         </Container>

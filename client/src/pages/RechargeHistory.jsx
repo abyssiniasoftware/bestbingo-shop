@@ -158,7 +158,7 @@ const RechargeHistory = React.memo(() => {
         setCurrentPage(1);
         fetchData(1, value);
       }, 500),
-    [baseURL, token, rowsPerPage, startDate, endDate]
+    [ token, rowsPerPage, startDate, endDate]
   );
 
   useEffect(() => {

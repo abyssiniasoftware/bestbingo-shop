@@ -91,7 +91,7 @@ const AgentList = () => {
         setCurrentPage(1); // Reset to first page on new search
         fetchAgents(1, value);
       }, 500),
-    [baseURL, token, rowsPerPage]
+    [token, rowsPerPage]
   );
 
   useEffect(() => {

@@ -62,7 +62,7 @@ const HouseList = () => {
     };
 
     fetchHouses();
-  }, [baseURL, token]);
+  }, [token]);
 
   // Generate verification code when recharge modal opens
   useEffect(() => {

@@ -59,7 +59,7 @@ const AgentUserList = () => {
     };
 
     fetchUsers();
-  }, [baseURL, token]);
+  }, [ token]);
 
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 

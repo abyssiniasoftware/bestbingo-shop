@@ -80,7 +80,7 @@ const UserList = () => {
         setCurrentPage(1);
         fetchUsers(1, value);
       }, 500),
-    [baseURL, token, rowsPerPage]
+    [ token, rowsPerPage]
   );
 
   useEffect(() => {

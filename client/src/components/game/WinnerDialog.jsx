@@ -9,7 +9,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Confetti from "react-confetti";
-import {bonus} from "../../voice/utilVoice";
+import { bonus } from "../../voice/utilVoice";
 import { formatPatternName } from "../../utils/gameUtils";
 
 const blinkFadeInAnimation = `
@@ -53,8 +53,8 @@ const WinnerDialog = ({
       const playBonusAudio = async () => {
         try {
           const audio = new Audio(bonus);
-          await audio.play().catch((error) => {});
-        } catch (error) {}
+          await audio.play().catch((error) => { });
+        } catch (error) { }
       };
       playBonusAudio();
     }
@@ -118,15 +118,15 @@ const WinnerDialog = ({
     const cellSize = isVerySmallScreen
       ? "30px"
       : isSmallScreen
-      ? "45px"
-      : isMediumScreen
-      ? "60px"
-      : "70px";
+        ? "45px"
+        : isMediumScreen
+          ? "60px"
+          : "70px";
     const currentFontSize = isVerySmallScreen
       ? "10px"
       : isSmallScreen
-      ? "12px"
-      : "14px";
+        ? "12px"
+        : "14px";
 
     return {
       width: cellSize,
@@ -158,15 +158,15 @@ const WinnerDialog = ({
     const cellSize = isVerySmallScreen
       ? "30px"
       : isSmallScreen
-      ? "45px"
-      : isMediumScreen
-      ? "60px"
-      : "70px";
+        ? "45px"
+        : isMediumScreen
+          ? "60px"
+          : "70px";
     const currentFontSize = isVerySmallScreen
       ? "10px"
       : isSmallScreen
-      ? "12px"
-      : "14px";
+        ? "12px"
+        : "14px";
 
     return {
       width: cellSize,
@@ -197,10 +197,10 @@ const WinnerDialog = ({
   const cellSizeForGridTemplate = isVerySmallScreen
     ? "30px"
     : isSmallScreen
-    ? "45px"
-    : isMediumScreen
-    ? "60px"
-    : "70px";
+      ? "45px"
+      : isMediumScreen
+        ? "60px"
+        : "70px";
 
   return (
     <Dialog
@@ -332,19 +332,17 @@ const WinnerDialog = ({
                 ? `አሸናፊ! ${winningPatterns.length} ፓተርን ተመሳስለዋል`
                 : selectedPattern === "anySixLine" ||
                   selectedPattern === "anySevenLine"
-                ? "ውስብስብ ፓተርን, እራስዎ ያረጋግጡ"
-                : "አሸናፊ አይደለም"}
+                  ? "ውስብስብ ፓተርን, እራስዎ ያረጋግጡ"
+                  : "አሸናፊ አይደለም"}
             </Typography>
             <Box
               sx={{
                 maxWidth: {
                   xs: "100%",
-                  sm: `calc(5 * ${
-                    isSmallScreen ? "45px" : "60px"
-                  } + 4 * 2px + 2 * 8px)`,
-                  md: `calc(5 * ${
-                    isMediumScreen ? "60px" : "70px"
-                  } + 4 * 2px + 2 * 12px)`,
+                  sm: `calc(5 * ${isSmallScreen ? "45px" : "60px"
+                    } + 4 * 2px + 2 * 8px)`,
+                  md: `calc(5 * ${isMediumScreen ? "60px" : "70px"
+                    } + 4 * 2px + 2 * 12px)`,
                   lg: "calc(5 * 70px + 4 * 2px + 2 * 16px)",
                 },
                 width: "fit-content",
