@@ -105,6 +105,8 @@ const Game = () => {
     bonusAmount,
     bonusPattern,
     showCentralBall,
+    isCentralBallMoving,
+    blowerZoomBall,
   } = useGameLogic({ stake, players, winAmount });
 
   const backgroundStyle = backgroundOptions.find(
@@ -169,6 +171,7 @@ const Game = () => {
           bonusAmount={bonusAmount}
           bonusPattern={bonusPattern}
           winAmount={winAmount}
+          blowerZoomBall={blowerZoomBall}
         />
 
         {/* BINGO Grid */}
@@ -181,6 +184,7 @@ const Game = () => {
         <CentralBallOverlay
           currentNumber={currentNumber}
           show={showCentralBall}
+          isMoving={isCentralBallMoving}
         />
 
         {/* Bottom Controls Bar */}

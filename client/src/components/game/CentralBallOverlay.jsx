@@ -3,7 +3,7 @@ import { Box, Typography, Zoom, Fade } from "@mui/material";
 
 const getBallImage = (num) => `/balls/${num}.png`;
 
-const CentralBallOverlay = ({ currentNumber, show }) => {
+const CentralBallOverlay = ({ currentNumber, show, isMoving }) => {
   const numValue = parseInt(currentNumber) || 0;
   const [isVisible, setIsVisible] = useState(false);
 
@@ -24,12 +24,16 @@ const CentralBallOverlay = ({ currentNumber, show }) => {
           position: "fixed",
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, -50%)",
+          transform: isMoving
+            ? "translate(-45vw, -45vh) scale(0.15)" // Move towards RecentBallsStrip position
+            : "translate(-50%, -50%) scale(1)",
           zIndex: 9999,
           pointerEvents: "none",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          transition: isMoving ? "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)" : "none",
+          opacity: isMoving ? 0.3 : 1
         }}
       >
         <Zoom in={isVisible} timeout={500}>
@@ -44,32 +48,36 @@ const CentralBallOverlay = ({ currentNumber, show }) => {
             }}
           >
             {/* Outer Glow Ring */}
-            <Box
-              sx={{
-                position: "absolute",
-                width: "110%",
-                height: "110%",
-                borderRadius: "50%",
-                background:
-                  "radial-gradient(circle, rgba(255,165,0,0.4) 0%, rgba(255,69,0,0.1) 60%, rgba(255,0,0,0) 80%)",
-                animation: "glowPulse 1.5s ease-in-out infinite",
-                zIndex: 1,
-              }}
-            />
+            {!isMoving && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: "110%",
+                  height: "110%",
+                  borderRadius: "50%",
+                  background:
+                    "radial-gradient(circle, rgba(255,165,0,0.4) 0%, rgba(255,69,0,0.1) 60%, rgba(255,0,0,0) 80%)",
+                  animation: "glowPulse 1.5s ease-in-out infinite",
+                  zIndex: 1,
+                }}
+              />
+            )}
 
             {/* Inner High-Intensity Glow */}
-            <Box
-              sx={{
-                position: "absolute",
-                width: "90%",
-                height: "90%",
-                borderRadius: "50%",
-                background:
-                  "radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, rgba(255, 140, 0, 0.2) 70%, transparent 100%)",
-                filter: "blur(20px)",
-                zIndex: 2,
-              }}
-            />
+            {!isMoving && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  width: "90%",
+                  height: "90%",
+                  borderRadius: "50%",
+                  background:
+                    "radial-gradient(circle, rgba(255, 215, 0, 0.6) 0%, rgba(255, 140, 0, 0.2) 70%, transparent 100%)",
+                  filter: "blur(20px)",
+                  zIndex: 2,
+                }}
+              />
+            )}
 
             {/* The Ball Image */}
             <Box
@@ -82,11 +90,11 @@ const CentralBallOverlay = ({ currentNumber, show }) => {
                 objectFit: "contain",
                 position: "relative",
                 zIndex: 3,
-                filter: "drop-shadow(0 10px 40px rgba(0,0,0,0.6))",
+                filter: isMoving ? "none" : "drop-shadow(0 10px 40px rgba(0,0,0,0.6))",
               }}
             />
 
-            {/* Large White Number Overlay (If the image ball doesn't have it large enough) */}
+            {/* Large White Number Overlay */}
             <Typography
               sx={{
                 position: "absolute",
@@ -106,12 +114,12 @@ const CentralBallOverlay = ({ currentNumber, show }) => {
 
         <style>
           {`
-                    @keyframes glowPulse {
-                        0% { transform: scale(1); opacity: 0.6; }
-                        50% { transform: scale(1.05); opacity: 0.9; }
-                        100% { transform: scale(1); opacity: 0.6; }
-                    }
-                    `}
+            @keyframes glowPulse {
+                0% { transform: scale(1); opacity: 0.6; }
+                50% { transform: scale(1.05); opacity: 0.9; }
+                100% { transform: scale(1); opacity: 0.6; }
+            }
+          `}
         </style>
       </Box>
     </Fade>

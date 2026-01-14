@@ -37,6 +37,7 @@ const BlowerAnimation = ({
   calledNumbers = [],
   currentNumber,
   showCurrentBall = true,
+  zoomingBallNum = null
 }) => {
   // Store positions in state to avoid recalculating on every render
   const [ballPositions, setBallPositions] = useState([]);
@@ -55,9 +56,6 @@ const BlowerAnimation = ({
           height: { xs: 150, sm: 180, md: 250 },
         }}
       >
-        {/* Main blower image 
-                reason for rotate the image is due tube is to be horizontal the image had tube
-                */}
         <Box
           component="img"
           src="/images/blower.png"
@@ -106,9 +104,29 @@ const BlowerAnimation = ({
               }}
             />
           ))}
+
+          {/* THE ZOOMING BALL EFFECT */}
+          {zoomingBallNum && (
+            <Box
+              component="img"
+              src={getBallImage(parseInt(zoomingBallNum))}
+              alt={`Zooming Ball ${zoomingBallNum}`}
+              sx={{
+                position: "absolute",
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                left: "50%",
+                top: "50%",
+                zIndex: 100,
+                transform: "translate(-50%, -50%)",
+                animation: "zoomAndVanish 1s ease-out forwards",
+              }}
+            />
+          )}
         </Box>
 
-        {/* Current called ball - large display on top */}
+        {/* Current called ball - small corner preview if enabled */}
         {showCurrentBall && currentNumber && currentNumber !== "00" && (
           <Box
             sx={{
@@ -133,6 +151,16 @@ const BlowerAnimation = ({
             />
           </Box>
         )}
+
+        <style>
+          {`
+            @keyframes zoomAndVanish {
+                0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+                50% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; }
+                100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
+            }
+          `}
+        </style>
       </Box>
     </Box>
   );

@@ -12,6 +12,7 @@ const GameTopSection = ({
   currentNumber,
   recentCalls,
   callCount,
+  blowerZoomBall,
   patternAnimationIndex,
   patterns,
   winAmount = 0,
@@ -89,6 +90,7 @@ const GameTopSection = ({
             calledNumbers={calledNumbers}
             currentNumber={currentNumber}
             showCurrentBall={false}
+            zoomingBallNum={blowerZoomBall}
           />
         </Box>
 

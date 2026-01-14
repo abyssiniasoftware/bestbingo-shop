@@ -68,6 +68,8 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     () => localStorage.getItem("selectedVoice") || "a",
   );
   const [showCentralBall, setShowCentralBall] = useState(false);
+  const [isCentralBallMoving, setIsCentralBallMoving] = useState(false);
+  const [blowerZoomBall, setBlowerZoomBall] = useState(null);
   const [prefixedNumber, setPrefixedNumber] = useState(null);
   const [patternAnimationIndex, setPatternAnimationIndex] = useState(0);
   const [gameDetails, setGameDetails] = useState(null);
@@ -588,18 +590,35 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     }
     const newNumber =
       availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
-    setPreviousNumber(currentNumber);
-    setCurrentNumber(newNumber.padStart(2, "0"));
-    setCalledNumbers((prev) => [...prev, newNumber]);
-    setRecentCalls((prev) => [newNumber, ...prev].slice(0, 5));
-    setCallCount((prev) => prev + 1);
 
-    // Trigger large central ball overlay
-    setShowCentralBall(true);
+    // PHASE 1: Zoom in Blower
+    setBlowerZoomBall(newNumber);
+
     setTimeout(() => {
-      setShowCentralBall(false);
-    }, 2000); // Show for 2 seconds
-    // playAudio(parseInt(newNumber));
+      // PHASE 2: Show at Center
+      setPreviousNumber(currentNumber);
+      setCurrentNumber(newNumber.padStart(2, "0"));
+      setCalledNumbers((prev) => [...prev, newNumber]);
+      setRecentCalls((prev) => [newNumber, ...prev].slice(0, 5));
+      setCallCount((prev) => prev + 1);
+
+      setShowCentralBall(true);
+      setIsCentralBallMoving(false);
+      setBlowerZoomBall(null); // Remove from blower zoom
+
+      // PHASE 3: Move to Strip
+      setTimeout(() => {
+        setIsCentralBallMoving(true);
+
+        // Finale: Hide and Reset
+        setTimeout(() => {
+          setShowCentralBall(false);
+          setIsCentralBallMoving(false);
+        }, 800);
+      }, 1500);
+
+    }, 800);
+
   }, [calledNumbers, currentNumber, isStartAudioFinished]);
 
   // Play/Pause interval
@@ -1358,6 +1377,8 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     isManual,
     setIsManual,
     showCentralBall,
+    isCentralBallMoving,
+    blowerZoomBall,
   };
 };
 
