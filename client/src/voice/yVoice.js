@@ -74,7 +74,6 @@ import yo73 from "/yVoice/73.wav";
 import yo74 from "/yVoice/74.wav";
 import yo75 from "/yVoice/75.wav";
 
-
 export {
   yb1,
   yb2,

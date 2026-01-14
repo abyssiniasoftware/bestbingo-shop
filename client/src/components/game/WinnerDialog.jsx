@@ -53,8 +53,8 @@ const WinnerDialog = ({
       const playBonusAudio = async () => {
         try {
           const audio = new Audio(bonus);
-          await audio.play().catch((error) => { });
-        } catch (error) { }
+          await audio.play().catch((error) => {});
+        } catch (error) {}
       };
       playBonusAudio();
     }
@@ -104,8 +104,8 @@ const WinnerDialog = ({
         isWinningCell = patternTypes.some((patternType) =>
           BINGO_PATTERNS[patternType]?.some(
             (pattern) =>
-              pattern.includes(cell) && pattern.every((c) => bingoState[c])
-          )
+              pattern.includes(cell) && pattern.every((c) => bingoState[c]),
+          ),
         );
       }
     }
@@ -331,7 +331,7 @@ const WinnerDialog = ({
               {isWinner
                 ? `አሸናፊ! ${winningPatterns.length} ፓተርን ተመሳስለዋል`
                 : selectedPattern === "anySixLine" ||
-                  selectedPattern === "anySevenLine"
+                    selectedPattern === "anySevenLine"
                   ? "ውስብስብ ፓተርን, እራስዎ ያረጋግጡ"
                   : "አሸናፊ አይደለም"}
             </Typography>
@@ -339,10 +339,12 @@ const WinnerDialog = ({
               sx={{
                 maxWidth: {
                   xs: "100%",
-                  sm: `calc(5 * ${isSmallScreen ? "45px" : "60px"
-                    } + 4 * 2px + 2 * 8px)`,
-                  md: `calc(5 * ${isMediumScreen ? "60px" : "70px"
-                    } + 4 * 2px + 2 * 12px)`,
+                  sm: `calc(5 * ${
+                    isSmallScreen ? "45px" : "60px"
+                  } + 4 * 2px + 2 * 8px)`,
+                  md: `calc(5 * ${
+                    isMediumScreen ? "60px" : "70px"
+                  } + 4 * 2px + 2 * 12px)`,
                   lg: "calc(5 * 70px + 4 * 2px + 2 * 16px)",
                 },
                 width: "fit-content",
@@ -384,7 +386,7 @@ const WinnerDialog = ({
                         {cell === "n3" ? "ነፃ" : value}
                       </Box>
                     );
-                  })
+                  }),
                 )}
               </Box>
             </Box>

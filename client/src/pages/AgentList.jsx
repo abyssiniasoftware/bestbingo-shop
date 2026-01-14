@@ -66,7 +66,7 @@ const AgentList = () => {
     } catch (err) {
       setErrorMsg(
         err.response?.data?.message ||
-          "An error occurred while fetching agents."
+          "An error occurred while fetching agents.",
       );
     } finally {
       setLoading(false);
@@ -91,7 +91,7 @@ const AgentList = () => {
         setCurrentPage(1); // Reset to first page on new search
         fetchAgents(1, value);
       }, 500),
-    [token, rowsPerPage]
+    [token, rowsPerPage],
   );
 
   useEffect(() => {
@@ -115,7 +115,7 @@ const AgentList = () => {
     } catch (err) {
       toast.error(
         err.response?.data?.message ||
-          "An error occurred while fetching agent users."
+          "An error occurred while fetching agent users.",
       );
     } finally {
       setModalLoading(false);
@@ -134,16 +134,12 @@ const AgentList = () => {
       return;
     }
     try {
-      const response = await api.post(
-        `/api/house/recharge-agent`,
-        {
-          agentId: selectedAgent._id,
-          amount: parseFloat(rechargeAmount),
-          superAdminCommission: parseFloat(superAdminCommission / 100),
-          rechargeBy: superAdminId,
-        },
-        
-      );
+      const response = await api.post(`/api/house/recharge-agent`, {
+        agentId: selectedAgent._id,
+        amount: parseFloat(rechargeAmount),
+        superAdminCommission: parseFloat(superAdminCommission / 100),
+        rechargeBy: superAdminId,
+      });
       toast.success("Agent recharged successfully");
       setRechargeModalOpen(false);
       setRechargeAmount("");
@@ -380,7 +376,7 @@ const AgentList = () => {
                               {col.label}
                             </TableSortLabel>
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 </TableHead>
@@ -465,7 +461,7 @@ const AgentList = () => {
                                 (col.id === "package" ? 0 : "N/A")
                               )}
                             </TableCell>
-                          )
+                          ),
                       )}
                     </TableRow>
                   ))}
@@ -519,7 +515,7 @@ const AgentList = () => {
               border: "1px solid rgba(255, 255, 255, 0.2)",
               boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
               borderRadius: isVerySmallScreen ? 0 : 2,
-                        m: { xs: 1, sm: 2 },
+              m: { xs: 1, sm: 2 },
 
               color: "#ffffff",
             },
@@ -644,7 +640,7 @@ const AgentList = () => {
               border: "1px solid rgba(255, 255, 255, 0.2)",
               boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
               borderRadius: isVerySmallScreen ? 0 : 2,
-                        m: { xs: 1, sm: 2 },
+              m: { xs: 1, sm: 2 },
 
               color: "#ffffff",
             },

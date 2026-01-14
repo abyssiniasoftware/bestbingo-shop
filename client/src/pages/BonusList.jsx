@@ -51,10 +51,7 @@ const BonusList = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await api.get(
-          `/api/game/bonuses`,
-          
-        );
+        const response = await api.get(`/api/game/bonuses`);
         setBonuses(response.data.bonuses || []);
         setError(null);
       } catch (err) {
@@ -89,7 +86,7 @@ const BonusList = () => {
         setSearchTerm(value);
         fetchCashiers(value);
       }, 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -120,7 +117,7 @@ const BonusList = () => {
   const totalPages = Math.ceil(bonuses.length / itemsPerPage);
   const paginatedBonuses = sortedBonuses.slice(
     (page - 1) * itemsPerPage,
-    page * itemsPerPage
+    page * itemsPerPage,
   );
 
   const formatDate = (date) => new Date(date).toLocaleString();
@@ -135,8 +132,8 @@ const BonusList = () => {
         prev.map((cashier) =>
           cashier._id === cashierId
             ? { ...cashier, enableDynamicBonus: newStatus }
-            : cashier
-        )
+            : cashier,
+        ),
       );
       toast.success(`Dynamic bonus ${newStatus ? "enabled" : "disabled"}`);
     } catch (err) {
@@ -347,20 +344,20 @@ const BonusList = () => {
                           {col.id === "cashierId"
                             ? bonus.cashierId?.username || "N/A"
                             : col.id === "gameId"
-                            ? bonus.gameId?.gameId || "N/A"
-                            : col.id === "winnerCardId"
-                            ? bonus.gameId?.winnerCardId || "N/A"
-                            : col.id === "prize"
-                            ? bonus.gameId?.prize
-                              ? `${bonus.gameId.prize} ETB`
-                              : "N/A"
-                            : col.id === "houseId"
-                            ? bonus.houseId?.name || "N/A"
-                            : col.id === "bonusAmount"
-                            ? `${bonus.bonusAmount} ETB`
-                            : col.id === "dateIssued"
-                            ? formatDate(bonus.dateIssued)
-                            : "N/A"}
+                              ? bonus.gameId?.gameId || "N/A"
+                              : col.id === "winnerCardId"
+                                ? bonus.gameId?.winnerCardId || "N/A"
+                                : col.id === "prize"
+                                  ? bonus.gameId?.prize
+                                    ? `${bonus.gameId.prize} ETB`
+                                    : "N/A"
+                                  : col.id === "houseId"
+                                    ? bonus.houseId?.name || "N/A"
+                                    : col.id === "bonusAmount"
+                                      ? `${bonus.bonusAmount} ETB`
+                                      : col.id === "dateIssued"
+                                        ? formatDate(bonus.dateIssued)
+                                        : "N/A"}
                         </TableCell>
                       ))}
                   </TableRow>
@@ -428,7 +425,7 @@ const BonusList = () => {
             border: "1px solid rgba(255, 255, 255, 0.2)",
             boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
             borderRadius: isVerySmallScreen ? 0 : 2,
-                      m: { xs: 1, sm: 2 },
+            m: { xs: 1, sm: 2 },
 
             color: "#ffffff",
           },

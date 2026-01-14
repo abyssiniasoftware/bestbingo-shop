@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, FormControl, Select, MenuItem, InputLabel } from "@mui/material";
+import {
+  Box,
+  Typography,
+  FormControl,
+  Select,
+  MenuItem,
+  InputLabel,
+} from "@mui/material";
 import { FaSync, FaPlay, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 
@@ -163,7 +170,7 @@ const NewGame = () => {
           BINGO
         </Typography>
         <button
-          onClick={() => { }}
+          onClick={() => {}}
           className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold transition transform hover:scale-105"
         >
           ⊙ Register New Card
@@ -215,10 +222,11 @@ const NewGame = () => {
             <button
               onClick={handleRefreshCards}
               disabled={isLoading}
-              className={`p-2 rounded-full transition ${isLoading
+              className={`p-2 rounded-full transition ${
+                isLoading
                   ? "bg-gray-600 cursor-not-allowed"
                   : "bg-blue-600 hover:bg-blue-700"
-                }`}
+              }`}
             >
               <FaSync className={isLoading ? "animate-spin" : ""} />
             </button>
@@ -363,13 +371,14 @@ const NewGame = () => {
               className="bg-gray-700 text-white rounded px-3 py-2 focus:outline-none"
               style={{ flex: 1 }}
             >
-              {[10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300, 400, 500].map(
-                (amount) => (
-                  <option key={amount} value={amount}>
-                    {amount} ብር
-                  </option>
-                )
-              )}
+              {[
+                10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, 200, 250, 300,
+                400, 500,
+              ].map((amount) => (
+                <option key={amount} value={amount}>
+                  {amount} ብር
+                </option>
+              ))}
             </select>
           </Box>
 
@@ -383,7 +392,9 @@ const NewGame = () => {
                 bgcolor: "#374151",
                 color: "#fff",
                 borderRadius: "8px",
-                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#4b5563" },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#4b5563",
+                },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#60a5fa",
                 },
@@ -407,7 +418,9 @@ const NewGame = () => {
                 bgcolor: "#374151",
                 color: "#fff",
                 borderRadius: "8px",
-                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#4b5563" },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#4b5563",
+                },
               }}
             >
               <MenuItem value="">
@@ -431,7 +444,9 @@ const NewGame = () => {
                   bgcolor: "#374151",
                   color: "#fff",
                   borderRadius: "8px",
-                  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#4b5563" },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#4b5563",
+                  },
                 }}
               >
                 <MenuItem value="OR">ወይም (OR)</MenuItem>
@@ -475,10 +490,11 @@ const NewGame = () => {
             <button
               onClick={handleStartGame}
               disabled={isLoading || cartela.length === 0}
-              className={`flex-1 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 ${isLoading || cartela.length === 0
+              className={`flex-1 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 ${
+                isLoading || cartela.length === 0
                   ? "bg-gray-500 cursor-not-allowed text-gray-300"
                   : "bg-blue-600 hover:bg-blue-700 text-white"
-                }`}
+              }`}
             >
               <FaPlay />
               PLAY

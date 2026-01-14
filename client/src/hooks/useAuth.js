@@ -14,7 +14,8 @@ const useAuth = () => {
     const currentTime = new Date().getTime();
 
     if (token && storedExpiration && currentTime < storedExpiration) {
-      api.get(`/api/me`)
+      api
+        .get(`/api/me`)
         .then((response) => response.json())
         .then((userData) => {
           setUser({

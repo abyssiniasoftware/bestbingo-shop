@@ -25,13 +25,11 @@
 
 body {
   background-image: 
-    /* Subtle radial gradient to darken edges */ radial-gradient(
-      circle at center,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.8)
-    ),
+    /* Subtle radial gradient to darken edges */
+    radial-gradient(circle at center, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)),
     /* Lion logo watermark */ url("/images/logo.jpg");
-  background-size: auto, 300px; /* Gradient covers the whole area, logo is 300px wide */
+  background-size:
+    auto, 300px; /* Gradient covers the whole area, logo is 300px wide */
   background-position: center, center; /* Center both the gradient and logo */
   background-repeat: no-repeat, no-repeat; /* Don't repeat the logo */
   background-attachment: fixed; /* Keep the background fixed when scrolling */

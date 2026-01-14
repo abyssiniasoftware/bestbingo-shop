@@ -40,10 +40,7 @@ const Reports = () => {
           throw new Error("የማረጋገጫ ቶከን አልተገኘም። እባክዎ ይግቡ");
         }
 
-        const response = await api.get(
-          `/api/stats/daily`,
-          
-        );
+        const response = await api.get(`/api/stats/daily`);
 
         setStats(response.data);
         setError(null);
@@ -183,7 +180,7 @@ const Reports = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginatedGames = filteredAndSortedGames.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const handlePageChange = (page) => {
@@ -214,7 +211,7 @@ const Reports = () => {
           }`}
         >
           {i}
-        </button>
+        </button>,
       );
     }
 

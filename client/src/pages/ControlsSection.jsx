@@ -213,8 +213,8 @@ const ControlsSection = ({
               cartelaInput && !cardIds.includes(cartelaInput)
                 ? "border-red-500"
                 : cartelaInput && cartela.includes(cartelaInput)
-                ? "border-yellow-500"
-                : "border-transparent"
+                  ? "border-yellow-500"
+                  : "border-transparent"
             }`}
             placeholder="ቁጥር ያስገቡ"
             aria-label="ካርቴላ ቁጥር ያስገቡ"

@@ -12,7 +12,7 @@ const CardGrid = ({
     backgroundButtonColors[selectedBackground] || "bg-gray-700";
   const buttonHoverColor = `${buttonBgColor.replace(
     "bg-",
-    "hover:bg-"
+    "hover:bg-",
   )} hover:bg-opacity-80`;
   return (
     <div className=" p-2 rounded-lg">

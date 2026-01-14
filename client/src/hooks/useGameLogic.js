@@ -17,17 +17,17 @@ import { shuffle } from "../voice/utilVoice";
 const PRECOMPUTED_PATTERNS = Object.keys(BINGO_PATTERNS).reduce(
   (acc, pattern) => {
     acc[pattern] = BINGO_PATTERNS[pattern].map((variation) =>
-      variation.map((cell) => cellToGridIndex(cell))
+      variation.map((cell) => cellToGridIndex(cell)),
     );
     return acc;
   },
-  {}
+  {},
 );
 
 const useGameLogic = ({ stake, players, winAmount }) => {
   // State declarations
   const validPatterns = Object.keys(BINGO_PATTERNS).concat(
-    Object.keys(META_PATTERNS)
+    Object.keys(META_PATTERNS),
   );
   const [calledNumbers, setCalledNumbers] = useState([]);
   const [recentCalls, setRecentCalls] = useState([]);
@@ -61,18 +61,19 @@ const useGameLogic = ({ stake, players, winAmount }) => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [drawSpeed, setDrawSpeed] = useState(
-    () => parseInt(localStorage.getItem("drawSpeed")) || 3000
+    () => parseInt(localStorage.getItem("drawSpeed")) || 3000,
   );
   const [patternAnchorEl, setPatternAnchorEl] = useState(null);
   const [voiceOption, setVoiceOption] = useState(
-    () => localStorage.getItem("selectedVoice") || "a"
+    () => localStorage.getItem("selectedVoice") || "a",
   );
+  const [showCentralBall, setShowCentralBall] = useState(false);
   const [prefixedNumber, setPrefixedNumber] = useState(null);
   const [patternAnimationIndex, setPatternAnimationIndex] = useState(0);
   const [gameDetails, setGameDetails] = useState(null);
   const [isGameEnded, setIsGameEnded] = useState(false);
   const [selectedBackground, setSelectedBackground] = useState(
-    () => localStorage.getItem("selectedBackground") || "default"
+    () => localStorage.getItem("selectedBackground") || "default",
   );
   const [primaryPattern, setPrimaryPattern] = useState(() => {
     const stored = localStorage.getItem("primaryPattern");
@@ -140,7 +141,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         // toast.error(`Invalid pattern: ${pattern}`);
       }
     }, 300),
-    []
+    [],
   );
 
   const debouncedSetSecondaryPattern = useCallback(
@@ -153,7 +154,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         // toast.error(`Invalid pattern: ${pattern}`);
       }
     }, 300),
-    []
+    [],
   );
 
   const debouncedSetPatternLogic = useCallback(
@@ -166,7 +167,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         // toast.error(`Invalid logic: ${logic}`);
       }
     }, 300),
-    []
+    [],
   );
 
   const debouncedSetBonusPattern = useCallback(
@@ -178,7 +179,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         console.warn(`Invalid bonus pattern: ${pattern}`);
       }
     }, 300),
-    []
+    [],
   );
 
   const debouncedSetBonusAmount = useCallback(
@@ -186,13 +187,13 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       setBonusAmount(amount);
       localStorage.setItem("bonusAmount", amount.toString());
     }, 300),
-    []
+    [],
   );
 
   // Memoized called numbers set
   const calledNumbersSet = useMemo(
     () => new Set(calledNumbers.map((num) => parseInt(num, 10))),
-    [calledNumbers]
+    [calledNumbers],
   );
 
   // Update hasGameStarted when isPlaying becomes true
@@ -232,7 +233,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
   useEffect(() => {
     // Only reset if it's a brand new game
     const hasGameStarted = JSON.parse(
-      localStorage.getItem("hasGameStarted") || "false"
+      localStorage.getItem("hasGameStarted") || "false",
     );
     if (!hasGameStarted) {
       setCalledNumbers([]);
@@ -248,10 +249,10 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     } else {
       // Restore previous game state
       const savedCalled = JSON.parse(
-        localStorage.getItem("calledNumbers") || "[]"
+        localStorage.getItem("calledNumbers") || "[]",
       );
       const savedRecent = JSON.parse(
-        localStorage.getItem("recentCalls") || "[]"
+        localStorage.getItem("recentCalls") || "[]",
       );
       const savedCurrent = localStorage.getItem("currentNumber") || "00";
       const savedPrevious = localStorage.getItem("previousNumber") || "00";
@@ -369,7 +370,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
           const numbers = await apiService.fetchCardNumbers(
             cardId,
             userId,
-            token
+            token,
           );
           cardNumbersMap[cardId] = numbers;
           cardDataCache.current[cardId] = { numbers };
@@ -386,103 +387,112 @@ const useGameLogic = ({ stake, players, winAmount }) => {
   }, [gameData, userId, navigate]);
 
   // Audio playback
-  const playAudio = (audioKey) => {
-    return new Promise(async (resolve, reject) => {
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause();
-        currentAudioRef.current.currentTime = 0;
-        currentAudioRef.current = null;
-      }
+  const playAudio = useCallback(
+    (audioKey) => {
+      return new Promise(async (resolve, reject) => {
+        if (currentAudioRef.current) {
+          currentAudioRef.current.pause();
+          currentAudioRef.current.currentTime = 0;
+          currentAudioRef.current = null;
+        }
 
-      try {
-        // Always import utilVoice for special keys and structure
-        const utilVoiceModule = await import(`../voice/utilVoice.js`);
+        try {
+          // Always import utilVoice for special keys and structure
+          const utilVoiceModule = await import(`../voice/utilVoice.js`);
 
-        const specialAudioBaseKeys = [
-          "start",
-          "stop",
-          "winner",
-          "lose",
-          "blocked",
-          "notRegistered",
-        ];
+          const specialAudioBaseKeys = [
+            "start",
+            "stop",
+            "winner",
+            "lose",
+            "blocked",
+            "notRegistered",
+          ];
 
-        const isSpecialAudio = specialAudioBaseKeys.some(
-          (baseKey) => audioKey === baseKey
-        );
+          const isSpecialAudio = specialAudioBaseKeys.some(
+            (baseKey) => audioKey === baseKey,
+          );
 
-        let audioFile;
-        let finalAudioKey;
+          let audioFile;
+          let finalAudioKey;
 
-        if (isSpecialAudio) {
-          audioFile = utilVoiceModule[audioKey];
-        } else {
-          // Load specific voice module for numbered calls
-          let prefix = "";
-          const speakNumber = parseInt(audioKey, 10);
-          if (speakNumber >= 1 && speakNumber <= 15) prefix = "b";
-          else if (speakNumber >= 16 && speakNumber <= 30) prefix = "i";
-          else if (speakNumber >= 31 && speakNumber <= 45) prefix = "n";
-          else if (speakNumber >= 46 && speakNumber <= 60) prefix = "g";
-          else if (speakNumber >= 61 && speakNumber <= 75) prefix = "o";
+          if (isSpecialAudio) {
+            audioFile = utilVoiceModule[audioKey];
+          } else {
+            // Load specific voice module for numbered calls
+            let prefix = "";
+            const speakNumber = parseInt(audioKey, 10);
+            if (speakNumber >= 1 && speakNumber <= 15) prefix = "b";
+            else if (speakNumber >= 16 && speakNumber <= 30) prefix = "i";
+            else if (speakNumber >= 31 && speakNumber <= 45) prefix = "n";
+            else if (speakNumber >= 46 && speakNumber <= 60) prefix = "g";
+            else if (speakNumber >= 61 && speakNumber <= 75) prefix = "o";
 
-          const prefixedNumber = prefix + speakNumber;
-          finalAudioKey = voiceOption + prefixedNumber;
-          setPrefixedNumber(prefixedNumber);
+            const prefixedNumber = prefix + speakNumber;
+            finalAudioKey = voiceOption + prefixedNumber;
+            setPrefixedNumber(prefixedNumber);
 
-          // Dynamically load the voice-specific module
-          try {
-            const voiceModule = await import(`../voice/${voiceOption}Voice.js`);
-            audioFile = voiceModule[finalAudioKey];
-          } catch (err) {
-            console.warn(`Voice file for ${voiceOption} not found, falling back to utilVoice`);
-            audioFile = utilVoiceModule[finalAudioKey];
+            // Dynamically load the voice-specific module
+            try {
+              const voiceModule = await import(
+                `../voice/${voiceOption}Voice.js`
+              );
+              audioFile = voiceModule[finalAudioKey];
+            } catch (err) {
+              console.warn(
+                `Voice file for ${voiceOption} not found, falling back to utilVoice`,
+              );
+              audioFile = utilVoiceModule[finalAudioKey];
+            }
           }
-        }
 
-        if (!audioFile) {
-          throw new Error(`Audio file not found for ${finalAudioKey || audioKey}`);
-        }
+          if (!audioFile) {
+            throw new Error(
+              `Audio file not found for ${finalAudioKey || audioKey}`,
+            );
+          }
 
-        const audio = new Audio(audioFile);
-        currentAudioRef.current = audio;
+          const audio = new Audio(audioFile);
+          currentAudioRef.current = audio;
 
-        if (finalAudioKey === `${voiceOption}start`) {
-          setIsStartAudioFinished(false);
-          audio.onended = () => {
+          if (finalAudioKey === `${voiceOption}start`) {
+            setIsStartAudioFinished(false);
+            audio.onended = () => {
+              setIsStartAudioFinished(true);
+              currentAudioRef.current = null;
+              resolve();
+            };
+          } else {
+            audio.onended = () => {
+              currentAudioRef.current = null;
+              resolve();
+            };
+          }
+
+          audio.play().catch((error) => {
+            if (error.name === "AbortError") {
+              resolve();
+              return;
+            }
             setIsStartAudioFinished(true);
             currentAudioRef.current = null;
-            resolve();
-          };
-        } else {
-          audio.onended = () => {
-            currentAudioRef.current = null;
-            resolve();
-          };
-        }
-
-        audio.play().catch((error) => {
-          if (error.name === "AbortError") {
-            resolve();
-            return;
-          }
+            reject(error);
+          });
+        } catch (error) {
           setIsStartAudioFinished(true);
-          currentAudioRef.current = null;
+          console.error("Audio playback failed:", error);
           reject(error);
-        });
-      } catch (error) {
-        setIsStartAudioFinished(true);
-        console.error("Audio playback failed:", error);
-        reject(error);
-      }
-    });
-  };
+        }
+      });
+    },
+    [voiceOption],
+  );
 
-  const playWinnerAudio = async () => {
+  const playWinnerAudio = useCallback(async () => {
     await playAudio("winner");
-  };
+  }, [playAudio]);
 
-  const playStartAudio = () => {
+  const playStartAudio = useCallback(() => {
     return new Promise((resolve, reject) => {
       playAudio("start")
         .then(() => {
@@ -493,23 +503,23 @@ const useGameLogic = ({ stake, players, winAmount }) => {
           reject(error);
         });
     });
-  };
+  }, [playAudio]);
 
-  const playStopAudio = async () => {
+  const playStopAudio = useCallback(async () => {
     await playAudio("stop");
-  };
+  }, [playAudio]);
 
-  const playLoseAudio = async () => {
+  const playLoseAudio = useCallback(async () => {
     await playAudio("lose");
-  };
+  }, [playAudio]);
 
-  const playBlockedAudio = async () => {
+  const playBlockedAudio = useCallback(async () => {
     await playAudio("blocked");
-  };
+  }, [playAudio]);
 
-  const playNotRegisteredAudio = async () => {
+  const playNotRegisteredAudio = useCallback(async () => {
     await playAudio("notRegistered");
-  };
+  }, [playAudio]);
 
   const playShuffleSound = async () => {
     if (currentAudioRef.current) {
@@ -544,7 +554,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       return;
     }
     const availableNumbers = Array.from({ length: 75 }, (_, i) =>
-      (i + 1).toString()
+      (i + 1).toString(),
     ).filter((num) => !calledNumbers.includes(num));
 
     // const customPool = ['14', '23', '40', '58', '62']; //5 call
@@ -583,6 +593,12 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     setCalledNumbers((prev) => [...prev, newNumber]);
     setRecentCalls((prev) => [newNumber, ...prev].slice(0, 5));
     setCallCount((prev) => prev + 1);
+
+    // Trigger large central ball overlay
+    setShowCentralBall(true);
+    setTimeout(() => {
+      setShowCentralBall(false);
+    }, 2000); // Show for 2 seconds
     // playAudio(parseInt(newNumber));
   }, [calledNumbers, currentNumber, isStartAudioFinished]);
 
@@ -611,7 +627,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
   // Handle voice change
   const handleVoiceChange = (event) => {
     const selectedVoice = voiceOptions.find(
-      (option) => option.label === event.target.value
+      (option) => option.label === event.target.value,
     );
     if (selectedVoice) {
       setVoiceOption(selectedVoice.value);
@@ -667,7 +683,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       }
 
       const cellKeys = Object.keys(data).flatMap((row) =>
-        Object.keys(data[row])
+        Object.keys(data[row]),
       );
       const markedCells = new Set();
       for (const row of Object.keys(data)) {
@@ -687,7 +703,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       let isBadBingo = false;
       if (isBadBingoActive && calledNumbers.length === 15) {
         const hasAny = numbers.some((num) =>
-          calledNumbersSet.has(parseInt(num, 10))
+          calledNumbersSet.has(parseInt(num, 10)),
         );
         if (!hasAny) {
           isBadBingo = true;
@@ -705,7 +721,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
 
         if (META_PATTERNS[pattern]) {
           const markedCount = cellKeys.filter(
-            (cell) => cell !== "n3" && markedCells.has(cell)
+            (cell) => cell !== "n3" && markedCells.has(cell),
           ).length;
           if (markedCount >= META_PATTERNS[pattern].required) {
             patterns.add(pattern);
@@ -725,10 +741,10 @@ const useGameLogic = ({ stake, players, winAmount }) => {
           ];
           const corners = PRECOMPUTED_PATTERNS["fourCorners"][0];
           const hasLine = allLines.some((line) =>
-            line.every((idx) => markedCells.has(cellKeys[idx]))
+            line.every((idx) => markedCells.has(cellKeys[idx])),
           );
           const cornerCount = corners.filter((idx) =>
-            markedCells.has(cellKeys[idx])
+            markedCells.has(cellKeys[idx]),
           ).length;
           if (hasLine && cornerCount >= 1) {
             patterns.add(pattern);
@@ -742,10 +758,10 @@ const useGameLogic = ({ stake, players, winAmount }) => {
           ];
           const allCorners = PRECOMPUTED_PATTERNS["fourCorners"][0];
           const lineCount = allLines.filter((line) =>
-            line.every((idx) => markedCells.has(cellKeys[idx]))
+            line.every((idx) => markedCells.has(cellKeys[idx])),
           ).length;
           const cornerCount = allCorners.filter((idx) =>
-            markedCells.has(cellKeys[idx])
+            markedCells.has(cellKeys[idx]),
           ).length;
           if (
             lineCount >= 2 ||
@@ -757,13 +773,13 @@ const useGameLogic = ({ stake, players, winAmount }) => {
           }
         } else if (pattern === "anyCornerSquare") {
           patternMatched = patternVariations.some((variation) =>
-            variation.every((idx) => markedCells.has(cellKeys[idx]))
+            variation.every((idx) => markedCells.has(cellKeys[idx])),
           );
           if (patternMatched) patterns.add(pattern);
         } else {
           patternMatched = patternVariations.some((variation) => {
             const isMatch = variation.every((idx) =>
-              markedCells.has(cellKeys[idx])
+              markedCells.has(cellKeys[idx]),
             );
             if (isMatch) matchedVariation = variation;
             return isMatch;
@@ -790,8 +806,8 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       setBingoState(
         cellKeys.reduce(
           (acc, cell) => ({ ...acc, [cell]: markedCells.has(cell) }),
-          {}
-        )
+          {},
+        ),
       );
       setPatternTypes(Array.from(patterns));
 
@@ -804,7 +820,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
               gameDetails.houseId,
               gameDetails.gameId,
               cardIdInput,
-              token
+              token,
             );
             setGameDetails((prev) => ({
               ...prev,
@@ -817,12 +833,12 @@ const useGameLogic = ({ stake, players, winAmount }) => {
 
             const ineligiblePatterns = ["fullCard", "blackout"];
             const winningPatterns = Array.from(patterns).filter(
-              (pattern) => !ineligiblePatterns.includes(pattern)
+              (pattern) => !ineligiblePatterns.includes(pattern),
             );
 
             if (winningPatterns.length > 0 && matchedVariation) {
               const calledCells = Array.from(markedCells).filter(
-                (cell) => cell !== "n3"
+                (cell) => cell !== "n3",
               );
               const patternCells = matchedVariation
                 .map((idx) => cellKeys[idx])
@@ -846,13 +862,13 @@ const useGameLogic = ({ stake, players, winAmount }) => {
                     gameDetails.gameId,
                     gameDetails.houseId,
                     dynamicBonus,
-                    token
+                    token,
                   );
                   setBonusAwarded(true);
                   setBonusAmountGiven(bonusResponse.bonus.bonusAmount);
                   setDynamicBonus(0);
                   toast.success(
-                    `Dynamic bonus of ${bonusResponse.bonus.bonusAmount} ETB awarded for 4-call win!`
+                    `Dynamic bonus of ${bonusResponse.bonus.bonusAmount} ETB awarded for 4-call win!`,
                   );
                 } catch (error) {
                   toast.error(`Failed to award bonus: ${error.message}`);
@@ -869,7 +885,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
                   setBonusAwarded(true);
                   setBonusAmountGiven(bonusAmount);
                   toast.success(
-                    `Bonus of ${bonusAmount} ETB awarded for ${bonusPattern} pattern!`
+                    `Bonus of ${bonusAmount} ETB awarded for ${bonusPattern} pattern!`,
                   );
                 } catch (error) {
                   toast.error(`Failed to award bonus: ${error.message}`);
@@ -892,31 +908,31 @@ const useGameLogic = ({ stake, players, winAmount }) => {
                       gameDetails.gameId,
                       gameDetails.houseId,
                       bonusAmount,
-                      token
+                      token,
                     );
                     setBonusAwarded(true);
                     setBonusAmountGiven(bonusAmount);
                     toast.success(
-                      `Manual bonus of ${bonusAmount} ETB awarded!`
+                      `Manual bonus of ${bonusAmount} ETB awarded!`,
                     );
                   } catch (error) {
                     toast.error(`Failed to award bonus: ${error.message}`);
                   }
                 } else {
                   toast.info(
-                    "Pattern matched, but no bonus awarded due to call count."
+                    "Pattern matched, but no bonus awarded due to call count.",
                   );
                 }
               } else {
                 toast.info(
-                  "Pattern matched, but no bonus awarded due to call count."
+                  "Pattern matched, but no bonus awarded due to call count.",
                 );
               }
             }
             if (isBonusGloballyActive) {
               localStorage.setItem("isBonusGloballyActive", "false");
               toast.success(
-                "One-time Global Bonus has been consumed and deactivated."
+                "One-time Global Bonus has been consumed and deactivated.",
               );
             }
           } catch (error) {
@@ -1090,7 +1106,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       playShuffleSound();
       const interval = setInterval(() => {
         const shuffledNumbers = Array.from({ length: 75 }, (_, i) =>
-          (i + 1).toString()
+          (i + 1).toString(),
         ).sort(() => Math.random() - 0.5);
       }, 50);
       shuffleIntervalRef.current = interval;
@@ -1174,7 +1190,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     if (secondaryPattern) {
       if (META_PATTERNS[secondaryPattern]) {
         const exists = patterns.some(
-          (p) => p.type === formatPatternName(secondaryPattern)
+          (p) => p.type === formatPatternName(secondaryPattern),
         );
         if (!exists || patternLogic === "AND") {
           patterns.push({
@@ -1341,6 +1357,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     setBonusPattern: debouncedSetBonusPattern,
     isManual,
     setIsManual,
+    showCentralBall,
   };
 };
 

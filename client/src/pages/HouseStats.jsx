@@ -54,12 +54,9 @@ const HouseStats = () => {
         params.minStake = filters.minStake;
       }
 
-      const response = await api.get(
-        `/api/cases/house-cases`,
-        {
-          params,
-        }
-      );
+      const response = await api.get(`/api/cases/house-cases`, {
+        params,
+      });
 
       setCaseData(response.data);
       setError(null);
@@ -84,21 +81,18 @@ const HouseStats = () => {
         const token = localStorage.getItem("token");
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
-        const response = await api.get(
-          `/api/cases/house-cases`,
-          {
-            params: {
-              startDate: todayStart,
-              endDate: new Date(),
-            },
-          }
-        );
+        const response = await api.get(`/api/cases/house-cases`, {
+          params: {
+            startDate: todayStart,
+            endDate: new Date(),
+          },
+        });
 
         const games = response.data.recentGames || [];
         games.forEach((game) => {
           if (game.totalStake > 1000) {
             const message = `High-stake game detected: ${formatCurrency(
-              game.totalStake
+              game.totalStake,
             )} ETB`;
             setNotifications((prev) => [
               { id: game.gameId, message, timestamp: new Date() },
@@ -156,7 +150,7 @@ const HouseStats = () => {
       debounce((value) => {
         setFilters((prev) => ({ ...prev, minStake: value }));
       }, 300),
-    []
+    [],
   );
 
   const handleMinStakeChange = (e) => {

@@ -3,11 +3,31 @@ import { Box, Typography } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 
 const numbers = [
-  6, 16, 39, 55, 69,
-  5, 17, 34, 49, 59,
-  13, 27, "★", 53, 73,
-  14, 30, 32, 57, 68,
-  1, 24, 41, 58, 61,
+  6,
+  16,
+  39,
+  55,
+  69,
+  5,
+  17,
+  34,
+  49,
+  59,
+  13,
+  27,
+  "★",
+  53,
+  73,
+  14,
+  30,
+  32,
+  57,
+  68,
+  1,
+  24,
+  41,
+  58,
+  61,
 ];
 
 const PatternGrid = ({ progressGrid }) => {
@@ -58,14 +78,20 @@ const PatternGrid = ({ progressGrid }) => {
 
             {/* Center Star */}
             {isCenter && (
-              <StarIcon sx={{ color: "#7c2d12", fontSize: "1.8rem",backgroundImage:"url(/images/called.png)",
-  backgroundSize: "100% 100%", 
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
-  backgroundColor: "transparent",
-  cursor: "default",
-  userSelect: "none",
-  flexShrink: 0, }} />
+              <StarIcon
+                sx={{
+                  color: "#7c2d12",
+                  fontSize: "1.8rem",
+                  backgroundImage: "url(/images/called.png)",
+                  backgroundSize: "100% 100%",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                  backgroundColor: "transparent",
+                  cursor: "default",
+                  userSelect: "none",
+                  flexShrink: 0,
+                }}
+              />
             )}
 
             {/* SOLID RED BINGO BALL */}

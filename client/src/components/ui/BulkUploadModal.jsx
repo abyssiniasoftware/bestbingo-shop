@@ -62,7 +62,7 @@ const BulkUploadModal = ({ isOpen, onClose, userId, onBulkUpload }) => {
                 validateInput(key, 0)
                   ? validateInput(key, 0).join(" and ")
                   : "valid range"
-              }`
+              }`,
             );
           }
         }

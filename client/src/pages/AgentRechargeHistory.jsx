@@ -47,7 +47,7 @@ ChartJS.register(
   LinearScale,
   CategoryScale,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const AgentRechargeHistory = () => {
@@ -94,7 +94,7 @@ const AgentRechargeHistory = () => {
     };
 
     fetchData();
-  }, [ token]);
+  }, [token]);
 
   const handleRechargeSubmit = async () => {
     setModalLoading(true);
@@ -113,25 +113,19 @@ const AgentRechargeHistory = () => {
       }
 
       const response = await api.post(
-        `/api/house/${
-          modalMode === "create" ? "recharge" : "update-recharge"
-        }`,
+        `/api/house/${modalMode === "create" ? "recharge" : "update-recharge"}`,
         payload,
-       
       );
 
       if (response.status === 200 || response.status === 201) {
         setMessage(
           `Recharge ${
             modalMode === "create" ? "submitted" : "updated"
-          } successfully!`
+          } successfully!`,
         );
         setError(false);
         // Refresh recharges
-        const rechargeResponse = await api.get(
-          `/api/house/recharge-history`,
-          
-        );
+        const rechargeResponse = await api.get(`/api/house/recharge-history`);
         if (rechargeResponse.status === 200) {
           setRecharges(rechargeResponse.data.recharges);
         }
@@ -139,7 +133,7 @@ const AgentRechargeHistory = () => {
         handleModalClose();
       } else {
         setMessage(
-          `Recharge ${modalMode === "create" ? "failed" : "update failed"}.`
+          `Recharge ${modalMode === "create" ? "failed" : "update failed"}.`,
         );
         setError(true);
       }
@@ -147,7 +141,7 @@ const AgentRechargeHistory = () => {
       setMessage(
         `An error occurred during recharge ${
           modalMode === "create" ? "" : "update"
-        }.`
+        }.`,
       );
       setError(true);
     } finally {
@@ -196,7 +190,7 @@ const AgentRechargeHistory = () => {
     const totalCount = filteredRecharges.length;
     const totalAmount = filteredRecharges.reduce(
       (sum, r) => sum + (r.amount || 0),
-      0
+      0,
     );
     const avgAmount =
       totalCount > 0 ? (totalAmount / totalCount).toFixed(2) : 0;
@@ -792,7 +786,7 @@ const AgentRechargeHistory = () => {
                             >
                               {col.label}
                             </TableCell>
-                          )
+                          ),
                       )}
                     </TableRow>
                   </TableHead>
@@ -829,30 +823,29 @@ const AgentRechargeHistory = () => {
                                 {col.id === "house"
                                   ? recharge.houseId?.name || "N/A"
                                   : col.id === "amount"
-                                  ? recharge.amount?.toLocaleString() || "0"
-                                  : col.id === "packageAdded"
-                                  ? recharge.packageAdded?.toLocaleString() ||
-                                    "0"
-                                  : col.id === "superAdminCommission"
-                                  ? (
-                                      parseFloat(
-                                        recharge.superAdminCommission
-                                      ) * 100
-                                    ).toLocaleString() || "0"
-                                  : col.id === "createdAt"
-                                  ? new Date(recharge.createdAt).toLocaleString(
-                                      "en-US",
-                                      {
-                                        year: "numeric",
-                                        month: "2-digit",
-                                        day: "2-digit",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                      }
-                                    )
-                                  : "N/A"}
+                                    ? recharge.amount?.toLocaleString() || "0"
+                                    : col.id === "packageAdded"
+                                      ? recharge.packageAdded?.toLocaleString() ||
+                                        "0"
+                                      : col.id === "superAdminCommission"
+                                        ? (
+                                            parseFloat(
+                                              recharge.superAdminCommission,
+                                            ) * 100
+                                          ).toLocaleString() || "0"
+                                        : col.id === "createdAt"
+                                          ? new Date(
+                                              recharge.createdAt,
+                                            ).toLocaleString("en-US", {
+                                              year: "numeric",
+                                              month: "2-digit",
+                                              day: "2-digit",
+                                              hour: "2-digit",
+                                              minute: "2-digit",
+                                            })
+                                          : "N/A"}
                               </TableCell>
-                            )
+                            ),
                         )}
                       </TableRow>
                     ))}

@@ -11,15 +11,12 @@ import api from "../utils/api";
 const Login = () => {
   const { setUser, clearUser } = useUserStore();
   const navigate = useNavigate();
-  
-
-  
 
   const handleLogin = async (
     username,
     password,
     setLoading,
-    setErrorMessage
+    setErrorMessage,
   ) => {
     setLoading(true);
     setErrorMessage("");
@@ -30,21 +27,18 @@ const Login = () => {
         return;
       }
 
-
       let response;
-try {
-  response = await api.post("/api/auth/login", {
-    username,
-    password,
-  });
-} catch (err) {
-  // Axios error handling
-  const msg =
-    err.response?.data?.message ||
-    err.message ||
-    "Login failed";
-  throw new Error(msg);
-}
+      try {
+        response = await api.post("/api/auth/login", {
+          username,
+          password,
+        });
+      } catch (err) {
+        // Axios error handling
+        const msg =
+          err.response?.data?.message || err.message || "Login failed";
+        throw new Error(msg);
+      }
 
       const data = response.data;
 
@@ -68,12 +62,12 @@ try {
 
       // Validate session
       try {
-  await api.get("/api/me");
-} catch (err) {
-  throw new Error(
-    err.response?.data?.message || "Session validation failed"
-  );
-}
+        await api.get("/api/me");
+      } catch (err) {
+        throw new Error(
+          err.response?.data?.message || "Session validation failed",
+        );
+      }
       toast.success("Login successful!");
       switch (role) {
         case "super_admin":
@@ -103,9 +97,7 @@ try {
   };
 
   return (
-    <Box
-      sx={{ width: "100%", height: "100vh", overflowX: "hidden" }}
-    >
+    <Box sx={{ width: "100%", height: "100vh", overflowX: "hidden" }}>
       <LoginForm handleLogin={handleLogin} config={config} />
     </Box>
   );

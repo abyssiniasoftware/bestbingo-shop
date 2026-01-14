@@ -122,13 +122,12 @@ export const voiceOptions = [
   { value: "y", label: "አማርኛ 17" },
   { value: "z", label: "አማርኛ 18" },
 
-
   // amharic voices
   { value: "b", label: "አማርኛ 2" },
   { value: "c", label: "አማርኛ 3" },
   { value: "d", label: "አማርኛ 4" },
   { value: "e", label: "አማርኛ 5" },
-  { value: "g", label: "አማርኛ 7"},
+  { value: "g", label: "አማርኛ 7" },
   { value: "h", label: "አማርኛ 8" },
   { value: "j", label: "አማርኛ 10" },
   { value: "k", label: "አማርኛ 11" },

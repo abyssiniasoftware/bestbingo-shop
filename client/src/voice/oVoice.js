@@ -74,7 +74,6 @@ import oo73 from "/oVoice/73.wav";
 import oo74 from "/oVoice/74.wav";
 import oo75 from "/oVoice/75.wav";
 
-
 export {
   ob1,
   ob2,

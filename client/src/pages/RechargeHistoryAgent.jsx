@@ -47,7 +47,7 @@ ChartJS.register(
   LinearScale,
   CategoryScale,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const RechargeHistoryAgent = () => {
@@ -94,7 +94,7 @@ const RechargeHistoryAgent = () => {
         }
       } catch (error) {
         setErrorMessage(
-          "Failed to fetch recharge history, agents, or user role."
+          "Failed to fetch recharge history, agents, or user role.",
         );
       } finally {
         setLoading(false);
@@ -116,9 +116,7 @@ const RechargeHistoryAgent = () => {
       };
       if (modalMode === "create") {
         payload.agentId = selectedAgentId;
-        payload.rechargeBy = (
-          await api.get(`/api/me`)
-        ).data.id;
+        payload.rechargeBy = (await api.get(`/api/me`)).data.id;
       } else {
         payload.rechargeId = selectedRechargeId;
       }
@@ -135,13 +133,12 @@ const RechargeHistoryAgent = () => {
         setMessage(
           `Recharge ${
             modalMode === "create" ? "submitted" : "updated"
-          } successfully!`
+          } successfully!`,
         );
         setError(false);
         // Refresh recharges
         const rechargeResponse = await api.get(
           `/api/house/agent-recharge-history`,
-          
         );
         if (rechargeResponse.status === 200) {
           setRecharges(rechargeResponse.data.recharges);
@@ -150,7 +147,7 @@ const RechargeHistoryAgent = () => {
         handleModalClose();
       } else {
         setMessage(
-          `Recharge ${modalMode === "create" ? "failed" : "update failed"}.`
+          `Recharge ${modalMode === "create" ? "failed" : "update failed"}.`,
         );
         setError(true);
       }
@@ -159,7 +156,7 @@ const RechargeHistoryAgent = () => {
         error.response?.data?.message ||
           `An error occurred during recharge ${
             modalMode === "create" ? "" : "update"
-          }.`
+          }.`,
       );
       setError(true);
     } finally {
@@ -208,7 +205,7 @@ const RechargeHistoryAgent = () => {
     const totalCount = filteredRecharges.length;
     const totalAmount = filteredRecharges.reduce(
       (sum, r) => sum + (r.amount || 0),
-      0
+      0,
     );
     const avgAmount =
       totalCount > 0 ? (totalAmount / totalCount).toFixed(2) : 0;
@@ -824,7 +821,7 @@ const RechargeHistoryAgent = () => {
                             >
                               {col.label}
                             </TableCell>
-                          )
+                          ),
                       )}
                     </TableRow>
                   </TableHead>
@@ -861,40 +858,39 @@ const RechargeHistoryAgent = () => {
                                 {col.id === "agent"
                                   ? recharge.agentId?.fullname || "N/A"
                                   : col.id === "amount"
-                                  ? recharge.amount?.toLocaleString() || "0"
-                                  : col.id === "packageAdded"
-                                  ? recharge.packageAdded?.toLocaleString() ||
-                                    "0"
-                                  : col.id === "superAdminCommission"
-                                  ? (
-                                      parseFloat(
-                                        recharge.superAdminCommission
-                                      ) * 100
-                                    ).toLocaleString() || "0"
-                                  : col.id === "createdAt"
-                                  ? new Date(recharge.createdAt).toLocaleString(
-                                      "en-US",
-                                      {
-                                        year: "numeric",
-                                        month: "2-digit",
-                                        day: "2-digit",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                      }
-                                    )
-                                  : // : col.id === "actions" &&
-                                    //   userRole === "super_admin" ? (
-                                    //   <IconButton
-                                    //     onClick={() => handleUpdateClick(recharge)}
-                                    //     sx={{ color: "#ffffff" }}
-                                    //     aria-label={`Update recharge ${recharge._id}`}
-                                    //   >
-                                    //     <Edit />
-                                    //   </IconButton>
-                                    // )
-                                    "N/A"}
+                                    ? recharge.amount?.toLocaleString() || "0"
+                                    : col.id === "packageAdded"
+                                      ? recharge.packageAdded?.toLocaleString() ||
+                                        "0"
+                                      : col.id === "superAdminCommission"
+                                        ? (
+                                            parseFloat(
+                                              recharge.superAdminCommission,
+                                            ) * 100
+                                          ).toLocaleString() || "0"
+                                        : col.id === "createdAt"
+                                          ? new Date(
+                                              recharge.createdAt,
+                                            ).toLocaleString("en-US", {
+                                              year: "numeric",
+                                              month: "2-digit",
+                                              day: "2-digit",
+                                              hour: "2-digit",
+                                              minute: "2-digit",
+                                            })
+                                          : // : col.id === "actions" &&
+                                            //   userRole === "super_admin" ? (
+                                            //   <IconButton
+                                            //     onClick={() => handleUpdateClick(recharge)}
+                                            //     sx={{ color: "#ffffff" }}
+                                            //     aria-label={`Update recharge ${recharge._id}`}
+                                            //   >
+                                            //     <Edit />
+                                            //   </IconButton>
+                                            // )
+                                            "N/A"}
                               </TableCell>
-                            )
+                            ),
                         )}
                       </TableRow>
                     ))}

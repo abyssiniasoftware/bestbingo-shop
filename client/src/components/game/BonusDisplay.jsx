@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Table, TableBody, TableCell, TableRow, TableHead } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  TableHead,
+} from "@mui/material";
 
 const BonusDisplay = () => {
   const [viewIndex, setViewIndex] = useState(0);
@@ -15,15 +23,27 @@ const BonusDisplay = () => {
   // Version 1: Bonus Rules (ቅድመ) - Screenshot 1
   const renderVersionOne = () => (
     <Box sx={containerStyle}>
-      <Typography sx={{ color: "#aaa", fontSize: "0.8rem", mt: 0.5 }}>🎊 ችርስ 🎊</Typography>
-      <Box sx={{ color: "#fff", fontSize: "0.9rem", textAlign: "center", mt: 1 }}>
+      <Typography sx={{ color: "#aaa", fontSize: "0.8rem", mt: 0.5 }}>
+        🎊 ችርስ 🎊
+      </Typography>
+      <Box
+        sx={{ color: "#fff", fontSize: "0.9rem", textAlign: "center", mt: 1 }}
+      >
         <div>B-15</div>
         <div>I-22</div>
         <div>N-35</div>
         <div>G-46</div>
         <div>O-68</div>
       </Box>
-      <Typography sx={{ color: "#fff", fontSize: "0.8rem", mt: "auto", textAlign: "center", pb: 1 }}>
+      <Typography
+        sx={{
+          color: "#fff",
+          fontSize: "0.8rem",
+          mt: "auto",
+          textAlign: "center",
+          pb: 1,
+        }}
+      >
         ከጨረሱ 🎊 <br /> 100 ብር የቦነስ ሽልማት
       </Typography>
     </Box>
@@ -32,8 +52,12 @@ const BonusDisplay = () => {
   // Version 2: Two Line (ሁለት ዝግ) - Screenshot 2
   const renderVersionTwo = () => (
     <Box sx={containerStyle}>
-      <Typography sx={{ color: "#ff9999", fontSize: "1rem", fontWeight: "bold" }}>ሁለት ዝግ</Typography>
-      <Table size="small" sx={{ mt: 1, border: '1px solid #555' }}>
+      <Typography
+        sx={{ color: "#ff9999", fontSize: "1rem", fontWeight: "bold" }}
+      >
+        ሁለት ዝግ
+      </Typography>
+      <Table size="small" sx={{ mt: 1, border: "1px solid #555" }}>
         <TableHead>
           <TableRow sx={{ backgroundColor: "#444" }}>
             <TableCell sx={headerCellStyle}>ጥሪ</TableCell>
@@ -41,7 +65,12 @@ const BonusDisplay = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {[[11, 1000], [12, 500], [13, 300], [14, 200]].map((row) => (
+          {[
+            [11, 1000],
+            [12, 500],
+            [13, 300],
+            [14, 200],
+          ].map((row) => (
             <TableRow key={row[0]}>
               <TableCell sx={bodyCellStyle}>{row[0]}</TableCell>
               <TableCell sx={bodyCellStyle}>{row[1]}</TableCell>
@@ -55,8 +84,12 @@ const BonusDisplay = () => {
   // Version 3: One Line (አንድ ዝግ) - Screenshot 3
   const renderVersionThree = () => (
     <Box sx={containerStyle}>
-      <Typography sx={{ color: "#ff9999", fontSize: "1rem", fontWeight: "bold" }}>አንድ ዝግ</Typography>
-      <Table size="small" sx={{ mt: 1, border: '1px solid #555' }}>
+      <Typography
+        sx={{ color: "#ff9999", fontSize: "1rem", fontWeight: "bold" }}
+      >
+        አንድ ዝግ
+      </Typography>
+      <Table size="small" sx={{ mt: 1, border: "1px solid #555" }}>
         <TableHead>
           <TableRow sx={{ backgroundColor: "#444" }}>
             <TableCell sx={headerCellStyle}>ጥሪ</TableCell>
@@ -64,7 +97,10 @@ const BonusDisplay = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {[[4, 2000], [5, 200]].map((row) => (
+          {[
+            [4, 2000],
+            [5, 200],
+          ].map((row) => (
             <TableRow key={row[0]}>
               <TableCell sx={bodyCellStyle}>{row[0]}</TableCell>
               <TableCell sx={bodyCellStyle}>{row[1]} ብር</TableCell>
@@ -94,7 +130,7 @@ const containerStyle = {
   alignItems: "center",
   background: "#333",
   position: "relative",
-  overflow: "hidden"
+  overflow: "hidden",
 };
 
 const headerCellStyle = {
@@ -103,7 +139,7 @@ const headerCellStyle = {
   fontSize: "0.75rem",
   textAlign: "center",
   border: "1px solid #555",
-  fontWeight: "bold"
+  fontWeight: "bold",
 };
 
 const bodyCellStyle = {
@@ -111,7 +147,7 @@ const bodyCellStyle = {
   padding: "4px",
   fontSize: "0.8rem",
   textAlign: "center",
-  border: "1px solid #555"
+  border: "1px solid #555",
 };
 
 export default BonusDisplay;

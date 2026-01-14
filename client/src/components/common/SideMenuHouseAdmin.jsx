@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiMenu, FiX, FiHome, FiUserPlus, FiUsers, FiPlusCircle, FiEye, FiBarChart2, FiLogOut } from "react-icons/fi";
+import {
+  FiMenu,
+  FiX,
+  FiHome,
+  FiUserPlus,
+  FiUsers,
+  FiPlusCircle,
+  FiEye,
+  FiBarChart2,
+  FiLogOut,
+} from "react-icons/fi";
 import { FaGift } from "react-icons/fa";
 
 const SidebarHouse = ({ setActiveTab }) => {

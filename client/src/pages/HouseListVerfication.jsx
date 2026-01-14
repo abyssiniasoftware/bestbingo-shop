@@ -97,7 +97,7 @@ const HouseList = () => {
     const entered = Number(e.target.value);
     const validOffsets = [123, 321, 234];
     const isValid = validOffsets.some(
-      (offset) => entered === code + amount + commission + offset
+      (offset) => entered === code + amount + commission + offset,
     );
     if (isValid) {
       setIsVerified(true);
@@ -122,15 +122,11 @@ const HouseList = () => {
     setRechargeError(false);
 
     try {
-      const response = await api.post(
-        `/api/house/recharge`,
-        {
-          houseId: selectedHouseId,
-          amount: Number(rechargeAmount),
-          superAdminCommission: Number(superAdminCommission) / 100,
-        },
-        
-      );
+      const response = await api.post(`/api/house/recharge`, {
+        houseId: selectedHouseId,
+        amount: Number(rechargeAmount),
+        superAdminCommission: Number(superAdminCommission) / 100,
+      });
 
       if (response.status === 200 || response.status === 201) {
         setRechargeMessage("Recharge submitted successfully!");
@@ -168,12 +164,12 @@ const HouseList = () => {
       (house) =>
         house.name.toLowerCase().includes(searchTerm) ||
         (house.houseAdminId?.fullname?.toLowerCase() || "").includes(
-          searchTerm
+          searchTerm,
         ) ||
         (house.houseAdminId?.username?.toLowerCase() || "").includes(
-          searchTerm
+          searchTerm,
         ) ||
-        (house.houseAdminId?.phone?.toLowerCase() || "").includes(searchTerm)
+        (house.houseAdminId?.phone?.toLowerCase() || "").includes(searchTerm),
     );
   }, [houses, searchTerm]);
 
@@ -350,7 +346,7 @@ const HouseList = () => {
                         >
                           {col.label}
                         </TableCell>
-                      )
+                      ),
                   )}
                 </TableRow>
               </TableHead>
@@ -432,7 +428,7 @@ const HouseList = () => {
                               "N/A"
                             )}
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 ))}

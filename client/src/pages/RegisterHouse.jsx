@@ -142,7 +142,7 @@ const CreateHouseForm = () => {
     };
 
     fetchUsers();
-  }, [ token]);
+  }, [token]);
 
   const houseAdmins = useMemo(() => {
     return users.filter((user) => user.role === "house_admin");
@@ -164,11 +164,7 @@ const CreateHouseForm = () => {
       setSuccessMsg("");
 
       try {
-        const response = await api.post(
-          `/api/house/create`,
-          formData,
-          
-        );
+        const response = await api.post(`/api/house/create`, formData);
 
         setSuccessMsg("House created successfully!");
         setFormData({
@@ -183,7 +179,7 @@ const CreateHouseForm = () => {
         setLoading(false);
       }
     },
-    [ token, formData]
+    [token, formData],
   );
 
   return (

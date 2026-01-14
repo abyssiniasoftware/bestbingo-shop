@@ -59,7 +59,7 @@ const AgentUserList = () => {
     };
 
     fetchUsers();
-  }, [ token]);
+  }, [token]);
 
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 
@@ -78,10 +78,9 @@ const AgentUserList = () => {
   const handleBanChange = async () => {
     try {
       const bannedBy = "admin";
-      const res = await api.put(
-        `/api/user/ban/${selectedUser._id}`,
-        { bannedBy },
-      );
+      const res = await api.put(`/api/user/ban/${selectedUser._id}`, {
+        bannedBy,
+      });
 
       await fetchUsers();
       setModalOpen(false);
@@ -123,7 +122,7 @@ const AgentUserList = () => {
     });
     return Array.from(housePackages.values()).reduce(
       (sum, pkg) => sum + (pkg || 0),
-      0
+      0,
     );
   }, [users]);
 
@@ -322,7 +321,7 @@ const AgentUserList = () => {
                               {col.label}
                             </TableSortLabel>
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 </TableHead>
@@ -391,7 +390,7 @@ const AgentUserList = () => {
                                 (col.id === "package" ? 0 : "N/A")
                               )}
                             </TableCell>
-                          )
+                          ),
                       )}
                     </TableRow>
                   ))}

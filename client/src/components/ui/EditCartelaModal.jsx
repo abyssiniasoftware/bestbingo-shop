@@ -34,7 +34,7 @@ const EditCartelaModal = ({
           validateInput(key, 0)
             ? validateInput(key, 0).join(" and ")
             : "valid range"
-        }`
+        }`,
       );
       setInvalidFields((prev) => ({ ...prev, [key]: true }));
       setUpdatedBingoCard({
@@ -56,7 +56,7 @@ const EditCartelaModal = ({
       e.preventDefault();
       e.target.blur();
       toast.error(
-        "Please correct the invalid value before moving to another field."
+        "Please correct the invalid value before moving to another field.",
       );
     }
   };
@@ -86,7 +86,7 @@ const EditCartelaModal = ({
             validateInput(key, 0)
               ? validateInput(key, 0).join(" and ")
               : "valid range"
-          }`
+          }`,
         );
         return;
       }
@@ -97,7 +97,7 @@ const EditCartelaModal = ({
         userId,
         selectedCard,
         updatedBingoCard,
-        token
+        token,
       );
       toast.success("Bingo card updated successfully");
       onClose();
@@ -169,8 +169,8 @@ const EditCartelaModal = ({
                           value === 0
                             ? "bg-red-200 text-gray-900 cursor-not-allowed border-red-300"
                             : invalidFields[key]
-                            ? "bg-red-100 text-gray-900 border-red-500"
-                            : "text-gray-900 border-gray-300 focus:border-blue-500 focus:outline-none"
+                              ? "bg-red-100 text-gray-900 border-red-500"
+                              : "text-gray-900 border-gray-300 focus:border-blue-500 focus:outline-none"
                         }`}
                         disabled={value === 0}
                         aria-label={`Enter number for ${letter}${rowIndex + 1}`}

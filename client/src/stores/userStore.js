@@ -22,7 +22,7 @@ const useUserStore = create((set) => ({
       localStorage.setItem("houseId", userData?.houseId || "");
       localStorage.setItem(
         "enableDynamicBonus",
-        String(userData?.enableDynamicBonus || false)
+        String(userData?.enableDynamicBonus || false),
       );
       return {
         user: userData,

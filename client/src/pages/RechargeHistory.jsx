@@ -49,18 +49,18 @@ ChartJS.register(
   LinearScale,
   CategoryScale,
   Tooltip,
-  Legend
+  Legend,
 );
 
 // Lazy load chart components
 const Pie = lazy(() =>
-  import("react-chartjs-2").then((module) => ({ default: module.Pie }))
+  import("react-chartjs-2").then((module) => ({ default: module.Pie })),
 );
 const Bar = lazy(() =>
-  import("react-chartjs-2").then((module) => ({ default: module.Bar }))
+  import("react-chartjs-2").then((module) => ({ default: module.Bar })),
 );
 const Line = lazy(() =>
-  import("react-chartjs-2").then((module) => ({ default: module.Line }))
+  import("react-chartjs-2").then((module) => ({ default: module.Line })),
 );
 
 const RechargeHistory = React.memo(() => {
@@ -158,7 +158,7 @@ const RechargeHistory = React.memo(() => {
         setCurrentPage(1);
         fetchData(1, value);
       }, 500),
-    [ token, rowsPerPage, startDate, endDate]
+    [token, rowsPerPage, startDate, endDate],
   );
 
   useEffect(() => {
@@ -194,9 +194,7 @@ const RechargeHistory = React.memo(() => {
       }
 
       const response = await api.post(
-        `/api/house/${
-          modalMode === "create" ? "recharge" : "update-recharge"
-        }`,
+        `/api/house/${modalMode === "create" ? "recharge" : "update-recharge"}`,
         payload,
       );
 
@@ -204,14 +202,14 @@ const RechargeHistory = React.memo(() => {
         setMessage(
           `Recharge ${
             modalMode === "create" ? "submitted" : "updated"
-          } successfully!`
+          } successfully!`,
         );
         setError(false);
         await fetchData(currentPage, searchTerm);
         handleModalClose();
       } else {
         setMessage(
-          `Recharge ${modalMode === "create" ? "failed" : "update failed"}.`
+          `Recharge ${modalMode === "create" ? "failed" : "update failed"}.`,
         );
         setError(true);
       }
@@ -219,7 +217,7 @@ const RechargeHistory = React.memo(() => {
       setMessage(
         `An error occurred during recharge ${
           modalMode === "create" ? "" : "update"
-        }.`
+        }.`,
       );
       setError(true);
     } finally {
@@ -845,7 +843,7 @@ const RechargeHistory = React.memo(() => {
                               >
                                 {col.label}
                               </TableCell>
-                            )
+                            ),
                         )}
                       </TableRow>
                     </TableHead>
@@ -889,7 +887,7 @@ const RechargeHistory = React.memo(() => {
                                   ) : col.id === "superAdminCommission" ? (
                                     (
                                       parseFloat(
-                                        recharge.superAdminCommission
+                                        recharge.superAdminCommission,
                                       ) * 100
                                     ).toLocaleString() || "0"
                                   ) : col.id === "createdAt" ? (
@@ -901,7 +899,7 @@ const RechargeHistory = React.memo(() => {
                                         day: "2-digit",
                                         hour: "2-digit",
                                         minute: "2-digit",
-                                      }
+                                      },
                                     )
                                   ) : col.id === "actions" ? (
                                     <IconButton
@@ -917,7 +915,7 @@ const RechargeHistory = React.memo(() => {
                                     "N/A"
                                   )}
                                 </TableCell>
-                              )
+                              ),
                           )}
                         </TableRow>
                       ))}

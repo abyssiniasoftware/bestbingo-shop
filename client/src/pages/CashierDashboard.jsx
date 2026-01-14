@@ -259,7 +259,12 @@ const CashierDashboard = () => {
             <Box sx={{ padding: "20px", textAlign: "center" }}>
               {/* Welcome message */}
               <Typography
-                sx={{ mb: 2, color: "#333", fontWeight: "bold", fontSize: "1.25rem" }}
+                sx={{
+                  mb: 2,
+                  color: "#333",
+                  fontWeight: "bold",
+                  fontSize: "1.25rem",
+                }}
               >
                 እንኳን ደህና መጡ!
               </Typography>
@@ -300,7 +305,12 @@ const CashierDashboard = () => {
                 </Box>
 
                 {/* Card body - sample numbers */}
-                <Box sx={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)" }}>
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(5, 1fr)",
+                  }}
+                >
                   {[
                     [12, 16, 33, 56, 61],
                     [1, 26, 44, 55, 71],
@@ -345,9 +355,9 @@ const CashierDashboard = () => {
                   transition: "all 0.3s",
                   "&:hover": hasReservation
                     ? {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 5px 20px rgba(37, 99, 235, 0.4)",
-                    }
+                        transform: "translateY(-2px)",
+                        boxShadow: "0 5px 20px rgba(37, 99, 235, 0.4)",
+                      }
                     : {},
                 }}
               >

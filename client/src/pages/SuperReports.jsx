@@ -39,7 +39,7 @@ const SuperReports = () => {
           data.houses.reduce((acc, house) => {
             acc[house.houseName] = true;
             return acc;
-          }, {})
+          }, {}),
         );
         setError(null);
       } catch (err) {

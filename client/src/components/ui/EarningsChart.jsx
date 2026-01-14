@@ -25,7 +25,7 @@ const EarningsChart = ({ filters, stats, visibleHouses, setVisibleHouses }) => {
 
     stats.houses
       .filter(
-        (house) => !filters.houseName || house.houseName === filters.houseName
+        (house) => !filters.houseName || house.houseName === filters.houseName,
       )
       .forEach((house) => {
         house.gameHistory
@@ -112,7 +112,7 @@ const EarningsChart = ({ filters, stats, visibleHouses, setVisibleHouses }) => {
           {stats.houses
             .filter(
               (house) =>
-                !filters.houseName || house.houseName === filters.houseName
+                !filters.houseName || house.houseName === filters.houseName,
             )
             .map((house) => (
               <Line

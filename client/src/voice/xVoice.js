@@ -74,7 +74,6 @@ import xo73 from "/xVoice/73.wav";
 import xo74 from "/xVoice/74.wav";
 import xo75 from "/xVoice/75.wav";
 
-
 export {
   xb1,
   xb2,

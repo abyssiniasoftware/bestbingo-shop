@@ -34,10 +34,7 @@ const AgentBonusList = () => {
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const response = await api.get(
-          `/api/game/agent-bonuses`,
-         
-        );
+        const response = await api.get(`/api/game/agent-bonuses`);
         setBonuses(response.data.bonuses || []);
         setError(null);
       } catch (err) {
@@ -72,7 +69,7 @@ const AgentBonusList = () => {
   const totalPages = Math.ceil(bonuses.length / itemsPerPage);
   const paginatedBonuses = sortedBonuses.slice(
     (page - 1) * itemsPerPage,
-    page * itemsPerPage
+    page * itemsPerPage,
   );
 
   const formatDate = (date) => new Date(date).toLocaleString();
@@ -219,7 +216,7 @@ const AgentBonusList = () => {
                             )}
                           </Box>
                         </TableCell>
-                      )
+                      ),
                   )}
                 </TableRow>
               </TableHead>
@@ -250,22 +247,22 @@ const AgentBonusList = () => {
                             {col.id === "cashierId"
                               ? bonus.cashierId?.username || "N/A"
                               : col.id === "gameId"
-                              ? bonus.gameId?.gameId || "N/A"
-                              : col.id === "winnerCardId"
-                              ? bonus.gameId?.winnerCardId || "N/A"
-                              : col.id === "prize"
-                              ? bonus.gameId?.prize
-                                ? `${bonus.gameId.prize} ETB`
-                                : "N/A"
-                              : col.id === "houseId"
-                              ? bonus.houseId?.name || "N/A"
-                              : col.id === "bonusAmount"
-                              ? `${bonus.bonusAmount} ETB`
-                              : col.id === "dateIssued"
-                              ? formatDate(bonus.dateIssued)
-                              : "N/A"}
+                                ? bonus.gameId?.gameId || "N/A"
+                                : col.id === "winnerCardId"
+                                  ? bonus.gameId?.winnerCardId || "N/A"
+                                  : col.id === "prize"
+                                    ? bonus.gameId?.prize
+                                      ? `${bonus.gameId.prize} ETB`
+                                      : "N/A"
+                                    : col.id === "houseId"
+                                      ? bonus.houseId?.name || "N/A"
+                                      : col.id === "bonusAmount"
+                                        ? `${bonus.bonusAmount} ETB`
+                                        : col.id === "dateIssued"
+                                          ? formatDate(bonus.dateIssued)
+                                          : "N/A"}
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 ))}

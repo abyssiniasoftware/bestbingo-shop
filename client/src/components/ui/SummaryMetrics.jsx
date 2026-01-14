@@ -13,9 +13,7 @@ const SummaryMetrics = ({ filters, stats }) => {
     const fetchPaymentData = async () => {
       try {
         setLoadingPayment(true);
-        const response = await api.get(
-          `/api/payment`
-        );
+        const response = await api.get(`/api/payment`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -27,7 +25,7 @@ const SummaryMetrics = ({ filters, stats }) => {
           });
         } else {
           throw new Error(
-            "Failed to fetch payment data: API status not success"
+            "Failed to fetch payment data: API status not success",
           );
         }
         setPaymentError(null);
@@ -69,7 +67,7 @@ const SummaryMetrics = ({ filters, stats }) => {
     tomorrow.setDate(today.getDate() + 1);
 
     const filteredHouses = stats.houses.filter(
-      (house) => !filters.houseName || house.houseName === filters.houseName
+      (house) => !filters.houseName || house.houseName === filters.houseName,
     );
 
     const totalDeposits = filteredHouses

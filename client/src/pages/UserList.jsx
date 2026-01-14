@@ -80,7 +80,7 @@ const UserList = () => {
         setCurrentPage(1);
         fetchUsers(1, value);
       }, 500),
-    [ token, rowsPerPage]
+    [token, rowsPerPage],
   );
 
   useEffect(() => {
@@ -113,10 +113,9 @@ const UserList = () => {
   const handleBanChange = async () => {
     try {
       const bannedBy = "admin";
-      const res = await api.put(
-        `/api/user/ban/${selectedUser._id}`,
-        { bannedBy },
-      );
+      const res = await api.put(`/api/user/ban/${selectedUser._id}`, {
+        bannedBy,
+      });
       await fetchUsers(currentPage, searchTerm);
       setModalOpen(false);
     } catch (err) {
@@ -133,9 +132,7 @@ const UserList = () => {
     if (!userToDelete) return;
 
     try {
-      const response = await api.delete(
-        `/api/user/${userToDelete._id}`
-      );
+      const response = await api.delete(`/api/user/${userToDelete._id}`);
       if (response.status === 200) {
         await fetchUsers(currentPage, searchTerm);
       } else {
@@ -213,7 +210,7 @@ const UserList = () => {
     });
     return Array.from(housePackages.values()).reduce(
       (sum, pkg) => sum + (pkg || 0),
-      0
+      0,
     );
   }, [users]);
 
@@ -404,7 +401,7 @@ const UserList = () => {
                               {col.label}
                             </TableSortLabel>
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 </TableHead>
@@ -529,7 +526,7 @@ const UserList = () => {
                                 user[col.id] || "N/A"
                               )}
                             </TableCell>
-                          )
+                          ),
                       )}
                     </TableRow>
                   ))}

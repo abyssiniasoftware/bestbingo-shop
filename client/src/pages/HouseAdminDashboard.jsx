@@ -8,8 +8,8 @@ import AddCartela from "../pages/AddCartela";
 import ViewCartela from "../pages/ViewCartela";
 import HouseReports from "./HouseReports";
 import api from "../utils/api";
-import HouseStats from './HouseStats';
-import HouseBonusList from './HouseBonusList';
+import HouseStats from "./HouseStats";
+import HouseBonusList from "./HouseBonusList";
 
 const apiService = {
   fetchUserData: async (token) => {
@@ -17,7 +17,9 @@ const apiService = {
       const response = await api.get(`/api/me`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || "Failed to fetch user data");
+      throw new Error(
+        error.response?.data?.message || "Failed to fetch user data",
+      );
     }
   },
 };
@@ -27,8 +29,8 @@ const HouseAdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [walletData, setWalletData] = useState(null);
   const [error, setError] = useState(null);
-  const [showSensitiveInfo, setShowSensitiveInfo] = useState(() =>
-    JSON.parse(localStorage.getItem("showAdminBalanceInfo")) || false
+  const [showSensitiveInfo, setShowSensitiveInfo] = useState(
+    () => JSON.parse(localStorage.getItem("showAdminBalanceInfo")) || false,
   );
 
   // Fetch user data (balance and username)
@@ -52,13 +54,16 @@ const HouseAdminDashboard = () => {
 
   const toggleSensitiveInfo = () => {
     setShowSensitiveInfo((prev) => !prev);
-    localStorage.setItem("showAdminBalanceInfo", JSON.stringify(!showSensitiveInfo));
+    localStorage.setItem(
+      "showAdminBalanceInfo",
+      JSON.stringify(!showSensitiveInfo),
+    );
   };
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "dashboard":
-        return <HouseStats/>
+        return <HouseStats />;
       // case "register-user":
       //   return <Register />;
       // case "users-list":
@@ -74,8 +79,12 @@ const HouseAdminDashboard = () => {
       default:
         return (
           <div className="text-center">
-            <h2 className="text-xl font-semibold mb-4">Welcome, {walletData?.username || "Admin"}!</h2>
-            <p className="text-gray-400">Manage users, cartelas, and view reports from this dashboard.</p>
+            <h2 className="text-xl font-semibold mb-4">
+              Welcome, {walletData?.username || "Admin"}!
+            </h2>
+            <p className="text-gray-400">
+              Manage users, cartelas, and view reports from this dashboard.
+            </p>
           </div>
         );
     }
@@ -95,15 +104,23 @@ const HouseAdminDashboard = () => {
                 {isLoading
                   ? "Loading..."
                   : showSensitiveInfo
-                  ? `${(walletData?.package || 0).toFixed(2)} ETB`
-                  : "****"}
+                    ? `${(walletData?.package || 0).toFixed(2)} ETB`
+                    : "****"}
               </span>
               <button
                 onClick={toggleSensitiveInfo}
                 className="text-white hover:text-gray-300 transition"
-                aria-label={showSensitiveInfo ? "Hide sensitive information" : "Show sensitive information"}
+                aria-label={
+                  showSensitiveInfo
+                    ? "Hide sensitive information"
+                    : "Show sensitive information"
+                }
               >
-                {showSensitiveInfo ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                {showSensitiveInfo ? (
+                  <FaEyeSlash size={20} />
+                ) : (
+                  <FaEye size={20} />
+                )}
               </button>
             </div>
             <div className="flex items-center gap-2">

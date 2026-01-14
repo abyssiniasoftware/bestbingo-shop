@@ -74,7 +74,6 @@ import no73 from "/nVoice/O73.mp3";
 import no74 from "/nVoice/O74.mp3";
 import no75 from "/nVoice/O75.mp3";
 
-
 export {
   nb1,
   nb2,

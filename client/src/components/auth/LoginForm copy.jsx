@@ -36,7 +36,8 @@ const LoginForm = ({ handleLogin, config }) => {
             content: '""',
             position: "absolute",
             inset: 0,
-            background: "radial-gradient(circle at 30% 20%, rgba(33, 150, 243, 0.1) 0%, transparent 50%)",
+            background:
+              "radial-gradient(circle at 30% 20%, rgba(33, 150, 243, 0.1) 0%, transparent 50%)",
             zIndex: 1,
           },
         }}
@@ -76,7 +77,7 @@ const LoginForm = ({ handleLogin, config }) => {
                 >
                   happy
                 </Typography>
-                
+
                 <Typography
                   variant="h1"
                   sx={{
@@ -303,7 +304,8 @@ const LoginForm = ({ handleLogin, config }) => {
                     disabled={loading}
                     sx={{
                       backgroundColor: "#1a237e",
-                      background: "linear-gradient(145deg, #1a237e 0%, #283593 100%)",
+                      background:
+                        "linear-gradient(145deg, #1a237e 0%, #283593 100%)",
                       paddingY: 2,
                       borderRadius: "8px",
                       fontSize: "1.1rem",
@@ -328,7 +330,8 @@ const LoginForm = ({ handleLogin, config }) => {
                         left: "-100%",
                         width: "100%",
                         height: "100%",
-                        background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)",
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)",
                         transition: "left 0.7s",
                       },
                       "&:hover::before": {
@@ -362,7 +365,10 @@ const LoginForm = ({ handleLogin, config }) => {
                       fontSize: "0.75rem",
                     }}
                   >
-                    <Box component="span" sx={{ color: "#1a237e", fontWeight: 700 }}>
+                    <Box
+                      component="span"
+                      sx={{ color: "#1a237e", fontWeight: 700 }}
+                    >
                       ★
                     </Box>
                     Powered by

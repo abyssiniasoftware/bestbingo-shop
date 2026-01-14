@@ -21,8 +21,8 @@ const LoginForm = ({ handleLogin, config }) => {
 
   const themeColors = {
     primaryRed: "#8C3B3B",
-    lightInputBg: "#F0F4F8", 
-    highlightGrey: "#D1D5DB", 
+    lightInputBg: "#F0F4F8",
+    highlightGrey: "#D1D5DB",
     darkBlue: "#1a237e",
     gold: "#FFD700",
   };
@@ -64,18 +64,22 @@ const LoginForm = ({ handleLogin, config }) => {
         </Box>
 
         {/* 2. MAIN CONTENT AREA */}
-        <Container 
+        <Container
           maxWidth="xl" // Changed to xl for wider spread
-          sx={{ 
-            flexGrow: 1, 
-            display: "flex", 
-            alignItems: "center", 
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            alignItems: "center",
             justifyContent: "center",
-            py: 4 
+            py: 4,
           }}
         >
-          <Grid container spacing={8} alignItems="center" justifyContent="center">
-            
+          <Grid
+            container
+            spacing={8}
+            alignItems="center"
+            justifyContent="center"
+          >
             {/* LEFT SIDE: Marketing Text & Image */}
             <Grid
               item
@@ -99,14 +103,15 @@ const LoginForm = ({ handleLogin, config }) => {
                     fontSize: { xs: "2.5rem", md: "3.5rem" },
                     textTransform: "uppercase",
                     letterSpacing: "0.2em",
-                    textShadow: "3px 3px 0 rgba(0,0,0,0.3), 6px 6px 0 rgba(0,0,0,0.1)",
+                    textShadow:
+                      "3px 3px 0 rgba(0,0,0,0.3), 6px 6px 0 rgba(0,0,0,0.1)",
                     mb: 2,
                     lineHeight: 1.2,
                   }}
                 >
                   {config.bingoName}
                 </Typography>
-                
+
                 {/* BINGO Text - Darker shadow for better contrast */}
                 <Typography
                   variant="h1"
@@ -163,14 +168,43 @@ const LoginForm = ({ handleLogin, config }) => {
                     textShadow: "0 1px 2px rgba(255,255,255,0.8)",
                   }}
                 >
-                  ከ{config.bingoName} Bingo ጋር የቢንጎ ጨዋታዎችን በተሻለ ሁኔታ ያግኙ። አሁኑኑ ይቀላቀሉ!
+                  ከ{config.bingoName} Bingo ጋር የቢንጎ ጨዋታዎችን በተሻለ ሁኔታ ያግኙ። አሁኑኑ
+                  ይቀላቀሉ!
                 </Typography>
 
                 {/* Optional: Add decorative elements for visual interest */}
-                <Box sx={{ mt: 4, display: "flex", justifyContent: "center", gap: 2 }}>
-                  <Box sx={{ width: 20, height: 20, backgroundColor: themeColors.gold, borderRadius: "50%" }} />
-                  <Box sx={{ width: 20, height: 20, backgroundColor: themeColors.darkBlue, borderRadius: "50%" }} />
-                  <Box sx={{ width: 20, height: 20, backgroundColor: themeColors.primaryRed, borderRadius: "50%" }} />
+                <Box
+                  sx={{
+                    mt: 4,
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: 2,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      backgroundColor: themeColors.gold,
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      backgroundColor: themeColors.darkBlue,
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      backgroundColor: themeColors.primaryRed,
+                      borderRadius: "50%",
+                    }}
+                  />
                 </Box>
               </Box>
             </Grid>
@@ -214,14 +248,14 @@ const LoginForm = ({ handleLogin, config }) => {
                   >
                     PLEASE LOGIN
                   </Typography>
-                  <Box 
-                    sx={{ 
-                      width: 60, 
-                      height: 2, 
+                  <Box
+                    sx={{
+                      width: 60,
+                      height: 2,
                       backgroundColor: themeColors.darkBlue,
                       mx: "auto",
                       opacity: 0.7,
-                    }} 
+                    }}
                   />
                 </Box>
 
@@ -316,8 +350,8 @@ const LoginForm = ({ handleLogin, config }) => {
                     <Typography
                       color="error"
                       align="center"
-                      sx={{ 
-                        mb: 3, 
+                      sx={{
+                        mb: 3,
                         fontSize: "0.875rem",
                         fontWeight: 600,
                         backgroundColor: "#fee2e2",
@@ -361,7 +395,8 @@ const LoginForm = ({ handleLogin, config }) => {
                         left: "-100%",
                         width: "100%",
                         height: "100%",
-                        background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
                         transition: "left 0.7s",
                       },
                       "&:hover::before": {

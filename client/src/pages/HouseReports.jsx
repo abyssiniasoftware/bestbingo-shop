@@ -69,12 +69,9 @@ const HouseReports = () => {
           params.month = filters.month;
         }
 
-        const response = await api.get(
-          `/api/stats/house`,
-          {
-            params,
-          }
-        );
+        const response = await api.get(`/api/stats/house`, {
+          params,
+        });
 
         setStats(response.data);
         setError(null);
@@ -98,15 +95,12 @@ const HouseReports = () => {
         const token = localStorage.getItem("token");
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
-        const response = await api.get(
-          `/api/stats/house`,
-          {
-            params: {
-              startDate: todayStart.toISOString().slice(0, 10),
-              endDate: new Date().toISOString().slice(0, 10),
-            },
-          }
-        );
+        const response = await api.get(`/api/stats/house`, {
+          params: {
+            startDate: todayStart.toISOString().slice(0, 10),
+            endDate: new Date().toISOString().slice(0, 10),
+          },
+        });
 
         const games = response.data.gameHistory || [];
         games.forEach((game) => {
@@ -114,7 +108,7 @@ const HouseReports = () => {
             const message =
               game.totalStake > 1000
                 ? `High-stake game detected: ${formatCurrency(
-                    game.totalStake
+                    game.totalStake,
                   )} ETB`
                 : `High player count: ${game.numberOfPlayers} players`;
             setNotifications((prev) => [
@@ -171,7 +165,7 @@ const HouseReports = () => {
 
   const debouncedHandleFilterChange = useMemo(
     () => debounce(handleFilterChange, 300),
-    [handleFilterChange]
+    [handleFilterChange],
   );
 
   const handleWinnerFilterChange = (e) => {
@@ -284,7 +278,7 @@ const HouseReports = () => {
     link.href = URL.createObjectURL(blob);
     link.setAttribute(
       "download",
-      `house_reports_${new Date().toISOString().slice(0, 10)}.csv`
+      `house_reports_${new Date().toISOString().slice(0, 10)}.csv`,
     );
     document.body.appendChild(link);
     link.click();
@@ -319,7 +313,7 @@ const HouseReports = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "House Reports");
     XLSX.writeFile(
       workbook,
-      `house_reports_${new Date().toISOString().slice(0, 10)}.xlsx`
+      `house_reports_${new Date().toISOString().slice(0, 10)}.xlsx`,
     );
   };
 
@@ -457,7 +451,7 @@ const HouseReports = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginatedGames = filteredAndSortedGames.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const handlePageChange = (page) => {
@@ -494,7 +488,7 @@ const HouseReports = () => {
           }`}
         >
           {i}
-        </button>
+        </button>,
       );
     }
 
@@ -540,7 +534,7 @@ const HouseReports = () => {
     for (let i = 0; i < 12; i++) {
       const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
       const value = `${date.getFullYear()}-${String(
-        date.getMonth() + 1
+        date.getMonth() + 1,
       ).padStart(2, "0")}`;
       const label = date.toLocaleString("en-ET", {
         year: "numeric",
@@ -816,7 +810,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "numberOfPlayers",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -830,7 +824,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "numberOfPlayers",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -851,7 +845,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "betAmount",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -865,7 +859,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "betAmount",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -886,7 +880,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "totalStake",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -900,7 +894,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "totalStake",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -921,7 +915,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "cutAmountPercent",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -935,7 +929,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "cutAmountPercent",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -956,7 +950,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "prize",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -970,7 +964,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "prize",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -991,7 +985,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "systemEarnings",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"
@@ -1005,7 +999,7 @@ const HouseReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "systemEarnings",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-green-500"

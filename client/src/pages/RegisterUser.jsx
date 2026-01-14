@@ -36,10 +36,7 @@ const RegisterUser = () => {
     const fetchHouses = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await api.get(
-          `/api/house/`,
-         
-        );
+        const res = await api.get(`/api/house/`);
 
         if (res.data && Array.isArray(res.data.house)) {
           setHouses(res.data.house);
@@ -75,11 +72,7 @@ const RegisterUser = () => {
     }
 
     try {
-      const response = await api.post(
-        `/api/auth/register`,
-        formData,
-        
-      );
+      const response = await api.post(`/api/auth/register`, formData);
 
       if (response.status === 200 || response.status === 201) {
         const { message, user } = response.data;

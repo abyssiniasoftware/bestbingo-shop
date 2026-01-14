@@ -65,27 +65,24 @@ const AgentReports = () => {
           throw new Error("Authentication token not found. Please log in.");
         }
 
-        const response = await api.get(
-          `/api/stats/agent`,
-          {
-            params: {
-              month: filters.month || undefined,
-              startDate: filters.dateRange.start
-                ? filters.dateRange.start.toISOString()
-                : undefined,
-              endDate: filters.dateRange.end
-                ? filters.dateRange.end.toISOString()
-                : undefined,
-            },
-          }
-        );
+        const response = await api.get(`/api/stats/agent`, {
+          params: {
+            month: filters.month || undefined,
+            startDate: filters.dateRange.start
+              ? filters.dateRange.start.toISOString()
+              : undefined,
+            endDate: filters.dateRange.end
+              ? filters.dateRange.end.toISOString()
+              : undefined,
+          },
+        });
 
         setStats(response.data);
         setVisibleHouses(
           response.data.houses.reduce((acc, house) => {
             acc[house.houseName] = true;
             return acc;
-          }, {})
+          }, {}),
         );
         setError(null);
       } catch (err) {
@@ -140,7 +137,7 @@ const AgentReports = () => {
 
   const debouncedHandleFilterChange = useMemo(
     () => debounce(handleFilterChange, 300),
-    [handleFilterChange]
+    [handleFilterChange],
   );
 
   const handleHouseFilterChange = useCallback((e) => {
@@ -218,38 +215,38 @@ const AgentReports = () => {
       };
 
     const filteredHouses = stats.houses.filter(
-      (house) => !filters.houseName || house.houseName === filters.houseName
+      (house) => !filters.houseName || house.houseName === filters.houseName,
     );
 
     return {
       totalHouses: filteredHouses.length,
       totalEarnings: filteredHouses.reduce(
         (sum, house) => sum + house.totalEarnings,
-        0
+        0,
       ),
       totalGames: filteredHouses.reduce(
         (sum, house) => sum + house.totalGamesPlayed,
-        0
+        0,
       ),
       totalRechargeAmount: filteredHouses.reduce(
         (sum, house) => sum + house.totalRechargeAmount,
-        0
+        0,
       ),
       totalCommissions: filteredHouses.reduce(
         (sum, house) => sum + house.totalCommissions,
-        0
+        0,
       ),
       totalTodayGames: filteredHouses.reduce(
         (sum, house) => sum + house.todayGames,
-        0
+        0,
       ),
       totalTodayRechargeAmount: filteredHouses.reduce(
         (sum, house) => sum + house.todayRechargeAmount,
-        0
+        0,
       ),
       totalTodayCommissions: filteredHouses.reduce(
         (sum, house) => sum + house.todayCommissions,
-        0
+        0,
       ),
     };
   }, [stats, filters.houseName]);
@@ -259,7 +256,7 @@ const AgentReports = () => {
     if (!stats || !stats.houses) return [];
     return stats.houses
       .filter(
-        (house) => !filters.houseName || house.houseName === filters.houseName
+        (house) => !filters.houseName || house.houseName === filters.houseName,
       )
       .flatMap((house) =>
         house.recharges
@@ -286,7 +283,7 @@ const AgentReports = () => {
             "Commission (ETB)": formatCurrency(recharge.commission),
             "Package Added (ETB)": formatCurrency(recharge.packageAdded),
             "Created At": formatDate(recharge.createdAt),
-          }))
+          })),
       );
   }, [
     stats,
@@ -316,15 +313,15 @@ const AgentReports = () => {
         "Total Houses Profit (ETB)": formatCurrency(metrics.totalEarnings),
         "Total Games": metrics.totalGames,
         "Total Recharge Amount (ETB)": formatCurrency(
-          metrics.totalRechargeAmount
+          metrics.totalRechargeAmount,
         ),
         "Total Commissions (ETB)": formatCurrency(metrics.totalCommissions),
         "Today's Games": metrics.totalTodayGames,
         "Today's Recharge Amount (ETB)": formatCurrency(
-          metrics.totalTodayRechargeAmount
+          metrics.totalTodayRechargeAmount,
         ),
         "Today's Commissions (ETB)": formatCurrency(
-          metrics.totalTodayCommissions
+          metrics.totalTodayCommissions,
         ),
       },
     ];
@@ -339,7 +336,7 @@ const AgentReports = () => {
     link.href = URL.createObjectURL(blob);
     link.setAttribute(
       "download",
-      `agent_reports_${new Date().toISOString().slice(0, 10)}.csv`
+      `agent_reports_${new Date().toISOString().slice(0, 10)}.csv`,
     );
     document.body.appendChild(link);
     link.click();
@@ -366,15 +363,15 @@ const AgentReports = () => {
         "Total Houses Profit (ETB)": formatCurrency(metrics.totalEarnings),
         "Total Games": metrics.totalGames,
         "Total Recharge Amount (ETB)": formatCurrency(
-          metrics.totalRechargeAmount
+          metrics.totalRechargeAmount,
         ),
         "Total Commissions (ETB)": formatCurrency(metrics.totalCommissions),
         "Today's Games": metrics.totalTodayGames,
         "Today's Recharge Amount (ETB)": formatCurrency(
-          metrics.totalTodayRechargeAmount
+          metrics.totalTodayRechargeAmount,
         ),
         "Today's Commissions (ETB)": formatCurrency(
-          metrics.totalTodayCommissions
+          metrics.totalTodayCommissions,
         ),
       },
     ];
@@ -390,7 +387,7 @@ const AgentReports = () => {
 
     XLSX.writeFile(
       workbook,
-      `agent_reports_${new Date().toISOString().slice(0, 10)}.xlsx`
+      `agent_reports_${new Date().toISOString().slice(0, 10)}.xlsx`,
     );
   };
 
@@ -498,7 +495,7 @@ const AgentReports = () => {
 
     let games = stats.houses
       .filter(
-        (house) => !filters.houseName || house.houseName === filters.houseName
+        (house) => !filters.houseName || house.houseName === filters.houseName,
       )
       .flatMap((house) =>
         house.gameHistory
@@ -513,7 +510,7 @@ const AgentReports = () => {
           .map((game) => ({
             ...game,
             houseName: house.houseName,
-          }))
+          })),
       );
 
     // Apply numeric and winner filters
@@ -579,7 +576,7 @@ const AgentReports = () => {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginatedGames = filteredAndSortedGames.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const handlePageChange = useCallback(
@@ -588,7 +585,7 @@ const AgentReports = () => {
         setCurrentPage(page);
       }
     },
-    [totalPages]
+    [totalPages],
   );
 
   const handleItemsPerPageChange = useCallback((e) => {
@@ -619,7 +616,7 @@ const AgentReports = () => {
           }`}
         >
           {i}
-        </button>
+        </button>,
       );
     }
 
@@ -665,7 +662,7 @@ const AgentReports = () => {
     for (let i = 0; i < 12; i++) {
       const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
       const value = `${date.getFullYear()}-${String(
-        date.getMonth() + 1
+        date.getMonth() + 1,
       ).padStart(2, "0")}`;
       const label = date.toLocaleString("en-ET", {
         year: "numeric",
@@ -685,7 +682,7 @@ const AgentReports = () => {
 
     stats.houses
       .filter(
-        (house) => !filters.houseName || house.houseName === filters.houseName
+        (house) => !filters.houseName || house.houseName === filters.houseName,
       )
       .forEach((house) => {
         house.recharges
@@ -703,7 +700,7 @@ const AgentReports = () => {
               {
                 day: "numeric",
                 month: "short",
-              }
+              },
             );
             dates.add(date);
             houseCommissions[house.houseName] =
@@ -917,7 +914,7 @@ const AgentReports = () => {
                   .filter(
                     (house) =>
                       !filters.houseName ||
-                      house.houseName === filters.houseName
+                      house.houseName === filters.houseName,
                   )
                   .map((house) => (
                     <Line
@@ -992,7 +989,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "numberOfPlayers",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1005,7 +1002,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "numberOfPlayers",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1025,7 +1022,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "betAmount",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1038,7 +1035,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "betAmount",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1058,7 +1055,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "totalStake",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1071,7 +1068,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "totalStake",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1091,7 +1088,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "cutAmountPercent",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1104,7 +1101,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "cutAmountPercent",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1124,7 +1121,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "prize",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1137,7 +1134,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "prize",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1157,7 +1154,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "systemEarnings",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1170,7 +1167,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "systemEarnings",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1190,7 +1187,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "rechargeAmount",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1203,7 +1200,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "rechargeAmount",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1223,7 +1220,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "commission",
-                          "min"
+                          "min",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -1236,7 +1233,7 @@ const AgentReports = () => {
                         debouncedHandleFilterChange(
                           e.target.value,
                           "commission",
-                          "max"
+                          "max",
                         )
                       }
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"

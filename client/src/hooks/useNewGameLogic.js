@@ -13,10 +13,10 @@ const useNewGameLogic = ({
   setCardIds,
 }) => {
   const [betAmount, setBetAmount] = useState(
-    () => parseInt(localStorage.getItem("betAmount")) || 20
+    () => parseInt(localStorage.getItem("betAmount")) || 20,
   );
   const [useDropdown, setUseDropdown] = useState(
-    () => JSON.parse(localStorage.getItem("useDropdown")) || false
+    () => JSON.parse(localStorage.getItem("useDropdown")) || false,
   );
   const [cutAmount, setCutAmount] = useState(20);
   const [cartelaInput, setCartelaInput] = useState("");
@@ -24,23 +24,23 @@ const useNewGameLogic = ({
   const [winAmount, setWinAmount] = useState(0);
   const [houseProfit, setHouseProfit] = useState(0);
   const [showHouseProfitInfo, setShowHouseProfitInfo] = useState(
-    () => JSON.parse(localStorage.getItem("showHouseProfitInfo")) || false
+    () => JSON.parse(localStorage.getItem("showHouseProfitInfo")) || false,
   );
   const [showTotalStakeInfo, setShowTotalStakeInfo] = useState(
-    () => JSON.parse(localStorage.getItem("showTotalStakeInfo")) || false
+    () => JSON.parse(localStorage.getItem("showTotalStakeInfo")) || false,
   );
   const [showSensitiveInfo, setShowSensitiveInfo] = useState(
-    () => JSON.parse(localStorage.getItem("showSensitiveInfo")) || false
+    () => JSON.parse(localStorage.getItem("showSensitiveInfo")) || false,
   );
   const [showCutAmount, setShowCutAmount] = useState(
-    () => JSON.parse(localStorage.getItem("showCutAmount")) || false
+    () => JSON.parse(localStorage.getItem("showCutAmount")) || false,
   );
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(
-    () => JSON.parse(localStorage.getItem("isSummaryExpanded")) || true
+    () => JSON.parse(localStorage.getItem("isSummaryExpanded")) || true,
   );
   const [showCardCount, setShowCardCount] = useState(false);
   const [selectedBackground, setSelectedBackground] = useState(
-    () => localStorage.getItem("selectedBackground") || "default"
+    () => localStorage.getItem("selectedBackground") || "default",
   );
   const [bonusAmount, setBonusAmount] = useState(() => {
     const stored = localStorage.getItem("bonusAmount");
@@ -84,7 +84,7 @@ const useNewGameLogic = ({
         const response = await apiService.updateCutAmountSetting(
           userId,
           cutAmount,
-          token
+          token,
         );
         if (response.cutAmount !== cutAmount) {
           setCutAmount(response.cutAmount); // Sync with backend response
@@ -102,7 +102,7 @@ const useNewGameLogic = ({
         } catch (fetchError) {
           console.error(
             "Error fetching cut amount after failed update:",
-            fetchError.message
+            fetchError.message,
           );
           setCutAmount(20);
         }
@@ -122,19 +122,19 @@ const useNewGameLogic = ({
     localStorage.setItem("useDropdown", JSON.stringify(useDropdown));
     localStorage.setItem(
       "showSensitiveInfo",
-      JSON.stringify(showSensitiveInfo)
+      JSON.stringify(showSensitiveInfo),
     );
     localStorage.setItem(
       "isSummaryExpanded",
-      JSON.stringify(isSummaryExpanded)
+      JSON.stringify(isSummaryExpanded),
     );
     localStorage.setItem(
       "showHouseProfitInfo",
-      JSON.stringify(showHouseProfitInfo)
+      JSON.stringify(showHouseProfitInfo),
     );
     localStorage.setItem(
       "showTotalStakeInfo",
-      JSON.stringify(showTotalStakeInfo)
+      JSON.stringify(showTotalStakeInfo),
     );
     localStorage.setItem("showCutAmount", JSON.stringify(showCutAmount));
     localStorage.setItem("selectedBackground", selectedBackground);
@@ -233,7 +233,7 @@ const useNewGameLogic = ({
 
       const response = await apiService.createGame(
         payload,
-        localStorage.getItem("token")
+        localStorage.getItem("token"),
       );
       localStorage.removeItem("lockedCards");
       localStorage.removeItem("calledNumbers");

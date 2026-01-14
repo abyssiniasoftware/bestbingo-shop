@@ -22,14 +22,11 @@ import api from "../utils/api";
 const apiService = {
   fetchUserData: async (token) => {
     try {
-      const response = await api.get(
-        `/api/me`,
-       
-      );
+      const response = await api.get(`/api/me`);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch user data"
+        error.response?.data?.message || "Failed to fetch user data",
       );
     }
   },
@@ -41,7 +38,8 @@ const AgentDashboard = () => {
   const [walletData, setWalletData] = useState(null);
   const [error, setError] = useState(null);
   const [showSensitiveInfo, setShowSensitiveInfo] = useState(
-    () => JSON.parse(localStorage.getItem("showSuperAdminBalanceInfo")) || false
+    () =>
+      JSON.parse(localStorage.getItem("showSuperAdminBalanceInfo")) || false,
   );
 
   // Fetch user data (balance and username)
@@ -67,7 +65,7 @@ const AgentDashboard = () => {
     setShowSensitiveInfo((prev) => !prev);
     localStorage.setItem(
       "showSuperAdminBalanceInfo",
-      JSON.stringify(!showSensitiveInfo)
+      JSON.stringify(!showSensitiveInfo),
     );
   };
 
@@ -122,8 +120,8 @@ const AgentDashboard = () => {
                 {isLoading
                   ? "Loading..."
                   : showSensitiveInfo
-                  ? `${(walletData?.package || 0).toFixed(2)} ETB`
-                  : "****"}
+                    ? `${(walletData?.package || 0).toFixed(2)} ETB`
+                    : "****"}
               </span>
               <button
                 onClick={toggleSensitiveInfo}

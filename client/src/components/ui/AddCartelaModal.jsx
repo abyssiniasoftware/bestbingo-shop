@@ -22,7 +22,7 @@ const AddCartelaModal = ({ isOpen, onClose, userId, onCartelaAdded }) => {
           validateInput(key, 0)
             ? validateInput(key, 0).join(" and ")
             : "valid range"
-        }`
+        }`,
       );
       setCartelaData({ ...cartelaData, [key]: "" });
     }
@@ -38,7 +38,7 @@ const AddCartelaModal = ({ isOpen, onClose, userId, onCartelaAdded }) => {
             validateInput(key, 0)
               ? validateInput(key, 0).join(" and ")
               : "valid range"
-          }`
+          }`,
         );
         return;
       }

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import api from "../../utils/api";
@@ -27,9 +26,11 @@ const History = ({ userId }) => {
   }, [userId]);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-64">
+    return (
+      <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
-      </div>;
+      </div>
+    );
   }
 
   if (error) {

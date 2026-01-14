@@ -17,8 +17,13 @@
   width: 180px;
   height: 180px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #4a4a4a 0%, #1a1a1a 50%, #000 100%);
-  box-shadow: 
+  background: radial-gradient(
+    circle at 30% 30%,
+    #4a4a4a 0%,
+    #1a1a1a 50%,
+    #000 100%
+  );
+  box-shadow:
     inset -10px -10px 30px rgba(0, 0, 0, 0.8),
     inset 10px 10px 30px rgba(100, 100, 100, 0.3),
     0 10px 30px rgba(0, 0, 0, 0.5);
@@ -27,19 +32,23 @@
 }
 
 .blower-sphere::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 10%;
   left: 15%;
   width: 30%;
   height: 15%;
-  background: radial-gradient(ellipse, rgba(255,255,255,0.4), transparent);
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.4), transparent);
   border-radius: 50%;
 }
 
 @keyframes sphereRotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .balls-container {
@@ -54,8 +63,13 @@
 }
 
 @keyframes ballsFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 .blower-ball {
@@ -67,8 +81,13 @@
 }
 
 @keyframes ballBounce {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50% { transform: translateY(-8px) scale(1.05); }
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.05);
+  }
 }
 
 /* Ball tube connecting to recent calls */
@@ -81,7 +100,7 @@
   height: 50px;
   background: linear-gradient(to right, #333 0%, #555 50%, #333 100%);
   border-radius: 10px;
-  box-shadow: inset 0 5px 10px rgba(0,0,0,0.5);
+  box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.5);
 }
 
 /* ============================================
@@ -91,20 +110,33 @@
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #ffd700 0%, #ffa500 50%, #ff8c00 100%);
+  background: radial-gradient(
+    circle at 30% 30%,
+    #ffd700 0%,
+    #ffa500 50%,
+    #ff8c00 100%
+  );
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(255, 165, 0, 0.6),
     0 10px 30px rgba(0, 0, 0, 0.3);
   animation: numberPulse 0.5s ease-out;
 }
 
 @keyframes numberPulse {
-  0% { transform: scale(0.8); opacity: 0.5; }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .current-number-text {
@@ -123,7 +155,7 @@
   padding: 10px 15px;
   background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
   border-radius: 25px;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .recent-ball {
@@ -139,8 +171,14 @@
 }
 
 @keyframes ballEnter {
-  0% { transform: scale(0) translateX(50px); opacity: 0; }
-  100% { transform: scale(1) translateX(0); opacity: 1; }
+  0% {
+    transform: scale(0) translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+  }
 }
 
 /* ============================================
@@ -204,8 +242,13 @@
 }
 
 @keyframes cellCalled {
-  0% { transform: scale(1.2); background: #fbbf24; }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1.2);
+    background: #fbbf24;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* ============================================
@@ -428,7 +471,7 @@
 
 .control-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
 
 .speed-slider {
@@ -460,45 +503,53 @@
     width: 150px;
     height: 150px;
   }
-  
+
   .blower-sphere {
     width: 130px;
     height: 130px;
   }
-  
+
   .current-number-display {
     width: 100px;
     height: 100px;
   }
-  
+
   .current-number-text {
     font-size: 2.5rem;
   }
-  
+
   .bingo-letter,
   .bingo-number-cell {
     width: 35px;
     height: 35px;
     font-size: 1rem;
   }
-  
+
   .card-oval {
     width: 30px;
     height: 24px;
     font-size: 0.75rem;
   }
-  
+
   .card-grid-oval {
     grid-template-columns: repeat(10, 1fr);
   }
 }
 @keyframes popIn {
-  0% { transform: scale(0); opacity: 0; }
-  80% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Ensure the Blower doesn't overflow */
 .blower-container {
-    overflow: visible;
+  overflow: visible;
 }

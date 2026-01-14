@@ -10,7 +10,7 @@ const useWallet = () => {
     setIsLoading(true);
     try {
       const data = await apiService.fetchWalletData(
-        localStorage.getItem("token")
+        localStorage.getItem("token"),
       );
       setWalletData(data);
     } catch (err) {

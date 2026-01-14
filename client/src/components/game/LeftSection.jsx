@@ -41,7 +41,7 @@ const LeftSection = ({
         return null;
       }
       return `🎯🎉 ${Number(dynamicBonusAmount).toFixed(
-        0
+        0,
       )} ብር ዳይናሚክ ቦነስ - በ4 ጥሪዎች ያሸንፉ! 🎉`;
     }
     if (isBonusHidden) {

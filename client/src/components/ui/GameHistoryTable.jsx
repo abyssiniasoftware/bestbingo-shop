@@ -39,7 +39,7 @@ const GameHistoryTable = ({
       });
       setCurrentPage(1);
     },
-    [setCurrentPage]
+    [setCurrentPage],
   );
 
   const filteredAndSortedGames = useMemo(() => {
@@ -47,7 +47,7 @@ const GameHistoryTable = ({
 
     let games = stats.houses
       .filter(
-        (house) => !filters.houseName || house.houseName === filters.houseName
+        (house) => !filters.houseName || house.houseName === filters.houseName,
       )
       .flatMap((house) =>
         house.gameHistory
@@ -62,7 +62,7 @@ const GameHistoryTable = ({
           .map((game) => ({
             ...game,
             houseName: house.houseName,
-          }))
+          })),
       );
 
     games = games.filter((game) => {
@@ -125,7 +125,7 @@ const GameHistoryTable = ({
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginatedGames = filteredAndSortedGames.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const handlePageChange = useCallback(
@@ -134,7 +134,7 @@ const GameHistoryTable = ({
         setCurrentPage(page);
       }
     },
-    [totalPages, setCurrentPage]
+    [totalPages, setCurrentPage],
   );
 
   const handleItemsPerPageChange = useCallback(
@@ -142,7 +142,7 @@ const GameHistoryTable = ({
       setItemsPerPage(parseInt(e.target.value));
       setCurrentPage(1);
     },
-    [setItemsPerPage, setCurrentPage]
+    [setItemsPerPage, setCurrentPage],
   );
 
   const renderPagination = () => {
@@ -167,7 +167,7 @@ const GameHistoryTable = ({
           }`}
         >
           {i}
-        </button>
+        </button>,
       );
     }
 

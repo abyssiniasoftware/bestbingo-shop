@@ -8,82 +8,66 @@ const apiService = {
         throw new Error("Authentication token not found. Please log in.");
       }
 
-      const response = await api.get(
-        `/api/stats/super`,
-        {
-          params: month ? { month } : {},
-        }
-      );
+      const response = await api.get(`/api/stats/super`, {
+        params: month ? { month } : {},
+      });
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch super admin stats"
+        error.response?.data?.message || "Failed to fetch super admin stats",
       );
     }
   },
   getCutAmountSetting: async (cashierId, token) => {
     try {
-      const response = await api.get(
-        `/api/cut-amount/${cashierId}`,
-      );
+      const response = await api.get(`/api/cut-amount/${cashierId}`);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch cut amount setting"
+        error.response?.data?.message || "Failed to fetch cut amount setting",
       );
     }
   },
 
   updateCutAmountSetting: async (cashierId, cutAmount, token) => {
     try {
-      const response = await api.patch(
-        `/api/cut-amount/${cashierId}`,
-        { cutAmount },
-       
-      );
+      const response = await api.patch(`/api/cut-amount/${cashierId}`, {
+        cutAmount,
+      });
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to update cut amount setting"
+        error.response?.data?.message || "Failed to update cut amount setting",
       );
     }
   },
   fetchWalletData: async (token) => {
     try {
-      const response = await api.get(
-        `/api/me`,
-      );
+      const response = await api.get(`/api/me`);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch wallet data"
+        error.response?.data?.message || "Failed to fetch wallet data",
       );
     }
   },
   fetchCardIds: async (userId, token) => {
     try {
-      const response = await api.get(
-        `/api/bingo-card/${userId}/card-ids`,
-       
-      );
+      const response = await api.get(`/api/bingo-card/${userId}/card-ids`);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch card IDs"
+        error.response?.data?.message || "Failed to fetch card IDs",
       );
     }
   },
   createGame: async (payload, token) => {
     try {
-      const response = await api.post(
-        `/api/game/create`,
-        payload,
-       
-      );
+      const response = await api.post(`/api/game/create`, payload);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to create bingo game"
+        error.response?.data?.message || "Failed to create bingo game",
       );
     }
   },
@@ -105,15 +89,13 @@ const apiService = {
       return numbers;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch card numbers"
+        error.response?.data?.message || "Failed to fetch card numbers",
       );
     }
   },
   fetchCartelaData: async (cardId, userId, token) => {
     try {
-      const response = await api.get(
-        `/api/bingo-card/${userId}/${cardId}`,
-      );
+      const response = await api.get(`/api/bingo-card/${userId}/${cardId}`);
       if (response.status !== 200) throw new Error("Failed to fetch cartela");
       const data = response.data;
       const formattedData = {};
@@ -128,15 +110,13 @@ const apiService = {
       return formattedData;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch cartela data"
+        error.response?.data?.message || "Failed to fetch cartela data",
       );
     }
   },
   fetchGameDetails: async (userId, token) => {
     try {
-      const response = await api.get(
-        `/api/game/last/${userId}`,
-      );
+      const response = await api.get(`/api/game/last/${userId}`);
       if (response.status !== 200)
         throw new Error("Failed to fetch game details");
       const game = response.data;
@@ -146,32 +126,33 @@ const apiService = {
       return game;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch game details"
+        error.response?.data?.message || "Failed to fetch game details",
       );
     }
   },
   declareWinner: async (houseId, gameId, winnerCardId, token) => {
     try {
-      const response = await api.put(
-        `/api/game/update-winner`,
-        { houseId, gameId, winnerCardId },
-        
-      );
+      const response = await api.put(`/api/game/update-winner`, {
+        houseId,
+        gameId,
+        winnerCardId,
+      });
       if (response.status !== 200) throw new Error("Failed to declare winner");
       return true;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to declare winner"
+        error.response?.data?.message || "Failed to declare winner",
       );
     }
   },
   awardBonus: async (cashierId, gameId, houseId, bonusAmount, token) => {
     try {
-      const response = await api.post(
-        `/api/game/award`,
-        { cashierId, gameId, houseId, bonusAmount },
-       
-      );
+      const response = await api.post(`/api/game/award`, {
+        cashierId,
+        gameId,
+        houseId,
+        bonusAmount,
+      });
       if (response.status !== 201) throw new Error("Failed to award bonus");
       return response.data;
     } catch (error) {
@@ -180,50 +161,41 @@ const apiService = {
   },
   fetchActiveDynamicBonus: async (token) => {
     try {
-      const response = await api.get(
-        `/api/game/active-dynamic`,
-        
-      );
+      const response = await api.get(`/api/game/active-dynamic`);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch dynamic bonus"
+        error.response?.data?.message || "Failed to fetch dynamic bonus",
       );
     }
   },
   markBonusInactive: async (houseId, cashierId, token) => {
     try {
-      const response = await api.post(
-        `/api/game/mark-inactive`,
-        { houseId, cashierId },
-      
-      );
+      const response = await api.post(`/api/game/mark-inactive`, {
+        houseId,
+        cashierId,
+      });
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to mark bonus inactive"
+        error.response?.data?.message || "Failed to mark bonus inactive",
       );
     }
   },
   fetchUserDetails: async (userId, token) => {
     try {
-      const response = await api.get(
-        `/api/me`,
-        
-      );
+      const response = await api.get(`/api/me`);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to fetch user details"
+        error.response?.data?.message || "Failed to fetch user details",
       );
     }
   },
   // Update getCashiers to support search
   getCashiers: async (token, { search = "" } = {}) => {
     const params = new URLSearchParams({ search }).toString();
-    const response = await api.get(
-      `/api/user/cashiers?${params}`
-    );
+    const response = await api.get(`/api/user/cashiers?${params}`);
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.message || "Failed to fetch cashiers");
@@ -235,9 +207,8 @@ const apiService = {
   updateDynamicBonus: async (userId, enableDynamicBonus, token) => {
     const response = await api.patch(
       `/api/user/${userId}/dynamic-bonus`,
-      
-        { enableDynamicBonus }
-      
+
+      { enableDynamicBonus },
     );
     if (!response.ok) {
       const error = await response.json();
@@ -247,42 +218,34 @@ const apiService = {
   },
   createBingoCard: async (cardData, token) => {
     try {
-      const response = await api.post(
-        `/api/bingo-card/create`,
-        cardData,
-        
-      );
+      const response = await api.post(`/api/bingo-card/create`, cardData);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to create bingo card"
+        error.response?.data?.message || "Failed to create bingo card",
       );
     }
   },
   bulkUploadCards: async (userId, cardsData, token) => {
     try {
-      const response = await api.post(
-        `/api/user/bulk-upload`,
-        { userId, cardsData },
-        
-      );
+      const response = await api.post(`/api/user/bulk-upload`, {
+        userId,
+        cardsData,
+      });
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to upload bulk cards"
+        error.response?.data?.message || "Failed to upload bulk cards",
       );
     }
   },
   deleteBingoCard: async (userId, cardId, token) => {
     try {
-      const response = await api.delete(
-        `/api/bingo-card/${userId}/${cardId}`,
-       
-      );
+      const response = await api.delete(`/api/bingo-card/${userId}/${cardId}`);
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to delete bingo card"
+        error.response?.data?.message || "Failed to delete bingo card",
       );
     }
   },
@@ -291,12 +254,11 @@ const apiService = {
       const response = await api.put(
         `/api/bingo-card/${userId}/${cardId}`,
         cardData,
-        
       );
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || "Failed to update bingo card"
+        error.response?.data?.message || "Failed to update bingo card",
       );
     }
   },

@@ -74,7 +74,6 @@ import jo73 from "/jVoice/73.wav";
 import jo74 from "/jVoice/74.wav";
 import jo75 from "/jVoice/75.wav";
 
-
 export {
   jb1,
   jb2,

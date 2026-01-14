@@ -40,12 +40,12 @@ const AdditionalFilters = ({
       }));
       setCurrentPage(1);
     },
-    [setFilters, setCurrentPage]
+    [setFilters, setCurrentPage],
   );
 
   const debouncedHandleFilterChange = useMemo(
     () => debounce(handleFilterChange, 300),
-    [handleFilterChange]
+    [handleFilterChange],
   );
 
   const handleWinnerFilterChange = useCallback(
@@ -56,7 +56,7 @@ const AdditionalFilters = ({
       }));
       setCurrentPage(1);
     },
-    [setFilters, setCurrentPage]
+    [setFilters, setCurrentPage],
   );
 
   const resetFilters = useCallback(() => {
@@ -80,7 +80,7 @@ const AdditionalFilters = ({
 
     let games = stats.houses
       .filter(
-        (house) => !filters.houseName || house.houseName === filters.houseName
+        (house) => !filters.houseName || house.houseName === filters.houseName,
       )
       .flatMap((house) =>
         house.gameHistory
@@ -95,7 +95,7 @@ const AdditionalFilters = ({
           .map((game) => ({
             ...game,
             houseName: house.houseName,
-          }))
+          })),
       );
 
     games = games.filter((game) => {
@@ -154,7 +154,7 @@ const AdditionalFilters = ({
     tomorrow.setDate(today.getDate() + 1);
 
     const filteredHouses = stats.houses.filter(
-      (house) => !filters.houseName || house.houseName === filters.houseName
+      (house) => !filters.houseName || house.houseName === filters.houseName,
     );
 
     const totalDeposits = filteredHouses
@@ -219,7 +219,7 @@ const AdditionalFilters = ({
     if (!stats || !stats.houses) return [];
     return stats.houses
       .filter(
-        (house) => !filters.houseName || house.houseName === filters.houseName
+        (house) => !filters.houseName || house.houseName === filters.houseName,
       )
       .flatMap((house) =>
         house.recharges
@@ -236,7 +236,7 @@ const AdditionalFilters = ({
             "Recharge Amount (ETB)": formatCurrency(recharge.amount),
             "Package Added (ETB)": formatCurrency(recharge.packageAdded),
             "Created At": formatDate(recharge.createdAt),
-          }))
+          })),
       );
   }, [stats, filters.houseName, filters.dateRange]);
 
@@ -274,7 +274,7 @@ const AdditionalFilters = ({
     link.href = URL.createObjectURL(blob);
     link.setAttribute(
       "download",
-      `super_admin_reports_${new Date().toISOString().slice(0, 10)}.csv`
+      `super_admin_reports_${new Date().toISOString().slice(0, 10)}.csv`,
     );
     document.body.appendChild(link);
     link.click();
@@ -316,7 +316,7 @@ const AdditionalFilters = ({
 
     XLSX.writeFile(
       workbook,
-      `super_admin_reports_${new Date().toISOString().slice(0, 10)}.xlsx`
+      `super_admin_reports_${new Date().toISOString().slice(0, 10)}.xlsx`,
     );
   };
 
@@ -406,7 +406,7 @@ const AdditionalFilters = ({
     });
 
     doc.save(
-      `super_admin_reports_${new Date().toISOString().slice(0, 10)}.pdf`
+      `super_admin_reports_${new Date().toISOString().slice(0, 10)}.pdf`,
     );
   };
 
@@ -415,7 +415,7 @@ const AdditionalFilters = ({
       setItemsPerPage(parseInt(e.target.value));
       setCurrentPage(1);
     },
-    [setItemsPerPage, setCurrentPage]
+    [setItemsPerPage, setCurrentPage],
   );
 
   return (
@@ -476,7 +476,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "numberOfPlayers",
-                      "min"
+                      "min",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -489,7 +489,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "numberOfPlayers",
-                      "max"
+                      "max",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -509,7 +509,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "betAmount",
-                      "min"
+                      "min",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -522,7 +522,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "betAmount",
-                      "max"
+                      "max",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -542,7 +542,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "totalStake",
-                      "min"
+                      "min",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -555,7 +555,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "totalStake",
-                      "max"
+                      "max",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -575,7 +575,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "cutAmountPercent",
-                      "min"
+                      "min",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -588,7 +588,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "cutAmountPercent",
-                      "max"
+                      "max",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -633,7 +633,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "systemEarnings",
-                      "min"
+                      "min",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"
@@ -646,7 +646,7 @@ const AdditionalFilters = ({
                     debouncedHandleFilterChange(
                       e.target.value,
                       "systemEarnings",
-                      "max"
+                      "max",
                     )
                   }
                   className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-red-500"

@@ -68,7 +68,7 @@ const HouseList = () => {
         setCurrentPage(1); // Reset to first page on new search
         fetchHouses(1, value);
       }, 500),
-    [token, rowsPerPage]
+    [token, rowsPerPage],
   );
 
   useEffect(() => {
@@ -98,15 +98,11 @@ const HouseList = () => {
     setRechargeError(false);
 
     try {
-      const response = await api.post(
-        `/api/house/recharge`,
-        {
-          houseId: selectedHouseId,
-          amount: Number(rechargeAmount),
-          superAdminCommission: Number(superAdminCommission) / 100,
-        },
-       
-      );
+      const response = await api.post(`/api/house/recharge`, {
+        houseId: selectedHouseId,
+        amount: Number(rechargeAmount),
+        superAdminCommission: Number(superAdminCommission) / 100,
+      });
 
       if (response.status === 200 || response.status === 201) {
         setRechargeMessage("Recharge submitted successfully!");
@@ -320,7 +316,7 @@ const HouseList = () => {
                           >
                             {col.label}
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 </TableHead>
@@ -371,7 +367,7 @@ const HouseList = () => {
                                 house.houseAdminId?.branch || "N/A"
                               ) : col.id === "wallet" ? (
                                 Number(house.houseAdminId?.package).toFixed(
-                                  0
+                                  0,
                                 ) || 0
                               ) : col.id === "status" ? (
                                 house.houseAdminId?.isBanned ? (
@@ -406,7 +402,7 @@ const HouseList = () => {
                                 "N/A"
                               )}
                             </TableCell>
-                          )
+                          ),
                       )}
                     </TableRow>
                   ))}

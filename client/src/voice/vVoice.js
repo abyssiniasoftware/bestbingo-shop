@@ -74,7 +74,6 @@ import vo73 from "/vVoice/73.wav";
 import vo74 from "/vVoice/74.wav";
 import vo75 from "/vVoice/75.wav";
 
-
 export {
   vb1,
   vb2,

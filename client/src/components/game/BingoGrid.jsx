@@ -4,8 +4,6 @@ import { Box, Grid, Typography, styled } from "@mui/material";
 
 import "../../styles/game-redesign.css";
 
-
-
 // Define animations
 
 const gridPulseAnimation = `
@@ -20,8 +18,6 @@ const gridPulseAnimation = `
 
 `;
 
-
-
 const calledPulseAnimation = `
 
 @keyframes calledPulse {
@@ -33,8 +29,6 @@ const calledPulseAnimation = `
 100% { transform: scale(1); }
 
 `;
-
-
 
 const numberFlipAnimation = `
 
@@ -48,12 +42,9 @@ const numberFlipAnimation = `
 
 `;
 
-
-
 // BINGO letter styles
 
 const letterColors = {
-
   B: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
 
   I: "linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)",
@@ -63,10 +54,7 @@ const letterColors = {
   G: "linear-gradient(135deg, #14532d 0%, #22c55e 100%)",
 
   O: "linear-gradient(135deg, #374151 0%, #6b7280 100%)",
-
 };
-
-
 
 const StyledBingoLetter = styled(Box, {
   shouldForwardProp: (prop) => prop !== "letter",
@@ -85,8 +73,6 @@ const StyledBingoLetter = styled(Box, {
   marginBottom: "4px", // Small gap between header and numbers
 }));
 
-
-
 const StyledNumberCell = styled(Box, {
   shouldForwardProp: (prop) => prop !== "called" && prop !== "isShuffling",
 })(({ theme, called, isShuffling }) => ({
@@ -104,10 +90,7 @@ const StyledNumberCell = styled(Box, {
   color: "#fff",
   textShadow: "0px 2px 4px rgba(0,0,0,0.6)", // Text shadow for better readability
 
-
-  backgroundImage: called
-    ? "url(/images/called.png)"
-    : "url(/images/num.png)",
+  backgroundImage: called ? "url(/images/called.png)" : "url(/images/num.png)",
 
   backgroundSize: "100% 100%", // Critical: Stretches the image to fit the rectangle exactly
   backgroundRepeat: "no-repeat",
@@ -140,16 +123,12 @@ const StyledNumberCell = styled(Box, {
   },
 }));
 
-
-
 // Utility functions
 
-const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-
+const getRandomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
 
 const getBingoLetter = (number) => {
-
   if (number >= 1 && number <= 15) return "B";
 
   if (number >= 16 && number <= 30) return "I";
@@ -159,13 +138,9 @@ const getBingoLetter = (number) => {
   if (number >= 46 && number <= 60) return "G";
 
   return "O";
-
 };
 
-
-
 const BingoGrid = ({ calledNumbers, shuffling }) => {
-
   const [shuffledNumber, setShuffledNumber] = useState(null);
 
   const [fastShuffleNums, setFastShuffleNums] = useState([]);
@@ -174,14 +149,10 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
 
   const [isFastShuffling, setIsFastShuffling] = useState(false);
 
-
-
   // Shuffle simulation
 
   useEffect(() => {
-
     if (!shuffling) {
-
       setShuffledNumber(null);
 
       setFastShuffleNums([]);
@@ -191,21 +162,15 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
       setIsFastShuffling(false);
 
       return;
-
     }
-
-
 
     const allNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
 
     const uncalledNumbers = allNumbers.filter(
-
-      (num) => !calledNumbers.includes(num.toString())
-
+      (num) => !calledNumbers.includes(num.toString()),
     );
 
     if (uncalledNumbers.length === 0) {
-
       setShuffledNumber(null);
 
       setFastShuffleNums([]);
@@ -215,10 +180,7 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
       setIsFastShuffling(false);
 
       return;
-
     }
-
-
 
     setIsFastShuffling(true);
 
@@ -229,7 +191,6 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
     const numbersToShuffle = 60;
 
     const fastShuffleInterval = setInterval(() => {
-
       shuffleCount += 1;
 
       const shuffledIndices = [];
@@ -237,41 +198,29 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
       const shuffledNumbers = [];
 
       while (
-
-        shuffledIndices.length < Math.min(numbersToShuffle, uncalledNumbers.length)
-
+        shuffledIndices.length <
+        Math.min(numbersToShuffle, uncalledNumbers.length)
       ) {
-
         const randomIndex = Math.floor(Math.random() * uncalledNumbers.length);
 
         if (!shuffledIndices.includes(randomIndex)) {
-
           shuffledIndices.push(randomIndex);
 
           shuffledNumbers.push(uncalledNumbers[randomIndex]);
-
         }
-
       }
 
       setFastShuffleNums(shuffledNumbers);
 
-
-
       const newDisplayNumbers = {};
 
       shuffledNumbers.forEach((num) => {
-
         newDisplayNumbers[num] = getRandomInt(1, 75);
-
       });
 
       setDisplayNumbers(newDisplayNumbers);
 
-
-
       if (shuffleCount >= maxShuffleRounds) {
-
         clearInterval(fastShuffleInterval);
 
         setIsFastShuffling(false);
@@ -279,59 +228,40 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
         setFastShuffleNums([]);
 
         setDisplayNumbers({});
-
       }
-
     }, 100);
 
+    const selectTimeout = setTimeout(
+      () => {
+        const randomIndex = Math.floor(Math.random() * uncalledNumbers.length);
 
+        const selectedNumber = uncalledNumbers[randomIndex];
 
-    const selectTimeout = setTimeout(() => {
-
-      const randomIndex = Math.floor(Math.random() * uncalledNumbers.length);
-
-      const selectedNumber = uncalledNumbers[randomIndex];
-
-      setShuffledNumber(selectedNumber);
-
-    }, 100 * maxShuffleRounds + 1200);
-
-
+        setShuffledNumber(selectedNumber);
+      },
+      100 * maxShuffleRounds + 1200,
+    );
 
     return () => {
-
       clearTimeout(selectTimeout);
 
       clearInterval(fastShuffleInterval);
-
     };
-
   }, [shuffling, calledNumbers]);
 
-
-
   const letters = ["B", "I", "N", "G", "O"];
-
-
 
   // Render the grid in 5 rows (one per BINGO letter)
 
   return (
-
     <>
-
       <style>
-
         {gridPulseAnimation} {calledPulseAnimation} {numberFlipAnimation}
-
       </style>
 
       <Box
-
         className="bingo-grid-container"
-
         sx={{
-
           background: "#1a1a1a",
 
           padding: { xs: "5px", sm: "10px" },
@@ -339,43 +269,29 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
           borderRadius: "8px",
 
           overflowX: "auto",
-
         }}
-
       >
-
         {letters.map((letter, rowIdx) => {
-
           const startNum = rowIdx * 15 + 1;
 
           return (
-
             <Box
-
               key={letter}
-
               sx={{
-
                 display: "flex",
 
                 gap: { xs: 0.25, sm: 0.5 },
 
                 mb: { xs: 0.25, sm: 0.5 },
-
               }}
-
             >
-
               {/* BINGO letter */}
 
               <StyledBingoLetter letter={letter}>{letter}</StyledBingoLetter>
 
-
-
               {/* Numbers 1-15, 16-30, etc. */}
 
               {Array.from({ length: 15 }, (_, colIdx) => {
-
                 const num = startNum + colIdx;
 
                 const isCalled = calledNumbers.includes(num.toString());
@@ -383,47 +299,28 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
                 const isShuffled = num === shuffledNumber && !isCalled;
 
                 const isFastShuffled =
-
                   fastShuffleNums.includes(num) && isFastShuffling && !isCalled;
 
-                const displayNum = isFastShuffled ? displayNumbers[num] || num : num;
-
-
+                const displayNum = isFastShuffled
+                  ? displayNumbers[num] || num
+                  : num;
 
                 return (
-
                   <StyledNumberCell
-
                     key={num}
-
                     called={isCalled}
-
                     isShuffling={isShuffled || isFastShuffled}
-
                   >
-
                     {displayNum}
-
                   </StyledNumberCell>
-
                 );
-
               })}
-
             </Box>
-
           );
-
         })}
-
       </Box>
-
     </>
-
   );
-
 };
-
-
 
 export default BingoGrid;

@@ -9,7 +9,7 @@ const Modal = ({ isOpen, onClose, title, children, className }) => {
       <div
         className={classNames(
           "bg-white rounded-lg p-6 max-w-lg w-full",
-          className
+          className,
         )}
       >
         <div className="flex justify-between items-center mb-4">

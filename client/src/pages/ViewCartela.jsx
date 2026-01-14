@@ -89,7 +89,7 @@ const ViewCartela = () => {
     setIsBonusGloballyActive(newActiveState);
     localStorage.setItem("isBonusGloballyActive", newActiveState.toString());
     toast.success(
-      `የቦነስ ስርዓት በግሎባል ${newActiveState ? "አገልግሎት አስጀምረዋል" : "አገልግሎት አስቆመዋል"}.`
+      `የቦነስ ስርዓት በግሎባል ${newActiveState ? "አገልግሎት አስጀምረዋል" : "አገልግሎት አስቆመዋል"}.`,
     );
   };
 
@@ -105,7 +105,7 @@ const ViewCartela = () => {
     setIsBonusHidden(newActiveState);
     localStorage.setItem("isBonusHidden", newActiveState.toString());
     toast.success(
-      `ዳይናሚክ ቦነስ ማሳየት ${newActiveState ? "አገልግሎት ጀመረ" : "አገልግሎት አቆመ"}.`
+      `ዳይናሚክ ቦነስ ማሳየት ${newActiveState ? "አገልግሎት ጀመረ" : "አገልግሎት አቆመ"}.`,
     );
   };
 
@@ -116,7 +116,7 @@ const ViewCartela = () => {
       try {
         const data = await apiService.fetchCardIds(
           userId,
-          localStorage.getItem("token")
+          localStorage.getItem("token"),
         );
         setCardIds(data.sort((a, b) => parseInt(a) - parseInt(b)));
       } catch (error) {
@@ -135,7 +135,7 @@ const ViewCartela = () => {
       const data = await apiService.fetchCartelaData(
         cardId,
         userId,
-        localStorage.getItem("token")
+        localStorage.getItem("token"),
       );
       const rawData = {};
       Object.keys(data).forEach((row) => {
@@ -177,7 +177,7 @@ const ViewCartela = () => {
       try {
         const data = await apiService.fetchCardIds(
           userId,
-          localStorage.getItem("token")
+          localStorage.getItem("token"),
         );
         setCardIds(data.sort((a, b) => parseInt(a) - parseInt(b)));
         localStorage.removeItem("cachedCardIds");

@@ -74,7 +74,6 @@ import o73 from "/balls/73.png";
 import o74 from "/balls/74.png";
 import o75 from "/balls/75.png";
 
-
 export {
   b1,
   b2,

@@ -86,7 +86,7 @@ const RegisterUser = () => {
           message ||
             (formData.isAgent
               ? "Agent registered successfully!"
-              : "Users and house registered successfully!")
+              : "Users and house registered successfully!"),
         );
 
         // Trigger card submission only for house registration (not for agents)

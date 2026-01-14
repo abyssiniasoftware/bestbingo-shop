@@ -57,7 +57,7 @@ const AgentHouseList = () => {
     };
 
     fetchHouses();
-  }, [ token]);
+  }, [token]);
 
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 
@@ -76,15 +76,11 @@ const AgentHouseList = () => {
     setRechargeError(false);
 
     try {
-      const response = await api.post(
-        `/api/house/recharge`,
-        {
-          houseId: selectedHouseId,
-          amount: Number(rechargeAmount),
-          superAdminCommission: Number(superAdminCommission) / 100,
-        },
-        
-      );
+      const response = await api.post(`/api/house/recharge`, {
+        houseId: selectedHouseId,
+        amount: Number(rechargeAmount),
+        superAdminCommission: Number(superAdminCommission) / 100,
+      });
 
       if (response.status === 200 || response.status === 201) {
         setRechargeMessage("Recharge submitted successfully!");
@@ -120,12 +116,12 @@ const AgentHouseList = () => {
       (house) =>
         house.name.toLowerCase().includes(searchTerm) ||
         (house.houseAdminId?.fullname?.toLowerCase() || "").includes(
-          searchTerm
+          searchTerm,
         ) ||
         (house.houseAdminId?.username?.toLowerCase() || "").includes(
-          searchTerm
+          searchTerm,
         ) ||
-        (house.houseAdminId?.phone?.toLowerCase() || "").includes(searchTerm)
+        (house.houseAdminId?.phone?.toLowerCase() || "").includes(searchTerm),
     );
   }, [houses, searchTerm]);
 
@@ -302,7 +298,7 @@ const AgentHouseList = () => {
                         >
                           {col.label}
                         </TableCell>
-                      )
+                      ),
                   )}
                 </TableRow>
               </TableHead>
@@ -384,7 +380,7 @@ const AgentHouseList = () => {
                               "N/A"
                             )}
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 ))}

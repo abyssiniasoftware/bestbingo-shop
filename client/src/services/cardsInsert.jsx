@@ -5805,10 +5805,7 @@ const handleBulkSubmission = async (userId, setMessage = () => {}) => {
   ];
 
   try {
-    const response = await api.post(
-      `/api/user/register-cards`,
-      dataToPost
-    );
+    const response = await api.post(`/api/user/register-cards`, dataToPost);
     if (response.status === 200 || response.status === 201) {
       setMessage("Cartela registered successfully!");
     } else {

@@ -74,7 +74,6 @@ import ho73 from "/hVoice/73.wav";
 import ho74 from "/hVoice/74.wav";
 import ho75 from "/hVoice/75.wav";
 
-
 export {
   hb1,
   hb2,

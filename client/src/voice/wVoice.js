@@ -74,7 +74,6 @@ import wo73 from "/wVoice/73.wav";
 import wo74 from "/wVoice/74.wav";
 import wo75 from "/wVoice/75.wav";
 
-
 export {
   wb1,
   wb2,
