@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, IconButton, Button } from "@mui/material";
+import { Box, IconButton, Button, Dialog, DialogContent, Typography } from "@mui/material";
 import GameStartModal from "../components/game/GameStartModal";
 import GameTopSection from "../components/game/GameTopSection";
 import GameControlsBar from "../components/game/GameControlsBar";
@@ -56,6 +56,12 @@ const Game = () => {
     bonusAmountGiven,
     dynamicBonusAmount,
     enableDynamicBonus,
+    isManual,
+    setIsManual,
+    isAutomatic,
+    setIsAutomatic,
+    declareWinnerManually,
+    handleReset,
     primaryPattern,
     setLockedCards,
     bonusAmount,
@@ -63,7 +69,11 @@ const Game = () => {
     showCentralBall,
     isCentralBallMoving,
     blowerZoomBall,
+    playWinnerAudio,
+    playLoseAudio,
   } = useGameLogic({ stake, players, winAmount });
+
+  const [openNewGameConfirm, setOpenNewGameConfirm] = useState(false);
 
   const backgroundStyle = backgroundOptions.find(
     (bg) => bg.value === selectedBackground,
@@ -157,8 +167,76 @@ const Game = () => {
           isGameEnded={isGameEnded}
           hasGameStarted={hasGameStarted}
           handleEndGame={handleEndGame}
+          isManual={isManual}
+          setIsManual={setIsManual}
+          isAutomatic={isAutomatic}
+          setIsAutomatic={setIsAutomatic}
+          onNewGameClick={() => setOpenNewGameConfirm(true)}
         />
       </Box>
+
+      {/* New Game Confirmation Modal */}
+      <Dialog
+        open={openNewGameConfirm}
+        onClose={() => setOpenNewGameConfirm(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: "12px",
+            padding: "16px",
+            bgcolor: "#fff",
+          },
+        }}
+      >
+        <DialogContent sx={{ textAlign: "center", pb: 0 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1, color: "#374151" }}>
+            Start a New Game?
+          </Typography>
+          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 1, color: "#374151" }}>
+            አዲስ ጨዋታ ይጀምሩ?
+          </Typography>
+          <Typography variant="body1" sx={{ color: "#6b7280", mb: 3 }}>
+            የነበረው ይጠፋል?
+          </Typography>
+
+          <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 2 }}>
+            <Button
+              onClick={() => {
+                handleReset();
+                setOpenNewGameConfirm(false);
+              }}
+              sx={{
+                bgcolor: "#10b981",
+                color: "#fff",
+                px: 4,
+                py: 1,
+                fontSize: "1rem",
+                fontWeight: "bold",
+                "&:hover": { bgcolor: "#059669" },
+                borderRadius: "8px",
+                textTransform: "none",
+              }}
+            >
+              OK
+            </Button>
+            <Button
+              onClick={() => setOpenNewGameConfirm(false)}
+              sx={{
+                bgcolor: "#ef4444",
+                color: "#fff",
+                px: 4,
+                py: 1,
+                fontSize: "1rem",
+                fontWeight: "bold",
+                "&:hover": { bgcolor: "#dc2626" },
+                borderRadius: "8px",
+                textTransform: "none",
+              }}
+            >
+              Cancel
+            </Button>
+          </Box>
+        </DialogContent>
+      </Dialog>
 
       {/* Winner Dialog */}
 
@@ -180,6 +258,13 @@ const Game = () => {
         bonusAwarded={bonusAwarded}
         bonusAmount={bonusAmountGiven.toFixed(0)}
         handleEndGame={handleEndGame}
+        isManual={isManual}
+        isAutomatic={isAutomatic}
+        declareWinnerManually={declareWinnerManually}
+        handleReset={handleReset}
+        onNewGameClick={() => setOpenNewGameConfirm(true)}
+        playWinnerAudio={playWinnerAudio}
+        playLoseAudio={playLoseAudio}
       />
     </Box>
   );

@@ -29,6 +29,7 @@ const GameControlsBar = ({
   setIsManual,
   isAutomatic,
   setIsAutomatic,
+  onNewGameClick,
 }) => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && cardIdInput && !isPlaying) {
@@ -70,6 +71,21 @@ const GameControlsBar = ({
         </Button>
 
         <Button
+          onClick={onNewGameClick}
+          sx={{
+            background: "linear-gradient(135deg, #790918 0%, #790928 100%)",
+            color: "white",
+            fontWeight: "bold",
+            padding: { xs: "6px 12px", sm: "8px 16px" },
+            fontSize: { xs: "0.75rem", sm: "0.875rem" },
+            borderRadius: "4px",
+            "&:hover": { transform: "translateY(-1px)" },
+          }}
+        >
+          New Game
+        </Button>
+
+        {/* <Button
           onClick={handleBack}
           disabled={hasGameStarted && !isGameEnded}
           sx={{
@@ -84,7 +100,7 @@ const GameControlsBar = ({
           }}
         >
           Back
-        </Button>
+        </Button> */}
 
         <Button
           onClick={handleShuffleClick}
@@ -178,10 +194,8 @@ const GameControlsBar = ({
           <FormControlLabel
             control={
               <Checkbox
-                checked={isAutomatic || true}
-                onChange={(e) =>
-                  setIsAutomatic && setIsAutomatic(e.target.checked)
-                }
+                checked={isAutomatic}
+                onChange={(e) => setIsAutomatic(e.target.checked)}
                 sx={{ color: "#9ca3af", "&.Mui-checked": { color: "#60a5fa" } }}
                 size="small"
               />

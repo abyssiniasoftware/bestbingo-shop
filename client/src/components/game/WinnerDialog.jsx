@@ -21,7 +21,7 @@ const blinkFadeInAnimation = `
 `;
 
 // Map pattern types to display names
-const getPatternName = (patternType, index) => {
+const getPatternName = (patternType) => {
   if (patternType === "fullCard") return "ሙሉ ካርድ";
   return formatPatternName(patternType);
 };
@@ -33,15 +33,17 @@ const WinnerDialog = ({
   cartelaData,
   bingoState,
   patternTypes,
-  selectedPattern,
+  bonusAwarded,
+  bonusAmount,
+  isManual,
+  declareWinnerManually,
+  onNewGameClick,
+  playWinnerAudio,
+  playLoseAudio,
   lockedCards,
   setLockedCards,
   calledNumbers,
   BINGO_PATTERNS,
-  isGameEnded,
-  bonusAwarded,
-  bonusAmount,
-  handleEndGame,
 }) => {
   const theme = useTheme();
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down("xs"));
@@ -53,8 +55,10 @@ const WinnerDialog = ({
       const playBonusAudio = async () => {
         try {
           const audio = new Audio(bonus);
-          await audio.play().catch((error) => {});
-        } catch (error) {}
+          await audio.play().catch(() => { });
+        } catch {
+          // Audio playback failed or was interrupted, ignore
+        }
       };
       playBonusAudio();
     }
@@ -76,9 +80,9 @@ const WinnerDialog = ({
     }
     patternTypes.forEach((patternType) => {
       if (patternType !== "fullCard" && BINGO_PATTERNS[patternType]) {
-        BINGO_PATTERNS[patternType].forEach((pattern, index) => {
+        BINGO_PATTERNS[patternType].forEach((pattern) => {
           if (pattern.every((cell) => bingoState[cell])) {
-            const patternName = getPatternName(patternType, index);
+            const patternName = getPatternName(patternType);
             if (!winningPatterns.includes(patternName)) {
               winningPatterns.push(patternName);
             }
@@ -118,10 +122,10 @@ const WinnerDialog = ({
     const cellSize = isVerySmallScreen
       ? "30px"
       : isSmallScreen
-        ? "45px"
+        ? "40px"
         : isMediumScreen
-          ? "60px"
-          : "70px";
+          ? "50px"
+          : "60px";
     const currentFontSize = isVerySmallScreen
       ? "10px"
       : isSmallScreen
@@ -158,10 +162,10 @@ const WinnerDialog = ({
     const cellSize = isVerySmallScreen
       ? "30px"
       : isSmallScreen
-        ? "45px"
+        ? "40px"
         : isMediumScreen
-          ? "60px"
-          : "70px";
+          ? "50px"
+          : "60px";
     const currentFontSize = isVerySmallScreen
       ? "10px"
       : isSmallScreen
@@ -197,266 +201,227 @@ const WinnerDialog = ({
   const cellSizeForGridTemplate = isVerySmallScreen
     ? "30px"
     : isSmallScreen
-      ? "45px"
+      ? "40px"
       : isMediumScreen
-        ? "60px"
-        : "70px";
+        ? "50px"
+        : "60px";
 
   return (
     <Dialog
       open={openModal}
       onClose={handleCloseModal}
-      maxWidth={false}
+      maxWidth="sm"
+      fullWidth
       PaperProps={{
         sx: {
-          width: "100vw",
-          height: { xs: "100vh", sm: "90vh" },
-          maxHeight: { xs: "100vh", sm: "90vh" },
-          position: "fixed",
-          bottom: 0,
-          right: 0,
-          m: 0,
-          bgcolor: "#fefcbf",
-          borderRadius: { xs: 0, sm: "12px 12px 0 0" },
-          boxShadow: "0 -4px 16px rgba(0,0,0,0.2)",
+          bgcolor: "#fff",
+          borderRadius: "4px",
+          boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+          overflow: "hidden",
         },
       }}
     >
       <style>{blinkFadeInAnimation}</style>
-      {bonusAwarded && (
-        <>
-          <Confetti
-            width={window.innerWidth}
-            height={window.innerHeight}
-            recycle={false}
-            numberOfPieces={200}
-            run={openModal && bonusAwarded}
-            colors={["#FFD700", "#FF4500", "#00FF00", "#1E90FF", "#FF69B4"]}
-            initialVelocityY={10}
-            gravity={0.2}
-          />
-          <Box
-            sx={{
-              position: "absolute",
-              top: "5%",
-              left: "50%",
-              transform: "translateX(-50%)",
-              fontSize: { xs: "18px", sm: "20px", md: "24px" },
-              fontWeight: "bold",
-              color: "rgba(255, 215, 0, 0.8)",
-              WebkitTextStroke: "1px #FFD700",
-              background: "linear-gradient(45deg, #FFD700, #FF4500)",
-              WebkitBackgroundClip: "text",
-              textShadow: "0 0 6px rgba(255, 255, 255, 0.8)",
-              animation: "fallAndFade 5s ease-out 1s forwards",
-              zIndex: 10,
-              "@keyframes fallAndFade": {
-                "0%": { transform: "translate(-50%, -100%)", opacity: 0 },
-                "20%": { transform: "translate(-50%, 20vh)", opacity: 1 },
-                "80%": { transform: "translate(-50%, 80vh)", opacity: 1 },
-                "100%": { transform: "translate(-50%, 100vh)", opacity: 0 },
-              },
-            }}
-          >
-            ቦነስ {bonusAmount} ብር!
-          </Box>
-        </>
-      )}
-      <DialogContent
-        sx={{
-          bgcolor: "transparent",
-          color: "#000",
-          p: { xs: 1, sm: 2, md: 3 },
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          overflowY: "auto",
-        }}
-      >
-        <Box
+
+      {/* Header Bar */}
+      <Box sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        p: 1.5,
+        borderBottom: "1px solid #e5e7eb",
+        bgcolor: "#f9fafb"
+      }}>
+        <Typography sx={{ fontWeight: "bold", color: "#374151" }}>Bingo</Typography>
+        <Button
+          onClick={handleKickPlayer}
+          disabled={lockedCards.includes(cardIdInput)}
           sx={{
-            display: "flex",
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "center", md: "flex-end" },
-            gap: { xs: 2, md: 3 },
-            maxWidth: "800px",
-            width: "100%",
-            justifyContent: "center",
-            pb: { xs: 2, sm: 0 },
+            bgcolor: "#dc2626",
+            color: "#fff",
+            "&:hover": { bgcolor: "#b91c1c" },
+            fontSize: "1rem",
+            fontWeight: "bold",
+            px: 4,
+            py: 0.5,
+            borderRadius: "4px",
+            textTransform: "none",
+            border: "2px solid #000",
+            "&.Mui-disabled": { bgcolor: "#9ca3af", color: "#f3f4f6" },
           }}
         >
-          {/* Grid and Text */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              width: { xs: "100%", md: "auto" },
-              order: { xs: 0, md: 0 },
-            }}
-          >
-            <Typography
-              variant="h6"
-              sx={{
-                mb: 1,
-                fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
-                textAlign: "center",
-              }}
-            >
-              ካርድ {cardIdInput}
-            </Typography>
-            {isWinner && winningPatterns.length > 0 && (
-              <Typography
-                variant="body2"
-                sx={{
-                  mb: 1,
-                  color: "#15803d",
-                  fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" },
-                  textAlign: "center",
-                }}
-              >
-                የማሸነፍ ፓተርን(ዎች): {winningPatterns.join(", ")}
-              </Typography>
-            )}
-            <Typography
-              variant="h6"
-              sx={{
-                mb: 1,
-                color: isWinner ? "#15803d" : "#b91c1c",
-                fontSize: { xs: "1rem", sm: "1.1rem", md: "1.25rem" },
-                textAlign: "center",
-              }}
-            >
-              {isWinner
-                ? `አሸናፊ! ${winningPatterns.length} ፓተርን ተመሳስለዋል`
-                : selectedPattern === "anySixLine" ||
-                    selectedPattern === "anySevenLine"
-                  ? "ውስብስብ ፓተርን, እራስዎ ያረጋግጡ"
-                  : "አሸናፊ አይደለም"}
-            </Typography>
+          ይታሰር
+        </Button>
+      </Box>
+
+      {/* Blue Card No Bar */}
+      <Box
+        sx={{
+          bgcolor: "#0047ab",
+          color: "#fff",
+          py: 1,
+          textAlign: "center",
+          fontSize: "2rem",
+          fontWeight: "bold",
+          borderBottom: "4px solid #fff"
+        }}
+      >
+        Card No: {cardIdInput}
+      </Box>
+
+      <DialogContent sx={{ p: 2, bgcolor: "#f3f4f6" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+
+          {/* Grid Container */}
+          <Box sx={{
+            bgcolor: "#fff",
+            p: 1,
+            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+            border: "1px solid #9ca3af"
+          }}>
+            {/* Header Row */}
             <Box
               sx={{
-                maxWidth: {
-                  xs: "100%",
-                  sm: `calc(5 * ${
-                    isSmallScreen ? "45px" : "60px"
-                  } + 4 * 2px + 2 * 8px)`,
-                  md: `calc(5 * ${
-                    isMediumScreen ? "60px" : "70px"
-                  } + 4 * 2px + 2 * 12px)`,
-                  lg: "calc(5 * 70px + 4 * 2px + 2 * 16px)",
-                },
-                width: "fit-content",
-                bgcolor: "#fff",
-                borderRadius: "8px",
-                p: { xs: 0.5, sm: 1, md: 1.5, lg: 2 },
-                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                display: "grid",
+                gridTemplateColumns: `repeat(5, ${cellSizeForGridTemplate})`,
+                gap: "2px",
+                mb: "2px",
               }}
             >
-              {/* Header Row */}
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(5, ${cellSizeForGridTemplate})`,
-                  gap: "2px",
-                  mb: "2px",
-                }}
-              >
-                {["B", "I", "N", "G", "O"].map((letter) => (
-                  <Box key={letter} sx={getHeaderStyle(letter)}>
-                    {letter}
-                  </Box>
-                ))}
-              </Box>
-              {/* 5x5 Grid */}
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(5, ${cellSizeForGridTemplate})`,
-                  gap: "2px",
-                }}
-              >
-                {[1, 2, 3, 4, 5].map((row) =>
-                  ["b", "i", "n", "g", "o"].map((col) => {
-                    const cell = `${col}${row}`;
-                    const value = cartelaData[row]?.[cell] ?? "N/A";
-                    return (
-                      <Box key={cell} sx={getCellStyle(cell, value)}>
-                        {cell === "n3" ? "ነፃ" : value}
-                      </Box>
-                    );
-                  }),
-                )}
-              </Box>
+              {["B", "I", "N", "G", "O"].map((letter) => (
+                <Box key={letter} sx={getHeaderStyle(letter)}>
+                  {letter}
+                </Box>
+              ))}
+            </Box>
+            {/* 5x5 Grid */}
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: `repeat(5, ${cellSizeForGridTemplate})`,
+                gap: "2px",
+              }}
+            >
+              {[1, 2, 3, 4, 5].map((row) =>
+                ["b", "i", "n", "g", "o"].map((col) => {
+                  const cell = `${col}${row}`;
+                  const value = cartelaData[row]?.[cell] ?? "N/A";
+                  return (
+                    <Box key={cell} sx={getCellStyle(cell, value)}>
+                      {cell === "n3" ? "free" : value}
+                    </Box>
+                  );
+                }),
+              )}
             </Box>
           </Box>
-          {/* Buttons */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              gap: 1,
-              alignSelf: { xs: "stretch", md: "flex-end" },
-              mb: { md: 2 },
-              width: { xs: "100%", sm: "auto" },
-              order: { xs: 1, md: 1 },
-              justifyContent: "center",
-              p: { xs: "0 16px", sm: 0 },
-            }}
-          >
-            <Button
-              onClick={handleCloseModal}
-              sx={{
-                bgcolor: "#22c55e",
-                color: "#fff",
-                "&:hover": { bgcolor: "#16a34a" },
-                fontSize: { xs: "0.7rem", sm: "0.75rem" },
-                px: { xs: 1.5, sm: 2 },
-                py: { xs: 1, sm: 0.25 },
-                borderRadius: "6px",
-                minWidth: { sm: "80px" },
-                minHeight: { xs: "38px", sm: "36px" },
-                width: { xs: "100%", sm: "auto" },
-              }}
-            >
-              ቀጥል
-            </Button>
-            <Button
-              onClick={handleKickPlayer}
-              sx={{
-                bgcolor: "#f97316",
-                color: "#fff",
-                "&:hover": { bgcolor: "#ea580c" },
-                fontSize: { xs: "0.7rem", sm: "0.75rem" },
-                px: { xs: 1.5, sm: 2 },
-                py: { xs: 1, sm: 0.25 },
-                borderRadius: "6px",
-                minWidth: { sm: "80px" },
-                minHeight: { xs: "38px", sm: "36px" },
-                width: { xs: "100%", sm: "auto" },
-              }}
-              disabled={lockedCards.includes(cardIdInput)}
-            >
-              ተጫዋቹን አስወግድ
-            </Button>
-            <Button
-              onClick={handleEndGame}
-              sx={{
-                bgcolor: "#ef4444",
-                color: "#fff",
-                "&:hover": { bgcolor: "#dc2626" },
-                fontSize: { xs: "0.7rem", sm: "0.75rem" },
-                px: { xs: 1.5, sm: 2 },
-                py: { xs: 1, sm: 0.25 },
-                borderRadius: "6px",
-                minWidth: { sm: "80px" },
-                minHeight: { xs: "38px", sm: "36px" },
-                width: { xs: "100%", sm: "auto" },
-              }}
-            >
-              ጨዋታው አልቋል
-            </Button>
+
+          {/* Bottom Buttons */}
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, justifyContent: "center", width: "100%" }}>
+            {isManual ? (
+              <>
+                <Button
+                  onClick={async () => {
+                    if (playWinnerAudio) playWinnerAudio();
+                    await declareWinnerManually();
+                    handleCloseModal();
+                  }}
+                  sx={{
+                    bgcolor: "#1e7e4e",
+                    color: "#fff",
+                    border: "2px solid #000",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    textTransform: "none",
+                    px: 3,
+                    "&:hover": { bgcolor: "#166534" }
+                  }}
+                >
+                  አሸንፏል
+                </Button>
+                <Button
+                  onClick={() => {
+                    if (playLoseAudio) playLoseAudio();
+                    handleCloseModal();
+                  }}
+                  sx={{
+                    bgcolor: "#d94242",
+                    color: "#fff",
+                    border: "2px solid #000",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    textTransform: "none",
+                    px: 3,
+                    "&:hover": { bgcolor: "#991b1b" }
+                  }}
+                >
+                  አላሸነፈም
+                </Button>
+                <Button
+                  onClick={handleCloseModal}
+                  sx={{
+                    bgcolor: "#f2c144",
+                    color: "#000",
+                    border: "2px solid #000",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    textTransform: "none",
+                    px: 3,
+                    "&:hover": { bgcolor: "#eab308" }
+                  }}
+                >
+                  ተጨማሪ ቢንጎ
+                </Button>
+                <Button
+                  onClick={onNewGameClick}
+                  sx={{
+                    bgcolor: "#3f2b96",
+                    color: "#fff",
+                    border: "2px solid #000",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    textTransform: "none",
+                    px: 3,
+                    "&:hover": { bgcolor: "#2e1065" }
+                  }}
+                >
+                  አዲስ ጨዋታ
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  onClick={handleCloseModal}
+                  sx={{
+                    bgcolor: "#f2c144",
+                    color: "#000",
+                    border: "2px solid #000",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    textTransform: "none",
+                    px: 3,
+                    "&:hover": { bgcolor: "#eab308" }
+                  }}
+                >
+                  ተጨማሪ ቢንጎ
+                </Button>
+                <Button
+                  onClick={onNewGameClick}
+                  sx={{
+                    bgcolor: "#3f2b96",
+                    color: "#fff",
+                    border: "2px solid #000",
+                    fontWeight: "bold",
+                    borderRadius: "4px",
+                    textTransform: "none",
+                    px: 3,
+                    "&:hover": { bgcolor: "#2e1065" }
+                  }}
+                >
+                  አዲስ ጨዋታ
+                </Button>
+              </>
+            )}
           </Box>
         </Box>
       </DialogContent>

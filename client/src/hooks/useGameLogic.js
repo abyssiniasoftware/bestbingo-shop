@@ -113,6 +113,10 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     const stored = localStorage.getItem("isManualMode");
     return stored === "true";
   });
+  const [isAutomatic, setIsAutomatic] = useState(() => {
+    const stored = localStorage.getItem("isAutomaticMode");
+    return stored === "true" || stored === null; // Default to true if not set
+  });
   // Hooks and refs
   const { userId } = useUserStore();
   const { gameData, resetGame } = useGameStore();
@@ -290,6 +294,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     localStorage.setItem("bonusAmount", bonusAmount.toString());
     localStorage.setItem("bonusPattern", bonusPattern);
     localStorage.setItem("isManualMode", isManual.toString());
+    localStorage.setItem("isAutomaticMode", isAutomatic.toString());
     localStorage.setItem("calledNumbers", JSON.stringify(calledNumbers));
     localStorage.setItem("recentCalls", JSON.stringify(recentCalls));
     localStorage.setItem("currentNumber", currentNumber);
@@ -786,6 +791,12 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       );
       setPatternTypes(Array.from(patterns));
 
+      if (isManual) {
+        // In manual mode, we just open the modal and let the cashier decide
+        setOpenModal(true);
+        return;
+      }
+
       if (isWinner || isBadBingo) {
         setOpenModal(true);
         (async () => {
@@ -945,10 +956,54 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     bonusPattern,
     calledNumbers.length,
     playBlockedAudio,
+    cardIdInput,
+    lockedCards,
+    gameDetails,
+    calledNumbersSet,
+    primaryPattern,
+    userId,
+    enableDynamicBonus,
+    dynamicBonus,
+    isBonusGloballyActive,
+    isBadBingoActive,
+    bonusPattern,
+    calledNumbers.length,
+    playBlockedAudio,
     playLoseAudio,
-    playNotRegisteredAudio,
     playWinnerAudio,
+    isManual,
   ]);
+
+  const declareWinnerManually = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    if (!token || !userId) {
+      toast.error("User ID or token missing");
+      return;
+    }
+    if (!gameDetails || !gameDetails.houseId || !gameDetails.gameId) {
+      toast.error("Game details not loaded");
+      return;
+    }
+
+    try {
+      await apiService.declareWinner(
+        gameDetails.houseId,
+        gameDetails.gameId,
+        cardIdInput,
+        token,
+      );
+      setGameDetails((prev) => ({
+        ...prev,
+        winnerCardId: cardIdInput,
+        finished: true,
+      }));
+      setIsGameEnded(true);
+      setIsPlaying(false);
+      toast.success("Winner declared manually!");
+    } catch (error) {
+      toast.error(`Failed to declare winner: ${error.message}`);
+    }
+  }, [cardIdInput, gameDetails, userId]);
 
   // Handle end game
   const handleEndGame = () => {
@@ -1266,6 +1321,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     playBlockedAudio,
     playShuffleSound,
     checkWinner,
+    declareWinnerManually,
     handleEndGame,
     clearLockedCards,
     togglePlayPause,
@@ -1289,7 +1345,15 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     bonusPattern,
     setBonusPattern: debouncedSetBonusPattern,
     isManual,
-    setIsManual,
+    setIsManual: (val) => {
+      setIsManual(val);
+      setIsAutomatic(!val);
+    },
+    isAutomatic,
+    setIsAutomatic: (val) => {
+      setIsAutomatic(val);
+      setIsManual(!val);
+    },
     showCentralBall,
     isCentralBallMoving,
     blowerZoomBall,
