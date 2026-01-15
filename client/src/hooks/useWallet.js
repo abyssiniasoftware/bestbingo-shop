@@ -4,7 +4,7 @@ import apiService from "../api/apiService";
 const useWallet = () => {
   const [wallet, setWalletData] = useState(null);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchWalletData = useCallback(async () => {
     setIsLoading(true);

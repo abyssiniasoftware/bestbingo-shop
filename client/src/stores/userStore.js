@@ -30,6 +30,7 @@ const useUserStore = create((set) => ({
         role: userData?.role,
         houseId: userData?.houseId,
         enableDynamicBonus: userData?.enableDynamicBonus || false,
+        walletData: { package: userData?.package || 0 },
       };
     }),
   setWalletData: (wallet) =>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
-import { FaSignOutAlt, FaGamepad, FaIdCard, FaChartBar } from "react-icons/fa";
+import { FaSignOutAlt, FaGamepad, FaIdCard, FaChartBar, FaEye, FaEyeSlash } from "react-icons/fa";
 
 import NewGame from "./NewGame";
 import ViewCartela from "./ViewCartela";
@@ -12,20 +12,21 @@ import useUserStore from "../stores/userStore";
 import "../styles/game-redesign.css";
 
 const CashierDashboard = () => {
-  const [activeTab, setActiveTab] = useState("game-board");
-  const [showModal, setShowModal] = useState(true);
-  const { wallet, isLoading: walletLoading, refreshWallet } = useWallet();
-  const { username, clearUser } = useUserStore();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Check for navigation state to set active tab
+  const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "game-board");
+  const [showModal, setShowModal] = useState(() => !location.state?.activeTab);
+  const { wallet, isLoading: walletLoading } = useWallet();
+  const { username, clearUser } = useUserStore();
+  const [showBalance, setShowBalance] = useState(
+    () => JSON.parse(localStorage.getItem("showBalance")) ?? false,
+  );
+
   useEffect(() => {
-    if (location.state?.activeTab) {
-      setActiveTab(location.state.activeTab);
-      setShowModal(false);
-    }
-  }, [location.state]);
+    localStorage.setItem("showBalance", JSON.stringify(showBalance));
+  }, [showBalance]);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -67,7 +68,7 @@ const CashierDashboard = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "#111827",
+        background: "#f6f6f6",
         position: "relative",
       }}
     >
@@ -146,11 +147,31 @@ const CashierDashboard = () => {
                 px: 2,
                 py: 1,
                 borderRadius: "20px",
+                display: "flex",
+                alignItems: "center",
+                gap: 1.5,
               }}
             >
               <Typography sx={{ color: "#fbbf24", fontWeight: "bold" }}>
-                {walletLoading ? "..." : `${wallet?.balance || 0} ብር`}
+                {walletLoading || !wallet
+                  ? "..."
+                  : showBalance
+                    ? `${wallet?.package ?? wallet?.packageBalance ?? wallet?.balance ?? 0} ብር`
+                    : "**** ብር"}
               </Typography>
+              <button
+                onClick={() => setShowBalance(!showBalance)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#9ca3af",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {showBalance ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+              </button>
             </Box>
             <Button
               onClick={handleLogout}
@@ -355,9 +376,9 @@ const CashierDashboard = () => {
                   transition: "all 0.3s",
                   "&:hover": hasReservation
                     ? {
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 5px 20px rgba(37, 99, 235, 0.4)",
-                      }
+                      transform: "translateY(-2px)",
+                      boxShadow: "0 5px 20px rgba(37, 99, 235, 0.4)",
+                    }
                     : {},
                 }}
               >
