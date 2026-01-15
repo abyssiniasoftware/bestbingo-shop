@@ -14,15 +14,15 @@ const RecentBallsStrip = ({ recentCalls = [] }) => {
         alignItems: "center",
         gap: "15px",
         padding: "5px 15px",
-        borderRadius: "15px",
-        background: "linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.2) 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.2)",
-        boxShadow: "0 4px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.1)",
-        height: "80px",
+        borderRadius: "15px", // Match the rectangular/oval look of target
+        background: "linear-gradient(180deg, rgba(20,20,30,0.95) 0%, rgba(10,10,15,0.98) 100%)",
+        border: "1px solid rgba(255, 255, 255, 0.15)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.05)",
+        height: "85px",
         minWidth: "420px",
         position: "relative",
         overflow: "visible",
-        backdropFilter: "blur(10px)",
+        backdropFilter: "blur(12px)",
       }}
     >
       {displayBalls.map((number, index) => (

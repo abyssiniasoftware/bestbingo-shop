@@ -1,11 +1,10 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import StarIcon from "@mui/icons-material/Star"; // Ensure @mui/icons-material is installed
 import BlowerAnimation from "./BlowerAnimation";
 import RecentBallsStrip from "./RecentBallsStrip";
 import PatternGrid from "./PatternGrid";
-import "../../styles/game-redesign.css";
 import BonusDisplay from "./BonusDisplay";
+import "../../styles/game-redesign.css";
 
 const GameTopSection = ({
   calledNumbers,
@@ -17,19 +16,19 @@ const GameTopSection = ({
   patterns,
   winAmount = 0,
 }) => {
-  // Current Pattern Logic
   const currentPattern = patterns?.[patternAnimationIndex] || {
     type: "None",
     progressGrid: Array(25).fill(false),
   };
+
   return (
     <Box
       sx={{
         display: "flex",
         width: "100%",
-        height: { xs: "auto", lg: "280px" }, // Fixed height to match VLT screen
+        height: { xs: "auto", lg: "280px" },
         background: "#050505",
-        borderBottom: "6px solid #b91c1c", // Thick red bottom border from screenshot
+        borderBottom: "6px solid #b91c1c",
         overflow: "hidden",
         fontFamily: "Roboto, sans-serif",
       }}
@@ -44,19 +43,21 @@ const GameTopSection = ({
           alignItems: "center",
           borderRight: "4px solid #333",
           paddingLeft: "10px",
+          overflow: "visible",
         }}
       >
-        {/* Blower (Left) */}
+        {/* Blower Container */}
         <Box
           sx={{
-            width: "280px",
+            width: "300px",
             height: "100%",
             position: "relative",
-            zIndex: 2,
+            zIndex: 10,
             flexShrink: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            overflow: "visible",
           }}
         >
           <BlowerAnimation
@@ -67,28 +68,36 @@ const GameTopSection = ({
           />
         </Box>
 
-        {/* Info & Strip (Right of Blower) */}
+        {/* Right Side of Section 1: Text + The Tube */}
         <Box
           sx={{
             flex: 1,
             height: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center", // Center text and strip horizontally in this column
-            paddingLeft: "10px",
+            justifyContent: "center", // Centers the group vertically
+            marginLeft: "-65px", // Pulls closer to blower
             zIndex: 5,
+            position: "relative",
           }}
         >
-          {/* Header Text */}
-          <Box sx={{ mb: 1, textAlign: "center" }}>
+          {/* Header Text - Positioned slightly above the tube */}
+            <Box
+            sx={{
+              position: "absolute",
+              top: "4px",
+              left: "70px",
+              textAlign: "left",
+              zIndex: 10
+            }}
+          >
             <Typography
               sx={{
                 color: "#fff",
-                fontSize: "2.4rem",
+                fontSize: "2.2rem",
                 fontWeight: "900",
                 lineHeight: 1,
-                textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                textShadow: "0 2px 10px rgba(0,0,0,0.8)",
                 letterSpacing: "1px",
               }}
             >
@@ -96,8 +105,8 @@ const GameTopSection = ({
             </Typography>
             <Typography
               sx={{
-                color: "#00ffff", // Cyan
-                fontSize: "1.8rem",
+                color: "#00ffff",
+                fontSize: "1.4rem",
                 fontWeight: "bold",
                 mt: 0.5,
               }}
@@ -106,13 +115,29 @@ const GameTopSection = ({
             </Typography>
           </Box>
 
-          {/* Ball Strip */}
+          {/* THE TUBE CONTAINER */}
+          {/* This creates the visual glass pipe effect */}
           <Box
             sx={{
               width: "100%",
+              height: "85px", // Fixed height for the tube
               display: "flex",
-              justifyContent: "center",
-              mt: 1,
+              alignItems: "center",
+              justifyContent: "flex-start",
+
+              // TUBE STYLING -------------------------
+              background: "linear-gradient(180deg, rgba(20,20,20,0.6) 0%, rgba(60,60,60,0.4) 50%, rgba(20,20,20,0.6) 100%)",
+              borderTop: "1px solid rgba(255,255,255,0.2)",
+              borderBottom: "1px solid rgba(255,255,255,0.2)",
+              borderRight: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "0 50px 50px 0", // Rounded end on the right only
+              boxShadow: "inset 0 0 20px rgba(0,0,0,0.8)", // Inner shadow for depth
+              backdropFilter: "blur(4px)",
+              // --------------------------------------
+
+              paddingLeft: "70px", // Internal padding so balls don't hit the blower edge
+              position: "relative",
+              zIndex: 4, // Behind the blower
             }}
           >
             <RecentBallsStrip recentCalls={recentCalls} />
@@ -130,7 +155,6 @@ const GameTopSection = ({
           padding: "0 4px",
         }}
       >
-        {/* BINGO Header */}
         <Box
           sx={{
             display: "grid",
@@ -150,7 +174,6 @@ const GameTopSection = ({
                 fontSize: "1.4rem",
                 padding: "6px 0",
                 textShadow: "0px 2px 4px rgba(0,0,0,0.6)",
-
                 backgroundImage: "url(/images/num.png)",
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",
@@ -165,8 +188,6 @@ const GameTopSection = ({
             </Box>
           ))}
         </Box>
-
-        {/* Clean Pattern Grid */}
         <PatternGrid progressGrid={currentPattern.progressGrid} />
       </Box>
 
@@ -178,7 +199,6 @@ const GameTopSection = ({
           borderLeft: "2px solid #333",
         }}
       >
-        {/* 3A. Prize List Box */}
         <Box
           sx={{
             width: "35%",
@@ -189,12 +209,10 @@ const GameTopSection = ({
         >
           <BonusDisplay />
         </Box>
-
-        {/* 3B. Derash (Jackpot) Panel */}
         <Box
           sx={{
             flex: 1,
-            background: "#2a0a0a", // Dark red/black
+            background: "#2a0a0a",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",

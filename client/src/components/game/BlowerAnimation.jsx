@@ -1,182 +1,239 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import Matter from "matter-js";
 import { Box } from "@mui/material";
-import "../../styles/game-redesign.css";
-
-// Get ball image path from public folder
-const getBallImage = (num) => `/balls/${num}.png`;
-
-// Generate positions once during initial render
-const generateBallPositions = (calledNumbers) => {
-  const positions = [];
-  const calledSet = new Set(calledNumbers.map((n) => parseInt(n)));
-
-  // Increase count to make it look full (approx 70 balls)
-  for (let i = 1; i <= 75; i++) {
-    if (!calledSet.has(i)) {
-      // Create more chaotic, packed positions
-      const angle = Math.random() * Math.PI * 2;
-      const radius = Math.sqrt(Math.random()) * 60; // Concentrated but spread
-      const x = Math.cos(angle) * radius;
-      const y = Math.sin(angle) * radius;
-
-      // Randomize animation timings for chaos
-      const delay = Math.random() * 2;
-      const duration = 1.0 + Math.random() * 1.5;
-      const driftX = (Math.random() - 0.5) * 30;
-      const driftY = (Math.random() - 0.5) * 30;
-
-      positions.push({
-        num: i,
-        x,
-        y,
-        delay,
-        duration,
-        driftX,
-        driftY
-      });
-    }
-  }
-  return positions;
-};
 
 const BlowerAnimation = ({
   calledNumbers = [],
+  // eslint-disable-next-line no-unused-vars
   currentNumber,
-  showCurrentBall = true,
   zoomingBallNum = null
 }) => {
-  // Store positions in state to avoid recalculating on every render
-  const [ballPositions, setBallPositions] = useState([]);
+  const sceneRef = useRef(null);
+  const engineRef = useRef(null);
+  const worldRef = useRef(null);
+  const ballsRef = useRef({});
 
   useEffect(() => {
-    setBallPositions(generateBallPositions(calledNumbers));
+    // 1. Setup Engine
+    const engine = Matter.Engine.create();
+    engine.gravity.y = 1.0;
+    engineRef.current = engine;
+    worldRef.current = engine.world;
+
+    // 2. Setup Renderer - Internal size
+    const width = 260;
+    const height = 260;
+
+    const render = Matter.Render.create({
+      element: sceneRef.current,
+      engine: engine,
+      options: {
+        width: width,
+        height: height,
+        wireframes: false,
+        background: "transparent",
+      },
+    });
+
+    // 3. Create Circular Boundary (The Glass Sphere)
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const m = width;
+    const r = m * (1 / 4.5 * 2);
+    const pegCount = 64;
+    const TAU = Math.PI * 2;
+
+    for (let i = 0; i < pegCount; i++) {
+      const segment = TAU / pegCount;
+      const angle = (i / pegCount) * TAU + segment / 2;
+      const x = Math.cos(angle) * r + centerX;
+      const y = Math.sin(angle) * r + centerY;
+
+      const peg = Matter.Bodies.rectangle(x, y, 100 / 1000 * m, 3000 / 1000 * m, {
+        angle: angle,
+        isStatic: true,
+        render: { fillStyle: "transparent" },
+      });
+      Matter.World.add(engine.world, peg);
+    }
+
+    // 4. Create Balls
+    const initialBalls = [];
+    const calledSet = new Set(calledNumbers.map(n => parseInt(n)));
+
+    for (let i = 1; i <= 75; i++) {
+      const x = centerX + (Math.random() - 0.5) * 50;
+      const y = centerY + (Math.random() - 0.5) * 50;
+
+      const ball = Matter.Bodies.circle(x, y, 14, {
+        restitution: 0.95,
+        friction: 0.005,
+        frictionAir: 0.04,
+        render: {
+          sprite: {
+            texture: `/balls/${i}.png`,
+            xScale: 0.55,
+            yScale: 0.55
+          }
+        }
+      });
+      ball.label = `ball-${i}`;
+      if (!calledSet.has(i)) {
+        initialBalls.push(ball);
+        ballsRef.current[i] = ball;
+      }
+    }
+    Matter.World.add(engine.world, initialBalls);
+
+    // 5. Blowing Logic
+    const onRenderTick = () => {
+      const balls = Object.values(ballsRef.current);
+      balls.forEach(ball => {
+        // 1. Gentle turbulence (Air chaoticity)
+        const turbulenceX = (Math.random() - 0.5) * 0.001;
+        const turbulenceY = (Math.random() - 0.5) * 0.001;
+        Matter.Body.applyForce(ball, ball.position, { x: turbulenceX, y: turbulenceY });
+
+        // 2. Main Blower "Fan" - Apply gentle upward pressure from the bottom
+        const fanY = height * 0.8;
+        if (ball.position.y > fanY) {
+          const power = (ball.position.y - fanY) / (height * 0.2);
+          Matter.Body.applyForce(ball, ball.position, {
+            x: (Math.random() - 0.5) * 0.001,
+            y: -0.004 * power
+          });
+        }
+
+        // 3. Very subtle vortex effect
+        const dx = ball.position.x - centerX;
+        const dy = ball.position.y - centerY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist > 0) {
+          Matter.Body.applyForce(ball, ball.position, {
+            x: -dy * 0.000005,
+            y: dx * 0.000005
+          });
+        }
+
+        // 4. Occasional gentle pulses
+        if (Math.random() > 0.99) {
+          Matter.Body.applyForce(ball, ball.position, {
+            x: (Math.random() - 0.5) * 0.005,
+            y: (Math.random() - 0.5) * 0.005
+          });
+        }
+      });
+    };
+
+    const runner = Matter.Runner.create();
+    setTimeout(() => {
+      Matter.Events.on(runner, 'tick', onRenderTick);
+    }, 1000);
+
+    Matter.Runner.run(runner, engine);
+    Matter.Render.run(render);
+
+    return () => {
+      Matter.Render.stop(render);
+      Matter.Runner.stop(runner);
+      Matter.Engine.clear(engine);
+      render.canvas.remove();
+      render.canvas = null;
+    };
+  }, [calledNumbers]);
+
+  useEffect(() => {
+    if (!worldRef.current) return;
+    const calledSet = new Set(calledNumbers.map(n => parseInt(n)));
+    Object.keys(ballsRef.current).forEach(numStr => {
+      const num = parseInt(numStr);
+      if (calledSet.has(num)) {
+        const ball = ballsRef.current[num];
+        if (ball) {
+          Matter.World.remove(worldRef.current, ball);
+          delete ballsRef.current[num];
+        }
+      }
+    });
   }, [calledNumbers]);
 
   return (
-    <Box className="blower-container">
-      {/* Blower sphere container */}
+    <Box sx={{
+      position: "relative",
+      width: "280px",
+      height: "280px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "visible" // ALLOW TUBE TO STICK OUT
+    }}>
+      {/* Matter.js Canvas */}
       <Box
+        ref={sceneRef}
         sx={{
-          position: "relative",
-          width: { xs: 150, sm: 180, md: 500 },
-          height: { xs: 150, sm: 180, md: 550 },
+          width: "260px",
+          height: "260px",
+          borderRadius: "50%",
+          overflow: "hidden",
+          background: "rgba(0,0,0,0.3)", // Slight dark backing for glass
+          "& canvas": { width: "100% !important", height: "100% !important" }
         }}
-      >
+      />
+
+      {/* OVERLAY IMAGE 
+         1. Rotated 90deg (Tube points right)
+         2. Scaled up to 115% so tube clears the container
+         3. Translated to center the Sphere part over the canvas
+      */}
+      <Box
+        component="img"
+        src="/images/blower.png"
+        alt="Bingo Blower"
+        sx={{
+          width: "115%",
+          height: "115%",
+          objectFit: "contain",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          // Rotate 90deg. 
+          // Depending on your image transparency padding, you might need to tweak the X/Y translation slightly.
+          // Assuming the sphere is centered in the source image:
+          transform: "translate(-50%, -50%) rotate(90deg)",
+          zIndex: 20,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Zooming Ball */}
+      {zoomingBallNum && (
         <Box
           component="img"
-          src="/images/blower.png"
-          alt="Bingo Blower"
+          src={`/balls/${parseInt(zoomingBallNum)}.png`}
+          alt={`Zooming Ball ${zoomingBallNum}`}
           sx={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
             position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: 2,
-            transform: "rotate(90deg)",
-            transformOrigin: "center",
+            width: "80px",
+            height: "80px",
+            borderRadius: "50%",
+            left: "50%",
+            top: "50%",
+            zIndex: 30, // Above the glass
+            transform: "translate(-50%, -50%)",
+            animation: "zoomAndVanish 1s ease-out forwards",
           }}
         />
-
-        {/* Balls container inside the blower */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: "10%",
-            left: "10%",
-            width: "80%",
-            height: "80%",
-            borderRadius: "50%",
-            overflow: "hidden",
-            zIndex: 1,
-          }}
-        >
-          {ballPositions.map((ball) => (
-            <Box
-              key={ball.num}
-              component="img"
-              src={getBallImage(ball.num)}
-              alt={`Ball ${ball.num}`}
-              sx={{
-                position: "absolute",
-                width: { xs: 15, sm: 18, md: 22 }, // Slightly smaller to fit more
-                height: { xs: 15, sm: 18, md: 22 },
-                borderRadius: "50%",
-                left: `calc(50% + ${ball.x}px)`,
-                top: `calc(50% + ${ball.y}px)`,
-                transform: "translate(-50%, -50%)",
-                animation: `ballChaos ${ball.duration}s ease-in-out ${ball.delay}s infinite alternate`,
-                opacity: 0.9,
-                "--drift-x": `${ball.driftX}px`, // Custom properties for animation
-                "--drift-y": `${ball.driftY}px`,
-              }}
-            />
-          ))}
-
-          {/* THE ZOOMING BALL EFFECT */}
-          {zoomingBallNum && (
-            <Box
-              component="img"
-              src={getBallImage(parseInt(zoomingBallNum))}
-              alt={`Zooming Ball ${zoomingBallNum}`}
-              sx={{
-                position: "absolute",
-                width: "40px",
-                height: "40px",
-                borderRadius: "50%",
-                left: "50%",
-                top: "50%",
-                zIndex: 100,
-                transform: "translate(-50%, -50%)",
-                animation: "zoomAndVanish 1s ease-out forwards",
-              }}
-            />
-          )}
-        </Box>
-
-        {/* Current called ball - small corner preview if enabled */}
-        {showCurrentBall && currentNumber && currentNumber !== "00" && (
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: -10,
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 10,
-            }}
-          >
-            <Box
-              component="img"
-              src={getBallImage(parseInt(currentNumber))}
-              alt={`Current: ${currentNumber}`}
-              sx={{
-                width: { xs: 50, sm: 60, md: 70 },
-                height: { xs: 50, sm: 60, md: 70 },
-                borderRadius: "50%",
-                boxShadow: "0 5px 20px rgba(0,0,0,0.5)",
-                animation: "numberPulse 0.5s ease-out",
-              }}
-            />
-          </Box>
-        )}
-
-        <style>
-          {`
-            @keyframes ballChaos {
-                0% { transform: translate(-50%, -50%) translate(0, 0); }
-                33% { transform: translate(-50%, -50%) translate(var(--drift-x), var(--drift-y)); }
-                66% { transform: translate(-50%, -50%) translate(calc(var(--drift-x) * -0.5), calc(var(--drift-y) * 1.2)); }
-                100% { transform: translate(-50%, -50%) translate(calc(var(--drift-x) * 0.8), calc(var(--drift-y) * -0.6)); }
-            }
-            @keyframes zoomAndVanish {
-                0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; filter: brightness(1); }
-                50% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; filter: brightness(1.5); }
-                100% { transform: translate(-50%, -50%) scale(5); opacity: 0; filter: brightness(2); }
-            }
-          `}
-        </style>
-      </Box>
+      )}
+      <style>
+        {`
+          @keyframes zoomAndVanish {
+              0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; filter: brightness(1); }
+              50% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; filter: brightness(1.5); }
+              100% { transform: translate(-50%, -50%) scale(5); opacity: 0; filter: brightness(2); }
+          }
+        `}
+      </style>
     </Box>
   );
 };
