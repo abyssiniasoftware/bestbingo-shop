@@ -4,7 +4,6 @@ import { Box } from "@mui/material";
 
 const BlowerAnimation = ({
   calledNumbers = [],
-  // eslint-disable-next-line no-unused-vars
   currentNumber,
   zoomingBallNum = null
 }) => {
@@ -65,15 +64,15 @@ const BlowerAnimation = ({
       const x = centerX + (Math.random() - 0.5) * 50;
       const y = centerY + (Math.random() - 0.5) * 50;
 
-      const ball = Matter.Bodies.circle(x, y, 14, {
-        restitution: 0.95,
-        friction: 0.005,
-        frictionAir: 0.04,
+      const ball = Matter.Bodies.circle(x, y, 7.5, {
+        restitution: 1.05,
+        friction: 0.001,
+        frictionAir: 0.01,
         render: {
           sprite: {
             texture: `/balls/${i}.png`,
-            xScale: 0.55,
-            yScale: 0.55
+            xScale: 0.30,
+            yScale: 0.30
           }
         }
       });
@@ -89,38 +88,30 @@ const BlowerAnimation = ({
     const onRenderTick = () => {
       const balls = Object.values(ballsRef.current);
       balls.forEach(ball => {
-        // 1. Gentle turbulence (Air chaoticity)
-        const turbulenceX = (Math.random() - 0.5) * 0.001;
-        const turbulenceY = (Math.random() - 0.5) * 0.001;
+        const scale = width / 550;
+        const forceMag = 0.0012;
+
+        if (ball.position.y >= height - (90 * scale)) {
+          Matter.Body.applyForce(ball, ball.position, { x: forceMag * 0.5, y: -forceMag * 2.5 });
+        }
+        if (ball.position.y < (110 * scale)) {
+          Matter.Body.applyForce(ball, ball.position, { x: -forceMag * 0.5, y: forceMag });
+        }
+        if (ball.position.x < (70 * scale)) {
+          Matter.Body.applyForce(ball, ball.position, { x: forceMag, y: -forceMag * 0.2 });
+        }
+        if (ball.position.x > width - (70 * scale)) {
+          Matter.Body.applyForce(ball, ball.position, { x: -forceMag, y: forceMag * 0.2 });
+        }
+
+        const turbulenceX = (Math.random() - 0.5) * 0.0006;
+        const turbulenceY = (Math.random() - 0.5) * 0.0006 - 0.0004;
         Matter.Body.applyForce(ball, ball.position, { x: turbulenceX, y: turbulenceY });
 
-        // 2. Main Blower "Fan" - Apply gentle upward pressure from the bottom
-        const fanY = height * 0.8;
-        if (ball.position.y > fanY) {
-          const power = (ball.position.y - fanY) / (height * 0.2);
-          Matter.Body.applyForce(ball, ball.position, {
-            x: (Math.random() - 0.5) * 0.001,
-            y: -0.004 * power
-          });
-        }
-
-        // 3. Very subtle vortex effect
-        const dx = ball.position.x - centerX;
-        const dy = ball.position.y - centerY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        if (dist > 0) {
-          Matter.Body.applyForce(ball, ball.position, {
-            x: -dy * 0.000005,
-            y: dx * 0.000005
-          });
-        }
-
-        // 4. Occasional gentle pulses
         if (Math.random() > 0.99) {
           Matter.Body.applyForce(ball, ball.position, {
-            x: (Math.random() - 0.5) * 0.005,
-            y: (Math.random() - 0.5) * 0.005
+            x: (Math.random() - 0.5) * 0.006,
+            y: (Math.random() - 0.5) * 0.006
           });
         }
       });
@@ -141,7 +132,7 @@ const BlowerAnimation = ({
       render.canvas.remove();
       render.canvas = null;
     };
-  }, [calledNumbers]);
+  }, []);
 
   useEffect(() => {
     if (!worldRef.current) return;

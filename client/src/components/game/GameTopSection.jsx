@@ -82,7 +82,7 @@ const GameTopSection = ({
           }}
         >
           {/* Header Text - Positioned slightly above the tube */}
-            <Box
+          <Box
             sx={{
               position: "absolute",
               top: "4px",
