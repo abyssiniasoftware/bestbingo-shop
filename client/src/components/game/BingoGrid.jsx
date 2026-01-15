@@ -310,6 +310,7 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
 
                 return (
                   <StyledNumberCell
+                    id={`cell-number-${num}`}
                     key={num}
                     called={isCalled}
                     isShuffling={isShuffled || isFastShuffled}

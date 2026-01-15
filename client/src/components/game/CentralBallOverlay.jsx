@@ -4,7 +4,7 @@ const getBallImage = (num) => `/balls/${num}.png`;
 
 const CentralBallOverlay = ({ currentNumber, show, isMoving }) => {
   const numValue = parseInt(currentNumber) || 0;
-  
+
   const isVisible = show && numValue > 0;
 
   if (!isVisible) return null;
@@ -18,9 +18,32 @@ const CentralBallOverlay = ({ currentNumber, show, isMoving }) => {
           position: "fixed",
           top: "50%",
           left: "50%",
-          transform: isMoving
-            ? "translate(-45vw, -45vh) scale(0.15)" // Move towards RecentBallsStrip position
-            : "translate(-50%, -50%) scale(1)",
+          transform: (() => {
+            if (!isMoving) return "translate(-50%, -50%) scale(1)";
+
+            const targetCell = document.getElementById(`cell-number-${numValue}`);
+            if (targetCell) {
+              const rect = targetCell.getBoundingClientRect();
+              const centerX = window.innerWidth / 2;
+              const centerY = window.innerHeight / 2;
+
+              // Calculate delta to move from center to target cell center
+              const targetX = rect.left + rect.width / 2;
+              const targetY = rect.top + rect.height / 2;
+
+              const deltaX = targetX - centerX;
+              const deltaY = targetY - centerY;
+
+              // We must maintain the centering translate(-50%, -50%) and THEN apply the delta
+              // Note: transforms are applied left-to-right. 
+              // Actually, since we start at top:50%, left:50%, adding deltaX/Y moves the top-left origin.
+              // We then need strictly translate(-50%, -50%) relative to the element size to center it.
+              return `translate(${deltaX}px, ${deltaY}px) translate(-50%, -50%) scale(0.15)`;
+            }
+
+            // Fallback if cell not found (e.g., scrolled out or logic error)
+            return "translate(-45vw, -45vh) translate(-50%, -50%) scale(0.15)";
+          })(),
           zIndex: 9999,
           pointerEvents: "none",
           display: "flex",
