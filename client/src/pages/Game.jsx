@@ -7,101 +7,57 @@ import GameControlsBar from "../components/game/GameControlsBar";
 import BingoGrid from "../components/game/BingoGrid";
 import WinnerDialog from "../components/game/WinnerDialog";
 import CentralBallOverlay from "../components/game/CentralBallOverlay";
-
 import { pulseAnimation } from "../components/game/GameStyles";
-
 import useGameLogic from "../hooks/useGameLogic";
-
 import useGameStore from "../stores/gameStore";
-
 import {
   backgroundOptions,
   voiceOptions,
   BINGO_PATTERNS,
 } from "../constants/constants";
-
 import "../styles/game-redesign.css";
 
 const Game = () => {
   const { stake, players, winAmount } = useParams();
-
   const navigate = useNavigate();
-
   const { gameData } = useGameStore();
-
   const [showStartModal, setShowStartModal] = useState(false);
-
   const {
     calledNumbers,
-
     recentCalls,
-
     currentNumber,
-
     callCount,
-
     isPlaying,
-
     isShuffling,
-
     cardIdInput,
-
     setCardIdInput,
-
     openModal,
-
     cardNumbers,
-
     cartelaData,
-
     bingoState,
-
     patternTypes,
-
     lockedCards,
-
     drawSpeed,
-
     setDrawSpeed,
-
     voiceOption,
-
     patternAnimationIndex,
-
     isGameEnded,
-
     selectedBackground,
-
     hasGameStarted,
-
     checkWinner,
-
     handleVoiceChange,
-
     possiblePatterns,
-
     handleEndGame,
-
     handleShuffleClick,
-
     handleCloseModal,
-
     clearLockedCards,
-
     togglePlayPause,
-
     bonusAwarded,
-
     bonusAmountGiven,
-
     dynamicBonusAmount,
-
     enableDynamicBonus,
-
     primaryPattern,
-
     setLockedCards,
-
     bonusAmount,
     bonusPattern,
     showCentralBall,
@@ -131,13 +87,9 @@ const Game = () => {
     <Box
       sx={{
         minHeight: "100vh",
-
         color: "#fff",
-
         display: "flex",
-
         flexDirection: "column",
-
         ...backgroundStyle,
       }}
     >
@@ -188,7 +140,6 @@ const Game = () => {
         />
 
         {/* Bottom Controls Bar */}
-
         <GameControlsBar
           isPlaying={isPlaying}
           isShuffling={isShuffling}

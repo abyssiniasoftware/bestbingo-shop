@@ -466,7 +466,7 @@ const NewGame = () => {
             }}
           >
             <Typography sx={{ color: "#9ca3af", fontSize: "0.875rem" }}>
-              ውሸት ሽልማት
+              ደራሽ
             </Typography>
             <Typography
               sx={{

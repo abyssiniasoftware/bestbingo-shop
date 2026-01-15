@@ -1,19 +1,13 @@
-import React, { useEffect, useState } from "react";
 import { Box, Typography, Zoom, Fade } from "@mui/material";
 
 const getBallImage = (num) => `/balls/${num}.png`;
 
 const CentralBallOverlay = ({ currentNumber, show, isMoving }) => {
   const numValue = parseInt(currentNumber) || 0;
-  const [isVisible, setIsVisible] = useState(false);
+  
+  const isVisible = show && numValue > 0;
 
-  useEffect(() => {
-    if (show && numValue > 0) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
-  }, [show, numValue]);
+  if (!isVisible) return null;
 
   if (numValue <= 0) return null;
 
