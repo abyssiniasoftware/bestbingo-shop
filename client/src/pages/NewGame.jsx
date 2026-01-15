@@ -542,7 +542,7 @@ const NewGame = () => {
                   400, 500,
                 ].map((amount) => (
                   <option key={amount} value={amount}>
-                    {amount}-ብር
+                    {amount}ብር
                   </option>
                 ))}
               </select>
@@ -584,7 +584,7 @@ const NewGame = () => {
                   color: "white",
                   fontSize: "1.75rem",
                   fontWeight: "bold",
-                  padding: "16px",
+                  padding: "10px",
                   borderRadius: "8px",
                   border: "none",
                   cursor: (isLoading || cartela.length === 0 || isBalanceLow) ? "not-allowed" : "pointer",

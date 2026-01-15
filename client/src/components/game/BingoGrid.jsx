@@ -47,6 +47,12 @@ const numberFlipAnimation = `
   50% { box-shadow: 0 0 20px #f59e0b, 0 0 40px #f59e0b; filter: brightness(2); }
   100% { box-shadow: 0 0 5px #fbbf24; filter: brightness(1.2); }
 }
+
+@keyframes shuffleBackground {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 `;
 
 // BINGO letter styles
@@ -97,9 +103,13 @@ const StyledNumberCell = styled(Box, {
   color: "#fff",
   textShadow: "0px 2px 4px rgba(0,0,0,0.6)", // Text shadow for better readability
 
-  backgroundImage: called ? "url(/images/called.png)" : "url(/images/num.png)",
+  backgroundImage: isShuffling
+    ? "linear-gradient(45deg, #FFD700, #FF8C00, #FF4500, #FFD700)"
+    : called
+      ? "url(/images/called.png)"
+      : "url(/images/num.png)",
 
-  backgroundSize: "100% 100%", // Critical: Stretches the image to fit the rectangle exactly
+  backgroundSize: isShuffling ? "300% 300%" : "100% 100%", // Larger size for gradient movement
   backgroundRepeat: "no-repeat",
   backgroundPosition: "center",
   backgroundColor: "transparent", // Ensure no solid color sits behind
@@ -111,7 +121,7 @@ const StyledNumberCell = styled(Box, {
   transition: "all 0.2s ease",
   zIndex: isShuffling ? 10 : 1,
   animation: isShuffling
-    ? "shuffleGlow 0.4s ease-in-out infinite, numberFlip 0.3s ease-in-out infinite"
+    ? "shuffleBackground 0.8s ease infinite, numberFlip 0.3s ease-in-out infinite"
     : called
       ? "calledPulse 0.4s ease-in-out"
       : "none",

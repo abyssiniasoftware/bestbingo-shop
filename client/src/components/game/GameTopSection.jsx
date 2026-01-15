@@ -5,7 +5,7 @@ import RecentBallsStrip from "./RecentBallsStrip";
 import PatternGrid from "./PatternGrid";
 import BonusDisplay from "./BonusDisplay";
 import "../../styles/game-redesign.css";
-
+import config from "../../constants/config";
 const GameTopSection = ({
   calledNumbers,
   currentNumber,
@@ -89,6 +89,7 @@ const GameTopSection = ({
               left: "70px",
               textAlign: "left",
               zIndex: 10
+              
             }}
           >
             <Typography
@@ -142,6 +143,17 @@ const GameTopSection = ({
           >
             <RecentBallsStrip recentCalls={recentCalls} />
           </Box>
+          {/* <Typography
+            sx={{
+              color: "#fff",
+              fontSize: "1.4rem",
+              fontWeight: "bold",
+              mt: 0.5,
+              paddingLeft: "70px", 
+            }}
+          >
+            Call us {config.phoneNumber}
+          </Typography> */}
         </Box>
       </Box>
 
