@@ -27,7 +27,7 @@ const GameStartModal = ({
   };
 
   const handleRegisterCard = () => {
-    navigate("/dashboard", { state: { activeTab: "bingo-cards" } });
+    navigate("/new-game");
   };
 
   const handleReport = () => {

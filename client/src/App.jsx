@@ -4,6 +4,7 @@ import Game from "./pages/Game";
 import Register from "./pages/Register";
 import HouseAdminDashboard from "./pages/HouseAdminDashboard";
 import CashierDashboard from "./pages/CashierDashboard";
+import NewGame from "./pages/NewGame";
 import AddCartela from "./pages/AddCartela";
 import ViewCartela from "./pages/ViewCartela";
 import Login from "./pages/Login";
@@ -59,6 +60,22 @@ const App = () => {
           element={
             <ProtectedRoute allowedRoles={["cashier"]}>
               <CashierDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/new-game"
+          element={
+            <ProtectedRoute allowedRoles={["cashier"]}>
+              <NewGame />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/game"
+          element={
+            <ProtectedRoute allowedRoles={["cashier"]}>
+              <Game />
             </ProtectedRoute>
           }
         />

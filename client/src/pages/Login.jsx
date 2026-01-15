@@ -77,7 +77,7 @@ const Login = () => {
           navigate("/admin", { replace: true });
           break;
         case "cashier":
-          navigate("/dashboard", { replace: true });
+          navigate("/game", { replace: true });
           break;
         case "agent":
           navigate("/agent", { replace: true });

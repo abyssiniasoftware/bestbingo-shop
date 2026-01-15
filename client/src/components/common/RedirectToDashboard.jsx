@@ -25,7 +25,7 @@ const RedirectToDashboard = () => {
     // Redirect based on role
     switch (role) {
       case "cashier":
-        navigate("/dashboard", { replace: true });
+        navigate("/game", { replace: true });
         break;
       case "super_admin":
         navigate("/super_admin", { replace: true });

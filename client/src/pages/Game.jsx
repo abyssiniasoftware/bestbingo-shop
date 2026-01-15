@@ -15,10 +15,10 @@ import {
   voiceOptions,
   BINGO_PATTERNS,
 } from "../constants/constants";
-import "../styles/game-redesign.css";
 
 const Game = () => {
   const { stake, players, winAmount } = useParams();
+
   const navigate = useNavigate();
   const { gameData } = useGameStore();
   const [showStartModal, setShowStartModal] = useState(true);
@@ -72,7 +72,7 @@ const Game = () => {
     blowerZoomBall,
     playWinnerAudio,
     playLoseAudio,
-  } = useGameLogic({ stake, players, winAmount });
+  } = useGameLogic(stake, players, winAmount);
 
   const [openNewGameConfirm, setOpenNewGameConfirm] = useState(false);
 
@@ -81,13 +81,14 @@ const Game = () => {
   )?.style || { backgroundColor: "#111827" };
 
   const handleBack = () => {
-    navigate("/dashboard", { state: { gameId: gameData?.game.gameId } });
+    navigate("/new-game", { state: { gameId: gameData?.game.gameId } });
   };
 
 
   // Check if there's a reservation (cards selected)
-
+  // And if we have basic game data to render
   const hasReservation = gameData?.cartela?.length > 0;
+
 
   return (
     <Box

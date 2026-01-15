@@ -24,7 +24,7 @@ const PRECOMPUTED_PATTERNS = Object.keys(BINGO_PATTERNS).reduce(
   {},
 );
 
-const useGameLogic = ({ stake, players, winAmount }) => {
+const useGameLogic = () => {
   // State declarations
   const validPatterns = Object.keys(BINGO_PATTERNS).concat(
     Object.keys(META_PATTERNS),
@@ -252,7 +252,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         setGameDetails(details);
       } catch (error) {
         // toast.error(error.message);
-        navigate("/dashboard");
+        navigate("/game");
       }
     };
     fetchGameDetails();
@@ -323,7 +323,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     const fetchAllCardNumbers = async () => {
       if (!gameData || !gameData.cartela || !userId) {
         setIsLoading(false);
-        navigate("/dashboard");
+        navigate("/game");
         return;
       }
       const token = localStorage.getItem("token");
@@ -511,65 +511,65 @@ const useGameLogic = ({ stake, players, winAmount }) => {
   };
 
   // Draw number
-const drawNumber = useCallback(() => {
-  if (!isStartAudioFinished) {
-    return;
-  }
-  if (calledNumbers.length >= 75) {
-    setIsPlaying(false);
-    setIsGameEnded(true);
-    return;
-  }
-  
-  const availableNumbers = Array.from({ length: 75 }, (_, i) =>
-    (i + 1).toString(),
-  ).filter((num) => !calledNumbers.includes(num));
+  const drawNumber = useCallback(() => {
+    if (!isStartAudioFinished) {
+      return;
+    }
+    if (calledNumbers.length >= 75) {
+      setIsPlaying(false);
+      setIsGameEnded(true);
+      return;
+    }
 
-  if (availableNumbers.length === 0) {
-    setIsPlaying(false);
-    setIsGameEnded(true);
-    return;
-  }
-  
-  const newNumber =
-    availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+    const availableNumbers = Array.from({ length: 75 }, (_, i) =>
+      (i + 1).toString(),
+    ).filter((num) => !calledNumbers.includes(num));
 
-  // Calculate durations based on drawSpeed
-  const speedRatio = drawSpeed / 3000;
-  const phase1Duration = Math.max(300, Math.floor(500 * speedRatio)); // Zoom in duration
-  const phase2Duration = Math.max(800, Math.floor(1200 * speedRatio)); // Show at center duration
-  const moveDuration = Math.max(400, Math.floor(600 * speedRatio)); // Move to grid duration
-  const fadeOutDuration = Math.max(200, Math.floor(300 * speedRatio)); // Fade out at end
+    if (availableNumbers.length === 0) {
+      setIsPlaying(false);
+      setIsGameEnded(true);
+      return;
+    }
 
-  // PHASE 1: Zoom in Blower
-  setBlowerZoomBall(newNumber);
+    const newNumber =
+      availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
 
-  setTimeout(() => {
-    // PHASE 2: Show at Center
-    setPreviousNumber(currentNumber);
-    setCurrentNumber(newNumber.padStart(2, "0"));
-    setCalledNumbers((prev) => [...prev, newNumber]);
-    setRecentCalls((prev) => [newNumber, ...prev].slice(0, 5));
-    setCallCount((prev) => prev + 1);
+    // Calculate durations based on drawSpeed
+    const speedRatio = drawSpeed / 3000;
+    const phase1Duration = Math.max(300, Math.floor(500 * speedRatio)); // Zoom in duration
+    const phase2Duration = Math.max(800, Math.floor(1200 * speedRatio)); // Show at center duration
+    const moveDuration = Math.max(400, Math.floor(600 * speedRatio)); // Move to grid duration
+    const fadeOutDuration = Math.max(200, Math.floor(300 * speedRatio)); // Fade out at end
 
-    setShowCentralBall(true);
-    setIsCentralBallMoving(false);
-    setBlowerZoomBall(null); // Remove from blower zoom
+    // PHASE 1: Zoom in Blower
+    setBlowerZoomBall(newNumber);
 
-    // PHASE 3: After showing at center, move to grid
     setTimeout(() => {
-      setIsCentralBallMoving(true);
-      
-      // PHASE 4: After moving, fade out and hide
+      // PHASE 2: Show at Center
+      setPreviousNumber(currentNumber);
+      setCurrentNumber(newNumber.padStart(2, "0"));
+      setCalledNumbers((prev) => [...prev, newNumber]);
+      setRecentCalls((prev) => [newNumber, ...prev].slice(0, 5));
+      setCallCount((prev) => prev + 1);
+
+      setShowCentralBall(true);
+      setIsCentralBallMoving(false);
+      setBlowerZoomBall(null); // Remove from blower zoom
+
+      // PHASE 3: After showing at center, move to grid
       setTimeout(() => {
-        setShowCentralBall(false);
-        setIsCentralBallMoving(false);
-      }, moveDuration + fadeOutDuration); // Wait for move + fade to complete
-      
-    }, phase2Duration);
-    
-  }, phase1Duration);
-}, [calledNumbers, currentNumber, isStartAudioFinished, drawSpeed]);
+        setIsCentralBallMoving(true);
+
+        // PHASE 4: After moving, fade out and hide
+        setTimeout(() => {
+          setShowCentralBall(false);
+          setIsCentralBallMoving(false);
+        }, moveDuration + fadeOutDuration); // Wait for move + fade to complete
+
+      }, phase2Duration);
+
+    }, phase1Duration);
+  }, [calledNumbers, currentNumber, isStartAudioFinished, drawSpeed]);
 
   // Play/Pause interval
   useEffect(() => {
@@ -1007,7 +1007,7 @@ const drawNumber = useCallback(() => {
       currentAudioRef.current = null;
     }
     resetGame();
-    navigate("/dashboard");
+    navigate("/game");
   };
 
   // Clear locked cards
@@ -1025,7 +1025,6 @@ const drawNumber = useCallback(() => {
     }
     if (!gameData || !gameData.cartela || gameData.cartela.length === 0) {
       // toast.error('Game data or cartela not loaded');
-      navigate("/dashboard");
       return;
     }
     if (!isPlaying && isShuffling) {
@@ -1053,7 +1052,7 @@ const drawNumber = useCallback(() => {
   const handleReady = () => {
     if (!gameData || !gameData.cartela || gameData.cartela.length === 0) {
       // toast.error('Game data or cartela not loaded');
-      navigate("/dashboard");
+      navigate("/game");
       return;
     }
     if (isShuffling) {
@@ -1152,7 +1151,7 @@ const drawNumber = useCallback(() => {
       currentAudioRef.current = null;
     }
     resetGame();
-    navigate("/dashboard");
+    navigate("/game");
     localStorage.removeItem("bonusAmount");
     localStorage.removeItem("bonusPattern");
   };
