@@ -6,6 +6,7 @@ import PatternGrid from "./PatternGrid";
 import BonusDisplay from "./BonusDisplay";
 import "../../styles/game-redesign.css";
 import config from "../../constants/config";
+
 const GameTopSection = ({
   calledNumbers,
   currentNumber,
@@ -33,30 +34,27 @@ const GameTopSection = ({
         fontFamily: "Roboto, sans-serif",
       }}
     >
-      {/* --- SECTION 1: BLOWER & RECENT BALLS (Left - 45%) --- */}
+      {/* --- LEFT SIDE WRAPPER (45%) --- */}
       <Box
         sx={{
           flex: "0 0 45%",
-          position: "relative",
-          background: "linear-gradient(90deg, #0a0a0a 0%, #151525 100%)",
           display: "flex",
-          alignItems: "center",
           borderRight: "4px solid #333",
-          paddingLeft: "10px",
           overflow: "visible",
+          background: "linear-gradient(90deg, #0a0a0a 0%, #151525 100%)",
+          position: "relative",
         }}
       >
-        {/* Blower Container */}
+        {/* LEFT: BLOWER */}
         <Box
           sx={{
             width: "300px",
-            height: "100%",
-            position: "relative",
-            zIndex: 10,
-            flexShrink: 0,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            position: "relative",
+            zIndex: 10,
+            flexShrink: 0,
             overflow: "visible",
           }}
         >
@@ -68,92 +66,78 @@ const GameTopSection = ({
           />
         </Box>
 
-        {/* Right Side of Section 1: Text + The Tube */}
+        {/* RIGHT: TEXT + TUBE + EXTRA CONTENT */}
         <Box
           sx={{
             flex: 1,
-            height: "100%",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center", // Centers the group vertically
-            marginLeft: "-65px", // Pulls closer to blower
-            zIndex: 5,
+            justifyContent: "center",
+            paddingLeft: "0px",
             position: "relative",
+            zIndex: 5,
+            background:
+              "linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(121, 9, 24, 1) 100%, rgba(0, 212, 255, 1) 100%)",
+            overflow: "visible",
           }}
         >
-          {/* Header Text - Positioned slightly above the tube */}
+          {/* Header Text (normal flow) */}
+           <Box>
+      <Typography
+        sx={{
+          color: "#fff",
+          fontSize: "2.2rem",
+          fontWeight: "900",
+          lineHeight: 1,
+          textShadow: "0 2px 10px rgba(0,0,0,0.8)",
+          letterSpacing: "1px",
+        }}
+      >
+        Recent 5 Balls
+      </Typography>
+      <Typography
+        sx={{
+          color: "#00ffff",
+          fontSize: "1.4rem",
+          fontWeight: "bold",
+          mt: 0.5,
+        }}
+      >
+        ጥሪ <span style={{ color: "#ffd700" }}>{callCount}</span>/75
+      </Typography>
+    </Box>
+
+          {/* THE TUBE CONTAINER */}
+         <Box
+  sx={{
+    width: "100%",
+    height: "80px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    position: "relative",
+    zIndex: 4,
+  }}
+>
+            <RecentBallsStrip recentCalls={recentCalls} />
+          </Box>
+
           <Box
             sx={{
-              position: "absolute",
-              top: "4px",
-              left: "70px",
-              textAlign: "left",
-              zIndex: 10
-              
+              mt: 2,
+              paddingLeft: "70px",
             }}
           >
             <Typography
               sx={{
                 color: "#fff",
-                fontSize: "2.2rem",
-                fontWeight: "900",
-                lineHeight: 1,
-                textShadow: "0 2px 10px rgba(0,0,0,0.8)",
-                letterSpacing: "1px",
-              }}
-            >
-              Recent 5 Balls
-            </Typography>
-            <Typography
-              sx={{
-                color: "#00ffff",
-                fontSize: "1.4rem",
+                fontSize: "1.6rem",
                 fontWeight: "bold",
-                mt: 0.5,
               }}
             >
-              ጥሪ <span style={{ color: "#ffd700" }}>{callCount}</span>/75
+              Call us: {config.phoneNumber}
             </Typography>
           </Box>
-
-          {/* THE TUBE CONTAINER */}
-          {/* This creates the visual glass pipe effect */}
-          <Box
-            sx={{
-              width: "100%",
-              height: "85px", // Fixed height for the tube
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-start",
-
-              // TUBE STYLING -------------------------
-              background: "linear-gradient(180deg, rgba(20,20,20,0.6) 0%, rgba(60,60,60,0.4) 50%, rgba(20,20,20,0.6) 100%)",
-              borderTop: "1px solid rgba(255,255,255,0.2)",
-              borderBottom: "1px solid rgba(255,255,255,0.2)",
-              borderRight: "1px solid rgba(255,255,255,0.2)",
-              borderRadius: "0 50px 50px 0", // Rounded end on the right only
-              boxShadow: "inset 0 0 20px rgba(0,0,0,0.8)", // Inner shadow for depth
-              backdropFilter: "blur(4px)",
-              // --------------------------------------
-
-              paddingLeft: "70px", // Internal padding so balls don't hit the blower edge
-              position: "relative",
-              zIndex: 4, // Behind the blower
-            }}
-          >
-            <RecentBallsStrip recentCalls={recentCalls} />
-          </Box>
-          {/* <Typography
-            sx={{
-              color: "#fff",
-              fontSize: "1.4rem",
-              fontWeight: "bold",
-              mt: 0.5,
-              paddingLeft: "70px", 
-            }}
-          >
-            Call us {config.phoneNumber}
-          </Typography> */}
         </Box>
       </Box>
 

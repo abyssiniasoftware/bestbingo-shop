@@ -4,7 +4,6 @@ import { Box } from "@mui/material";
 const getBallImage = (num) => `/balls/${num}.png`;
 
 const RecentBallsStrip = ({ recentCalls = [] }) => {
-  // Show last 5. Logic: recentCalls[0] is the newest.
   const displayBalls = recentCalls.slice(0, 5);
 
   return (
@@ -13,18 +12,36 @@ const RecentBallsStrip = ({ recentCalls = [] }) => {
         display: "flex",
         alignItems: "center",
         gap: "15px",
-        padding: "5px 15px",
-        borderRadius: "15px", // Match the rectangular/oval look of target
-        background: "linear-gradient(180deg, rgba(20,20,30,0.95) 0%, rgba(10,10,15,0.98) 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.15)",
-        boxShadow: "0 8px 32px rgba(0,0,0,0.8), inset 0 0 10px rgba(255,255,255,0.05)",
-        height: "85px",
-        minWidth: "420px",
+        padding: "0 15px",
+        height: "80px",
+        width: "100%",
         position: "relative",
         overflow: "visible",
-        backdropFilter: "blur(12px)",
+        background: "rgba(255,255,255,0.05)",
+        border: "1px solid rgba(255,255,255,0.2)",
+        boxShadow:
+          "inset 0 4px 15px rgba(255,255,255,0.2), 0 8px 25px rgba(0,0,0,0.5)",
+        backdropFilter: "blur(15px)",
+        borderRadius: "10px 50px 50px 10px", // left/right ends
+        perspective: "1000px",
       }}
     >
+      {/* Inner 3D curved gradient */}
+      <Box
+        sx={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          borderRadius: "10px 50px 50px 10px",
+          background:
+            "linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2))",
+          transform: "rotateX(8deg)",
+          zIndex: 0,
+        }}
+      />
+
       {displayBalls.map((number, index) => (
         <Box
           key={`${number}-${recentCalls.length - index}`}
@@ -40,7 +57,7 @@ const RecentBallsStrip = ({ recentCalls = [] }) => {
             transition: "all 0.5s ease",
           }}
         >
-          {/* Active Halo for the newest ball */}
+          {/* Halo for newest ball */}
           {index === 0 && (
             <Box
               sx={{
@@ -51,7 +68,7 @@ const RecentBallsStrip = ({ recentCalls = [] }) => {
                 background:
                   "radial-gradient(circle, rgba(0,255,255,0.4) 0%, transparent 70%)",
                 animation: "haloPulse 1s infinite alternate",
-                zIndex: 0,
+                zIndex: 1,
               }}
             />
           )}
@@ -67,9 +84,9 @@ const RecentBallsStrip = ({ recentCalls = [] }) => {
                 index === 0
                   ? "drop-shadow(0 0 15px rgba(255,255,255,0.8))"
                   : "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
-              zIndex: 1,
+              zIndex: 2,
               transition: "all 0.5s ease",
-              transform: index === 0 ? "scale(1.1)" : "scale(1)",
+              transform: index === 0 ? "scale(1.1) translateZ(10px)" : "scale(1)",
             }}
           />
         </Box>
@@ -77,15 +94,15 @@ const RecentBallsStrip = ({ recentCalls = [] }) => {
 
       <style>
         {`
-                @keyframes ballEntry {
-                    0% { transform: scale(0) translateX(-100px); opacity: 0; }
-                    100% { transform: scale(1) translateX(0); opacity: 1; }
-                }
-                @keyframes haloPulse {
-                    from { transform: scale(0.9); opacity: 0.3; }
-                    to { transform: scale(1.1); opacity: 0.6; }
-                }
-                `}
+          @keyframes ballEntry {
+            0% { transform: scale(0) translateX(-100px) translateZ(-20px); opacity: 0; }
+            100% { transform: scale(1) translateX(0) translateZ(0); opacity: 1; }
+          }
+          @keyframes haloPulse {
+            from { transform: scale(0.9); opacity: 0.3; }
+            to { transform: scale(1.1); opacity: 0.6; }
+          }
+        `}
       </style>
     </Box>
   );
