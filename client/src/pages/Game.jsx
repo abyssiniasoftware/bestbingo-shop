@@ -68,6 +68,7 @@ const Game = () => {
     bonusPattern,
     showCentralBall,
     isCentralBallMoving,
+    moveDuration,
     blowerZoomBall,
     playWinnerAudio,
     playLoseAudio,
@@ -146,6 +147,7 @@ const Game = () => {
           currentNumber={currentNumber}
           show={showCentralBall}
           isMoving={isCentralBallMoving}
+          moveDuration={moveDuration}
         />
 
         {/* Bottom Controls Bar */}

@@ -1,56 +1,80 @@
+import { useRef, useLayoutEffect } from "react";
 import { Box, Typography, Zoom, Fade } from "@mui/material";
 
 const getBallImage = (num) => `/balls/${num}.png`;
 
-const CentralBallOverlay = ({ currentNumber, show, isMoving }) => {
+const CentralBallOverlay = ({ currentNumber, show, isMoving, moveDuration = 600 }) => {
   const numValue = parseInt(currentNumber) || 0;
 
   const isVisible = show && numValue > 0;
+  const ballRef = useRef(null);
+
+  useLayoutEffect(() => {
+    if (!ballRef.current) return;
+
+    if (!isMoving) {
+      ballRef.current.style.transform = "translate(-50%, -50%) scale(1)";
+      return;
+    }
+
+    const calculateTransform = () => {
+      const targetCell = document.getElementById(`cell-number-${numValue}`);
+      if (targetCell) {
+        const rect = targetCell.getBoundingClientRect();
+        const ballRect = ballRef.current.getBoundingClientRect();
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+
+        // Calculate dynamic scale to match target height exactly
+        // If ballRect height is 0 (first render), default to 0.15
+        // Use Math.max to avoid division by zero
+        const scaleFactor = ballRect.height > 1 ? rect.height / ballRect.height : 0.15;
+
+        // Calculate delta to move from center to target cell center
+        const targetX = rect.left + rect.width / 2;
+        const targetY = rect.top + rect.height / 2;
+
+        const deltaX = targetX - centerX;
+        const deltaY = targetY - centerY;
+
+        ballRef.current.style.transform = `translate(${deltaX}px, ${deltaY}px) translate(-50%, -50%) scale(${scaleFactor})`;
+      } else {
+        // Fallback
+        ballRef.current.style.transform = "translate(-45vw, -45vh) translate(-50%, -50%) scale(0.15)";
+      }
+    };
+
+    // Calculate immediately
+    requestAnimationFrame(calculateTransform);
+
+    // Optional: Recalculate on resize if needed, though animation is short
+    // window.addEventListener('resize', calculateTransform);
+    // return () => window.removeEventListener('resize', calculateTransform);
+
+  }, [isMoving, numValue]);
 
   if (!isVisible) return null;
 
   if (numValue <= 0) return null;
 
   return (
-    <Fade in={isVisible} timeout={400}>
+    <Fade in={isVisible} timeout={500}>
       <Box
+        ref={ballRef}
         sx={{
           position: "fixed",
           top: "50%",
           left: "50%",
-          transform: (() => {
-            if (!isMoving) return "translate(-50%, -50%) scale(1)";
-
-            const targetCell = document.getElementById(`cell-number-${numValue}`);
-            if (targetCell) {
-              const rect = targetCell.getBoundingClientRect();
-              const centerX = window.innerWidth / 2;
-              const centerY = window.innerHeight / 2;
-
-              // Calculate delta to move from center to target cell center
-              const targetX = rect.left + rect.width / 2;
-              const targetY = rect.top + rect.height / 2;
-
-              const deltaX = targetX - centerX;
-              const deltaY = targetY - centerY;
-
-              // We must maintain the centering translate(-50%, -50%) and THEN apply the delta
-              // Note: transforms are applied left-to-right. 
-              // Actually, since we start at top:50%, left:50%, adding deltaX/Y moves the top-left origin.
-              // We then need strictly translate(-50%, -50%) relative to the element size to center it.
-              return `translate(${deltaX}px, ${deltaY}px) translate(-50%, -50%) scale(0.15)`;
-            }
-
-            // Fallback if cell not found (e.g., scrolled out or logic error)
-            return "translate(-45vw, -45vh) translate(-50%, -50%) scale(0.15)";
-          })(),
+          transform: "translate(-50%, -50%) scale(1)", // Initial state
           zIndex: 9999,
           pointerEvents: "none",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          transition: isMoving ? "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)" : "none",
-          opacity: isMoving ? 0.3 : 1
+          // Smoother transition with separated properties and dynamic duration
+          transition: isMoving ? `transform ${moveDuration}ms cubic-bezier(0.22, 1, 0.36, 1), opacity ${moveDuration}ms ease` : "none",
+          // Keep fully visible during move so it arrives at the grid
+          opacity: 1
         }}
       >
         <Zoom in={isVisible} timeout={500}>

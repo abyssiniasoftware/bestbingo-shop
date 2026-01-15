@@ -558,6 +558,17 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     const newNumber =
       availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
 
+    // Calculate dynamic phase durations based on drawSpeed
+    // Base is 3000ms. If drawSpeed is faster (e.g., 2000), phases should be shorter.
+    // If drawSpeed is slower (e.g., 5000), phases should be longer.
+    const speedRatio = drawSpeed / 3000;
+
+    // Ensure minimums so animations don't break at extremely high speeds
+    const phase1Duration = Math.max(300, Math.floor(500 * speedRatio));
+    const phase2Duration = Math.max(800, Math.floor(1200 * speedRatio));
+    // Phase 3 (Move) needs enough time to be seen, but fit in remainder
+    const moveDuration = Math.max(400, Math.floor(600 * speedRatio));
+
     // PHASE 1: Zoom in Blower
     setBlowerZoomBall(newNumber);
 
@@ -581,12 +592,12 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         setTimeout(() => {
           setShowCentralBall(false);
           setIsCentralBallMoving(false);
-        }, 800);
-      }, 1500);
+        }, moveDuration);
+      }, phase2Duration);
 
-    }, 800);
+    }, phase1Duration);
 
-  }, [calledNumbers, currentNumber, isStartAudioFinished]);
+  }, [calledNumbers, currentNumber, isStartAudioFinished, drawSpeed]);
 
   // Play/Pause interval
   useEffect(() => {
@@ -1367,6 +1378,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     },
     showCentralBall,
     isCentralBallMoving,
+    moveDuration: Math.max(400, Math.floor(600 * (drawSpeed / 3000))), // Expose for overlay
     blowerZoomBall,
   };
 };
