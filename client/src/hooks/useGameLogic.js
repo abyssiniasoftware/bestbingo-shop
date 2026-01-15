@@ -81,14 +81,6 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     const stored = localStorage.getItem("primaryPattern");
     return stored && validPatterns.includes(stored) ? stored : "row";
   });
-  const [secondaryPattern, setSecondaryPattern] = useState(() => {
-    const stored = localStorage.getItem("secondaryPattern");
-    return stored && validPatterns.includes(stored) ? stored : "";
-  });
-  const [patternLogic, setPatternLogic] = useState(() => {
-    const stored = localStorage.getItem("patternLogic");
-    return stored === "AND" || stored === "OR" ? stored : "OR";
-  });
   const [bonusAwarded, setBonusAwarded] = useState(false);
   const [bonusAmountGiven, setBonusAmountGiven] = useState(0);
   const [isStartAudioFinished, setIsStartAudioFinished] = useState(true);
@@ -141,32 +133,6 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       } else {
         console.warn(`Invalid primary pattern: ${pattern}`);
         // toast.error(`Invalid pattern: ${pattern}`);
-      }
-    }, 300),
-    [],
-  );
-
-  const debouncedSetSecondaryPattern = useCallback(
-    debounce((pattern) => {
-      if (validPatterns.includes(pattern) || pattern === "") {
-        setSecondaryPattern(pattern);
-        localStorage.setItem("secondaryPattern", pattern);
-      } else {
-        console.warn(`Invalid secondary pattern: ${pattern}`);
-        // toast.error(`Invalid pattern: ${pattern}`);
-      }
-    }, 300),
-    [],
-  );
-
-  const debouncedSetPatternLogic = useCallback(
-    debounce((logic) => {
-      if (logic === "AND" || logic === "OR") {
-        setPatternLogic(logic);
-        localStorage.setItem("patternLogic", logic);
-      } else {
-        console.warn(`Invalid pattern logic: ${logic}`);
-        // toast.error(`Invalid logic: ${logic}`);
       }
     }, 300),
     [],
@@ -320,8 +286,6 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     localStorage.setItem("lockedCards", JSON.stringify(lockedCards));
     localStorage.setItem("selectedBackground", selectedBackground);
     localStorage.setItem("primaryPattern", primaryPattern);
-    localStorage.setItem("secondaryPattern", secondaryPattern);
-    localStorage.setItem("patternLogic", patternLogic);
     localStorage.setItem("hasGameStarted", JSON.stringify(hasGameStarted));
     localStorage.setItem("bonusAmount", bonusAmount.toString());
     localStorage.setItem("bonusPattern", bonusPattern);
@@ -338,8 +302,6 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     lockedCards,
     selectedBackground,
     primaryPattern,
-    secondaryPattern,
-    patternLogic,
     hasGameStarted,
     bonusAmount,
     bonusPattern,
@@ -810,15 +772,9 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       };
 
       const isPrimaryMatch = checkPattern(primaryPattern);
-      const isSecondaryMatch = secondaryPattern
-        ? checkPattern(secondaryPattern)
-        : false;
       const isBonusMatch = bonusPattern ? checkPattern(bonusPattern) : false;
 
-      const isWinner =
-        patternLogic === "AND"
-          ? isPrimaryMatch && (!secondaryPattern || isSecondaryMatch)
-          : isPrimaryMatch || isSecondaryMatch;
+      const isWinner = isPrimaryMatch;
 
       setCartelaData(data);
       setCardNumbers(numbers);
@@ -962,10 +918,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
         setOpenModal(true);
         if (
           primaryPattern !== "anySixLine" &&
-          primaryPattern !== "anySevenLine" &&
-          (!secondaryPattern ||
-            (secondaryPattern !== "anySixLine" &&
-              secondaryPattern !== "anySevenLine"))
+          primaryPattern !== "anySevenLine"
         ) {
           playLoseAudio();
           toast.info(`Card ${cardIdInput} is not a winner yet.`);
@@ -984,8 +937,6 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     gameDetails,
     calledNumbersSet,
     primaryPattern,
-    secondaryPattern,
-    patternLogic,
     userId,
     enableDynamicBonus,
     dynamicBonus,
@@ -1088,8 +1039,6 @@ const useGameLogic = ({ stake, players, winAmount }) => {
 
     setBonusAwarded(false);
     setPrimaryPattern("row");
-    setSecondaryPattern("");
-    setPatternLogic("AND");
     clearInterval(shuffleIntervalRef.current);
     clearTimeout(shuffleTimeoutRef.current);
     clearLockedCards();
@@ -1206,37 +1155,6 @@ const useGameLogic = ({ stake, players, winAmount }) => {
       });
     }
 
-    if (secondaryPattern) {
-      if (META_PATTERNS[secondaryPattern]) {
-        const exists = patterns.some(
-          (p) => p.type === formatPatternName(secondaryPattern),
-        );
-        if (!exists || patternLogic === "AND") {
-          patterns.push({
-            type: formatPatternName(secondaryPattern),
-            progressGrid: Array(25).fill(true),
-            source: "secondary",
-          });
-        }
-      } else if (BINGO_PATTERNS[secondaryPattern]) {
-        BINGO_PATTERNS[secondaryPattern].forEach((patternCells, index) => {
-          const grid = Array(25).fill(false);
-          patternCells.forEach((cell) => {
-            const gridIndex = cellToGridIndex(cell);
-            grid[gridIndex] = true;
-          });
-          const patternName = formatPatternName(secondaryPattern);
-          const exists = patterns.some((p) => p.type === patternName);
-          if (!exists || patternLogic === "AND") {
-            patterns.push({
-              type: patternName,
-              progressGrid: grid,
-              source: "secondary",
-            });
-          }
-        });
-      }
-    }
     if (bonusPattern) {
       if (META_PATTERNS[bonusPattern]) {
         patterns.push({
@@ -1261,7 +1179,7 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     }
     //
     return patterns;
-  }, [primaryPattern, secondaryPattern, patternLogic, bonusPattern]);
+  }, [primaryPattern, bonusPattern]);
 
   // Animate winning patterns
   useEffect(() => {
@@ -1337,10 +1255,6 @@ const useGameLogic = ({ stake, players, winAmount }) => {
     setSelectedBackground,
     primaryPattern,
     setPrimaryPattern: debouncedSetPrimaryPattern,
-    secondaryPattern,
-    setSecondaryPattern: debouncedSetSecondaryPattern,
-    patternLogic,
-    setPatternLogic: debouncedSetPatternLogic,
     hasGameStarted,
     setHasGameStarted,
     drawNumber,

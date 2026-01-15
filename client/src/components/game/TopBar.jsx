@@ -50,10 +50,6 @@ const TopBar = ({
   handleBackgroundChange,
   primaryPattern,
   setPrimaryPattern,
-  secondaryPattern,
-  setSecondaryPattern,
-  patternLogic,
-  setPatternLogic,
   handleBack,
   hasGameStarted,
 }) => {
@@ -197,44 +193,6 @@ const TopBar = ({
                 </MenuItem>
                 {allPatterns.map((pattern) => (
                   <MenuItem key={`primary-${pattern}`} value={pattern}>
-                    {formatPatternName(pattern)}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel sx={{ color: "#fff" }}>እና/ወይም</InputLabel>
-              <Select
-                value={patternLogic || "AND"}
-                onChange={(e) => setPatternLogic(e.target.value)}
-                sx={{
-                  bgcolor: "#4b5563",
-                  color: "#fff",
-                  borderRadius: "8px",
-                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-                }}
-              >
-                <MenuItem value="OR">ወይም</MenuItem>
-                <MenuItem value="AND">እና</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel sx={{ color: "#fff" }}>ሁለተኛ ፓተርን</InputLabel>
-              <Select
-                value={secondaryPattern || ""}
-                onChange={(e) => setSecondaryPattern(e.target.value)}
-                sx={{
-                  bgcolor: "#4b5563",
-                  color: "#fff",
-                  borderRadius: "8px",
-                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
-                }}
-              >
-                <MenuItem value="">
-                  <em>አልባ</em>
-                </MenuItem>
-                {allPatterns.map((pattern) => (
-                  <MenuItem key={`secondary-${pattern}`} value={pattern}>
                     {formatPatternName(pattern)}
                   </MenuItem>
                 ))}

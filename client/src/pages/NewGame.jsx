@@ -8,14 +8,11 @@ import {
   InputLabel,
 } from "@mui/material";
 import { FaSync, FaPlay, FaTimes } from "react-icons/fa";
-import { toast } from "react-toastify";
 
 import useGameStore from "../stores/gameStore";
 import useNewGameLogic from "../hooks/useNewGameLogic";
 import useCardIds from "../hooks/useCardIds";
-import useWallet from "../hooks/useWallet";
 
-import { backgroundOptions } from "../constants/constants";
 import { BINGO_PATTERNS, META_PATTERNS } from "../utils/patterns";
 import { formatPatternName } from "../utils/gameUtils";
 import "../styles/game-redesign.css";
@@ -31,51 +28,24 @@ const NewGame = () => {
     setCardIds: setStoreCardIds,
   } = useGameStore();
 
-  const { wallet } = useWallet();
-  const { cardIds, isLoading: cardIdsLoading, refreshCards } = useCardIds();
+  const { cardIds, isLoading: cardIdsLoading } = useCardIds();
 
-  // Pattern selection state
   const [primaryPattern, setPrimaryPattern] = useState(() => {
     const stored = localStorage.getItem("primaryPattern");
     return stored || "oneLine";
-  });
-  const [secondaryPattern, setSecondaryPattern] = useState(() => {
-    const stored = localStorage.getItem("secondaryPattern");
-    return stored || "";
-  });
-  const [patternLogic, setPatternLogic] = useState(() => {
-    const stored = localStorage.getItem("patternLogic");
-    return stored === "AND" || stored === "OR" ? stored : "OR";
   });
 
   const {
     betAmount,
     setBetAmount,
-    useDropdown,
-    setUseDropdown,
     cutAmount,
     setCutAmount,
-    cartelaInput,
-    setCartelaInput,
     isLoading,
     winAmount,
-    showCutAmount,
-    showCardCount,
-    selectedBackground,
-    handleBackgroundChange,
     handleStartGame,
     handleClearSelections,
     handleRefreshCards,
-    handleRefreshCutAmount,
-    isCartelaInputValid,
-    handleCartelaInput,
-    handleCartelaKeyDown,
-    toggleCutAmount,
-    toggleCardCount,
-    bonusAmount,
-    setBonusAmount,
-    bonusPattern,
-    setBonusPattern,
+    lastGameId,
   } = useNewGameLogic({
     cartela,
     setCartela,
@@ -122,9 +92,7 @@ const NewGame = () => {
   // Save pattern selections to localStorage
   useEffect(() => {
     localStorage.setItem("primaryPattern", primaryPattern);
-    localStorage.setItem("secondaryPattern", secondaryPattern);
-    localStorage.setItem("patternLogic", patternLogic);
-  }, [primaryPattern, secondaryPattern, patternLogic]);
+  }, [primaryPattern]);
 
   const handleCardClick = (cardId) => {
     const cardIdString = cardId.toString();
@@ -170,7 +138,7 @@ const NewGame = () => {
           BINGO
         </Typography>
         <button
-          onClick={() => {}}
+          onClick={() => { }}
           className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-full font-bold transition transform hover:scale-105"
         >
           ⊙ Register New Card
@@ -187,7 +155,7 @@ const NewGame = () => {
           mb: 2,
         }}
       >
-        Round 1
+        Round {lastGameId + 1}
       </Typography>
 
       {/* Main content - Two columns */}
@@ -222,11 +190,10 @@ const NewGame = () => {
             <button
               onClick={handleRefreshCards}
               disabled={isLoading}
-              className={`p-2 rounded-full transition ${
-                isLoading
-                  ? "bg-gray-600 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-              }`}
+              className={`p-2 rounded-full transition ${isLoading
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+                }`}
             >
               <FaSync className={isLoading ? "animate-spin" : ""} />
             </button>
@@ -303,7 +270,7 @@ const NewGame = () => {
         >
           {/* Selected cards header */}
           <Typography sx={{ fontWeight: "bold", color: "#9ca3af" }}>
-            ካርድ ቁጥሮች መመዝገቡን ይመልከቱ
+            ካርድ ቁጥሮት መመዝገቡን ይመልከቱ
           </Typography>
 
           {/* Selected cards display */}
@@ -364,7 +331,7 @@ const NewGame = () => {
               gap: 1,
             }}
           >
-            <Typography sx={{ color: "#9ca3af" }}>በ</Typography>
+            <Typography sx={{ color: "#9ca3af", minWidth: 60 }}>Stake:</Typography>
             <select
               value={betAmount}
               onChange={(e) => setBetAmount(parseInt(e.target.value))}
@@ -377,6 +344,31 @@ const NewGame = () => {
               ].map((amount) => (
                 <option key={amount} value={amount}>
                   {amount} ብር
+                </option>
+              ))}
+            </select>
+          </Box>
+
+          {/* Cut amount selector */}
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <Typography sx={{ color: "#9ca3af", minWidth: 60 }}>Cut %:</Typography>
+            <select
+              value={cutAmount}
+              onChange={(e) => setCutAmount(parseInt(e.target.value))}
+              className="bg-gray-700 text-white rounded px-3 py-2 focus:outline-none"
+              style={{ flex: 1 }}
+            >
+              {[
+                0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80
+              ].map((val) => (
+                <option key={val} value={val}>
+                  {val}%
                 </option>
               ))}
             </select>
@@ -407,53 +399,6 @@ const NewGame = () => {
               ))}
             </Select>
           </FormControl>
-
-          {/* Secondary pattern (optional) */}
-          <FormControl fullWidth>
-            <InputLabel sx={{ color: "#9ca3af" }}>ሁለተኛ ፓተርን (ምርጫ)</InputLabel>
-            <Select
-              value={secondaryPattern}
-              onChange={(e) => setSecondaryPattern(e.target.value)}
-              sx={{
-                bgcolor: "#374151",
-                color: "#fff",
-                borderRadius: "8px",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#4b5563",
-                },
-              }}
-            >
-              <MenuItem value="">
-                <em>ምንም</em>
-              </MenuItem>
-              {allPatterns.map((pattern) => (
-                <MenuItem key={pattern} value={pattern}>
-                  {formatPatternName(pattern)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          {/* Pattern logic (AND/OR) */}
-          {secondaryPattern && (
-            <FormControl fullWidth>
-              <Select
-                value={patternLogic}
-                onChange={(e) => setPatternLogic(e.target.value)}
-                sx={{
-                  bgcolor: "#374151",
-                  color: "#fff",
-                  borderRadius: "8px",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#4b5563",
-                  },
-                }}
-              >
-                <MenuItem value="OR">ወይም (OR)</MenuItem>
-                <MenuItem value="AND">እና (AND)</MenuItem>
-              </Select>
-            </FormControl>
-          )}
 
           {/* Win amount display */}
           <Box
@@ -490,11 +435,10 @@ const NewGame = () => {
             <button
               onClick={handleStartGame}
               disabled={isLoading || cartela.length === 0}
-              className={`flex-1 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 ${
-                isLoading || cartela.length === 0
-                  ? "bg-gray-500 cursor-not-allowed text-gray-300"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }`}
+              className={`flex-1 py-3 rounded-lg font-bold transition flex items-center justify-center gap-2 ${isLoading || cartela.length === 0
+                ? "bg-gray-500 cursor-not-allowed text-gray-300"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+                }`}
             >
               <FaPlay />
               PLAY

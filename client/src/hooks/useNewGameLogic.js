@@ -13,12 +13,13 @@ const useNewGameLogic = ({
   setCardIds,
 }) => {
   const [betAmount, setBetAmount] = useState(
-    () => parseInt(localStorage.getItem("betAmount")) || 20,
+    () => parseInt(localStorage.getItem("betAmount")) || 10,
   );
   const [useDropdown, setUseDropdown] = useState(
     () => JSON.parse(localStorage.getItem("useDropdown")) || false,
   );
-  const [cutAmount, setCutAmount] = useState(20);
+  const [cutAmount, setCutAmount] = useState(35);
+  const [lastGameId, setLastGameId] = useState(0);
   const [cartelaInput, setCartelaInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [winAmount, setWinAmount] = useState(0);
@@ -59,20 +60,27 @@ const useNewGameLogic = ({
 
   // Fetch cut amount from backend on mount
   useEffect(() => {
-    const fetchCutAmount = async () => {
+    const fetchInitialData = async () => {
       if (!userId || !token) return;
       try {
         setIsLoading(true);
-        const response = await apiService.getCutAmountSetting(userId, token);
-        setCutAmount(response.cutAmount || 20);
-      } catch (error) {
-        toast.error("Failed to fetch cut amount, using default");
-        setCutAmount(20);
+        const [cutResp, gameResp] = await Promise.all([
+          apiService.getCutAmountSetting(userId, token),
+          apiService.fetchGameDetails(userId, token).catch(() => null),
+        ]);
+
+        setCutAmount(cutResp.cutAmount || 35);
+        if (gameResp && gameResp.gameId) {
+          setLastGameId(gameResp.gameId);
+        }
+      } catch {
+        toast.error("Failed to fetch initial settings");
+        setCutAmount(35);
       } finally {
         setIsLoading(false);
       }
     };
-    fetchCutAmount();
+    fetchInitialData();
   }, [userId, token]);
 
   // Update cut amount on backend when changed
@@ -92,19 +100,19 @@ const useNewGameLogic = ({
         } else {
           // toast.success("Cut amount updated successfully");
         }
-      } catch (error) {
+      } catch {
         toast.error("Failed to update cut amount");
 
         // Fetch current value from backend to ensure consistency
         try {
           const response = await apiService.getCutAmountSetting(userId, token);
-          setCutAmount(response.cutAmount || 20);
+          setCutAmount(response.cutAmount || 35);
         } catch (fetchError) {
           console.error(
             "Error fetching cut amount after failed update:",
             fetchError.message,
           );
-          setCutAmount(20);
+          setCutAmount(35);
         }
       } finally {
         setIsLoading(false);
@@ -158,13 +166,13 @@ const useNewGameLogic = ({
     const cutPercentage = cutAmount / 100;
     const betAmountFloat = parseFloat(betAmount);
     const totalStake = betAmountFloat * cartela.length;
-    const calculatedWinAmount =
-      betAmountFloat * (1 - cutPercentage) * cartela.length;
-    const calculatedHouseProfit =
-      cartela.length < 3 ? 0 : totalStake - calculatedWinAmount;
 
-    setWinAmount(calculatedWinAmount.toFixed(2));
-    setHouseProfit(calculatedHouseProfit.toFixed(2));
+    // Logic: Math.floor for house profit, round is totalStake - houseProfit
+    const calculatedHouseProfit = Math.floor(totalStake * cutPercentage);
+    const calculatedWinAmount = totalStake - calculatedHouseProfit;
+
+    setWinAmount(calculatedWinAmount.toFixed(0));
+    setHouseProfit(calculatedHouseProfit.toFixed(0));
     setTotalBet(totalStake);
     setTotalWin(calculatedWinAmount);
     setTotalHouseProfit(calculatedHouseProfit);
@@ -294,11 +302,11 @@ const useNewGameLogic = ({
         throw new Error("User not authenticated");
       }
       const response = await apiService.getCutAmountSetting(userId, token);
-      setCutAmount(response.cutAmount || 20);
+      setCutAmount(response.cutAmount || 35);
       toast.success("Cut amount refreshed successfully");
     } catch (error) {
       toast.error(error.message || "Failed to refresh cut amount");
-      setCutAmount(20);
+      setCutAmount(35);
     } finally {
       setIsLoading(false);
     }
@@ -346,6 +354,7 @@ const useNewGameLogic = ({
     setBonusAmount,
     bonusPattern,
     setBonusPattern,
+    lastGameId,
   };
 };
 
