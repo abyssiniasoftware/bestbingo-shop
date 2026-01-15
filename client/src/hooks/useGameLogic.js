@@ -511,93 +511,65 @@ const useGameLogic = ({ stake, players, winAmount }) => {
   };
 
   // Draw number
-  const drawNumber = useCallback(() => {
-    if (!isStartAudioFinished) {
-      // Wait for start audio to finish before drawing numbers
-      return;
-    }
-    if (calledNumbers.length >= 75) {
-      setIsPlaying(false);
-      setIsGameEnded(true);
-      // toast.info('All numbers called! Please end the game.');
-      return;
-    }
-    const availableNumbers = Array.from({ length: 75 }, (_, i) =>
-      (i + 1).toString(),
-    ).filter((num) => !calledNumbers.includes(num));
+const drawNumber = useCallback(() => {
+  if (!isStartAudioFinished) {
+    return;
+  }
+  if (calledNumbers.length >= 75) {
+    setIsPlaying(false);
+    setIsGameEnded(true);
+    return;
+  }
+  
+  const availableNumbers = Array.from({ length: 75 }, (_, i) =>
+    (i + 1).toString(),
+  ).filter((num) => !calledNumbers.includes(num));
 
-    // const customPool = ['14', '23', '40', '58', '62']; //5 call
-    // const customPool = ["3", "28", "50", "63"]; //4 call
-    // const customPool = [
-    //   "1",
-    //   "2",
-    //   "4",
-    //   "5",
-    //   "6",
-    //   "17",
-    //   "18",
-    //   "19",
-    //   "22",
-    //   "27",
-    //   "43",
-    //   "45",
-    //   "50",
-    //   "57",
-    //   "73",
-    // ]; // 15 call for bad bingo
+  if (availableNumbers.length === 0) {
+    setIsPlaying(false);
+    setIsGameEnded(true);
+    return;
+  }
+  
+  const newNumber =
+    availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
 
-    // const availableNumbers = customPool.filter(
-    //   (num) => !calledNumbers.includes(num)
-    // );
-    if (availableNumbers.length === 0) {
-      setIsPlaying(false);
-      setIsGameEnded(true);
-      // toast.info('All numbers called! Please end the game.');
-      return;
-    }
-    const newNumber =
-      availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+  // Calculate durations based on drawSpeed
+  const speedRatio = drawSpeed / 3000;
+  const phase1Duration = Math.max(300, Math.floor(500 * speedRatio)); // Zoom in duration
+  const phase2Duration = Math.max(800, Math.floor(1200 * speedRatio)); // Show at center duration
+  const moveDuration = Math.max(400, Math.floor(600 * speedRatio)); // Move to grid duration
+  const fadeOutDuration = Math.max(200, Math.floor(300 * speedRatio)); // Fade out at end
 
-    // Calculate dynamic phase durations based on drawSpeed
-    // Base is 3000ms. If drawSpeed is faster (e.g., 2000), phases should be shorter.
-    // If drawSpeed is slower (e.g., 5000), phases should be longer.
-    const speedRatio = drawSpeed / 3000;
+  // PHASE 1: Zoom in Blower
+  setBlowerZoomBall(newNumber);
 
-    // Ensure minimums so animations don't break at extremely high speeds
-    const phase1Duration = Math.max(300, Math.floor(500 * speedRatio));
-    const phase2Duration = Math.max(800, Math.floor(1200 * speedRatio));
-    // Phase 3 (Move) needs enough time to be seen, but fit in remainder
-    const moveDuration = Math.max(400, Math.floor(600 * speedRatio));
+  setTimeout(() => {
+    // PHASE 2: Show at Center
+    setPreviousNumber(currentNumber);
+    setCurrentNumber(newNumber.padStart(2, "0"));
+    setCalledNumbers((prev) => [...prev, newNumber]);
+    setRecentCalls((prev) => [newNumber, ...prev].slice(0, 5));
+    setCallCount((prev) => prev + 1);
 
-    // PHASE 1: Zoom in Blower
-    setBlowerZoomBall(newNumber);
+    setShowCentralBall(true);
+    setIsCentralBallMoving(false);
+    setBlowerZoomBall(null); // Remove from blower zoom
 
+    // PHASE 3: After showing at center, move to grid
     setTimeout(() => {
-      // PHASE 2: Show at Center
-      setPreviousNumber(currentNumber);
-      setCurrentNumber(newNumber.padStart(2, "0"));
-      setCalledNumbers((prev) => [...prev, newNumber]);
-      setRecentCalls((prev) => [newNumber, ...prev].slice(0, 5));
-      setCallCount((prev) => prev + 1);
-
-      setShowCentralBall(true);
-      setIsCentralBallMoving(false);
-      setBlowerZoomBall(null); // Remove from blower zoom
-
-      // PHASE 3: Move to Strip
+      setIsCentralBallMoving(true);
+      
+      // PHASE 4: After moving, fade out and hide
       setTimeout(() => {
-        setIsCentralBallMoving(true);
-
-        // Finale: Hide and Reset
-        setTimeout(() => {
-          setShowCentralBall(false);
-          setIsCentralBallMoving(false);
-        }, moveDuration);
-      }, phase2Duration);
-
-    }, phase1Duration);
-
-  }, [calledNumbers, currentNumber, isStartAudioFinished, drawSpeed]);
+        setShowCentralBall(false);
+        setIsCentralBallMoving(false);
+      }, moveDuration + fadeOutDuration); // Wait for move + fade to complete
+      
+    }, phase2Duration);
+    
+  }, phase1Duration);
+}, [calledNumbers, currentNumber, isStartAudioFinished, drawSpeed]);
 
   // Play/Pause interval
   useEffect(() => {

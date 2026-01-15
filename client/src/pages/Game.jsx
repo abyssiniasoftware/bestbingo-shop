@@ -84,11 +84,6 @@ const Game = () => {
     navigate("/dashboard", { state: { gameId: gameData?.game.gameId } });
   };
 
-  const handleStartGame = () => {
-    setShowStartModal(false);
-
-    togglePlayPause();
-  };
 
   // Check if there's a reservation (cards selected)
 

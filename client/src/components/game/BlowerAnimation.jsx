@@ -4,7 +4,6 @@ import { Box } from "@mui/material";
 
 const BlowerAnimation = ({
   calledNumbers = [],
-  currentNumber,
   zoomingBallNum = null
 }) => {
   const sceneRef = useRef(null);
