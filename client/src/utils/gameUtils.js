@@ -15,11 +15,11 @@ export const getBallColor = (number) => {
 };
 
 export const formatPatternName = (pattern) => {
-  if (pattern === "row") return "Any Horizontal Line";
-  if (pattern === "column") return "Any Vertical Line";
+  if (pattern === "row") return "ኣንድ ኣግዳሚ መስመር/Any one Horizontal";
+  if (pattern === "column") return "ኣንድ የቆመ መስመር/Any one Vertical";
   if (pattern === "diagonal") return "Any Diagonal";
-  if (pattern === "oneLine") return "Any Line (one line)";
-  if (pattern === "fourCorners") return "Four Corners";
+  if (pattern === "oneLine") return "ኣንድ መስመር ብቻ/Any Line";
+  if (pattern === "fourCorners") return "ኣራቱ ማኣዝን ነጠብጣብ/Four corner";
   if (pattern === "innerCorners") return "Inner Corners";
   if (pattern === "lPattern") return "L Shape";
   if (pattern === "reverseL") return "Reverse L";
@@ -27,7 +27,7 @@ export const formatPatternName = (pattern) => {
   if (pattern === "reverseT") return "Reverse T";
   if (pattern === "plus") return "Plus";
   if (pattern === "square") return "Square";
-  if (pattern === "xPattern") return "Two Diagonal (X Shape)";
+  if (pattern === "xPattern") return "ሁለት ዲያጎናል/X pattern (both diagonals)";
   if (pattern === "uPattern") return "U Shape";
   if (pattern === "cross") return "Cross";
   if (pattern === "diamond") return "Diamond";
@@ -46,7 +46,7 @@ export const formatPatternName = (pattern) => {
   if (pattern === "checkmark") return "Checkmark";
   if (pattern === "heart") return "Heart";
   if (pattern === "arrow") return "Arrow";
-  if (pattern === "anyLineOrCorner") return "Any Line or Corner";
+  if (pattern === "anyLineOrCorner") return "ኣንድ መስመር /Any Line or Corner";
   if (pattern === "anyLinePlusCorner") return "Any Line Plus Corner";
   if (pattern === "anyTwoLinesOrCorners") return "Any Two Lines or Corners";
   if (pattern === "anyCornerSquare") return "Any Corner Square";
@@ -87,9 +87,9 @@ export const formatPatternName = (pattern) => {
   if (pattern === "zigzag") return "Zigzag";
   if (pattern === "crescent") return "Crescent";
   if (pattern === "lightningBolt") return "Lightning Bolt";
-  if (pattern === "anyTwoLine") return "Any 2 Lines";
-  if (pattern === "anyTwoHorizontalLine") return "Any 2 Horizontal Lines";
-  if (pattern === "anyTwoVerticalLine") return "Any 2 Vertical Lines";
+  if (pattern === "anyTwoLine") return "ሁለት መስመር/Any Two Lines";
+  if (pattern === "anyTwoHorizontalLine") return "ሁለት ኣግዳሚ መስመር/Any two Horizontal";
+  if (pattern === "anyTwoVerticalLine") return "ሁለት የቆመ መስመር/Any two Vertical";
   if (pattern === "anyThreeLine") return "Any 3 Lines";
   if (pattern === "allSingleMiddleCorner")
     return "All Single or Middle Corners";
@@ -98,7 +98,7 @@ export const formatPatternName = (pattern) => {
   if (pattern === "anyFiveLine") return "Any 5 Lines";
   if (pattern === "anySixLine") return "Any 6 Lines";
   if (pattern === "anySevenLine") return "Any 7 Lines";
-  if (pattern === "fullCard") return "Full House";
+  if (pattern === "fullCard") return "Full House/ሙሉ ዝግ";
   if (pattern === "badBingo") return "Bad Bingo";
   return pattern.charAt(0).toUpperCase() + pattern.slice(1);
 };
