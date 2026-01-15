@@ -2,10 +2,11 @@ import React from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import "../../styles/game-redesign.css";
+import { ready } from "../../voice/utilVoice";
 
 const GameStartModal = ({
   isOpen,
-  onStart,
+  onClose,
   hasReservation,
   cartelaData,
   roundNumber = 1,
@@ -211,7 +212,13 @@ const GameStartModal = ({
           {/* Start Button */}
           <Button
             className="start-button"
-            onClick={onStart}
+            onClick={() => {
+              const audio = new Audio(ready);
+              audio.play();
+              audio.onended = () => {
+                onClose();
+              };
+            }}
             disabled={!hasReservation}
             sx={{
               width: "100%",
@@ -228,9 +235,9 @@ const GameStartModal = ({
               transition: "all 0.3s",
               "&:hover": hasReservation
                 ? {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 5px 20px rgba(37, 99, 235, 0.4)",
-                  }
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 5px 20px rgba(37, 99, 235, 0.4)",
+                }
                 : {},
             }}
           >

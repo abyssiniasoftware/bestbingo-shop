@@ -22,8 +22,6 @@ const GameControlsBar = ({
   cardIdInput,
   setCardIdInput,
   checkWinner,
-  handleBack,
-  isGameEnded,
   hasGameStarted,
   isManual,
   setIsManual,
@@ -104,7 +102,7 @@ const GameControlsBar = ({
 
         <Button
           onClick={handleShuffleClick}
-          disabled={isPlaying}
+          disabled={isPlaying || hasGameStarted}
           sx={{
             background: isShuffling
               ? "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"

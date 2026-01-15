@@ -40,6 +40,13 @@ const numberFlipAnimation = `
 
 100% { transform: perspective(400px) rotateX(0deg); opacity: 1; }
 
+}
+
+@keyframes shuffleGlow {
+  0% { box-shadow: 0 0 5px #fbbf24; filter: brightness(1.2); }
+  50% { box-shadow: 0 0 20px #f59e0b, 0 0 40px #f59e0b; filter: brightness(2); }
+  100% { box-shadow: 0 0 5px #fbbf24; filter: brightness(1.2); }
+}
 `;
 
 // BINGO letter styles
@@ -58,7 +65,7 @@ const letterColors = {
 
 const StyledBingoLetter = styled(Box, {
   shouldForwardProp: (prop) => prop !== "letter",
-})(({ theme, letter }) => ({
+})(({ letter }) => ({
   width: "100%", // Fill the column width
   height: "50px",
   display: "flex",
@@ -101,9 +108,10 @@ const StyledNumberCell = styled(Box, {
   userSelect: "none",
 
   // Animations
-  transition: "transform 0.2s ease",
+  transition: "all 0.2s ease",
+  zIndex: isShuffling ? 10 : 1,
   animation: isShuffling
-    ? "gridPulse 0.6s ease-in-out, numberFlip 0.3s ease-in-out"
+    ? "shuffleGlow 0.4s ease-in-out infinite, numberFlip 0.3s ease-in-out infinite"
     : called
       ? "calledPulse 0.4s ease-in-out"
       : "none",
@@ -124,21 +132,8 @@ const StyledNumberCell = styled(Box, {
 }));
 
 // Utility functions
-
 const getRandomInt = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
-
-const getBingoLetter = (number) => {
-  if (number >= 1 && number <= 15) return "B";
-
-  if (number >= 16 && number <= 30) return "I";
-
-  if (number >= 31 && number <= 45) return "N";
-
-  if (number >= 46 && number <= 60) return "G";
-
-  return "O";
-};
 
 const BingoGrid = ({ calledNumbers, shuffling }) => {
   const [shuffledNumber, setShuffledNumber] = useState(null);
@@ -153,14 +148,12 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
 
   useEffect(() => {
     if (!shuffling) {
-      setShuffledNumber(null);
-
-      setFastShuffleNums([]);
-
-      setDisplayNumbers({});
-
-      setIsFastShuffling(false);
-
+      setTimeout(() => {
+        if (shuffledNumber !== null) setShuffledNumber(null);
+        if (fastShuffleNums.length > 0) setFastShuffleNums([]);
+        if (Object.keys(displayNumbers).length > 0) setDisplayNumbers({});
+        if (isFastShuffling) setIsFastShuffling(false);
+      }, 0);
       return;
     }
 
@@ -171,18 +164,18 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
     );
 
     if (uncalledNumbers.length === 0) {
-      setShuffledNumber(null);
-
-      setFastShuffleNums([]);
-
-      setDisplayNumbers({});
-
-      setIsFastShuffling(false);
-
+      setTimeout(() => {
+        setShuffledNumber(null);
+        setFastShuffleNums([]);
+        setDisplayNumbers({});
+        setIsFastShuffling(false);
+      }, 0);
       return;
     }
 
-    setIsFastShuffling(true);
+    setTimeout(() => {
+      setIsFastShuffling(true);
+    }, 0);
 
     let shuffleCount = 0;
 
@@ -247,7 +240,7 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
 
       clearInterval(fastShuffleInterval);
     };
-  }, [shuffling, calledNumbers]);
+  }, [shuffling, calledNumbers, shuffledNumber, fastShuffleNums.length, displayNumbers, isFastShuffling]);
 
   const letters = ["B", "I", "N", "G", "O"];
 

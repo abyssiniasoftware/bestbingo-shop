@@ -11,7 +11,7 @@ import {
   META_PATTERNS,
 } from "../constants/constants";
 import { cellToGridIndex, formatPatternName } from "../utils/gameUtils";
-import { shuffle } from "../voice/utilVoice";
+import { shuffle, finished } from "../voice/utilVoice";
 
 // Precompute pattern indices for faster win checking
 const PRECOMPUTED_PATTERNS = Object.keys(BINGO_PATTERNS).reduce(
@@ -628,6 +628,17 @@ const useGameLogic = ({ stake, players, winAmount }) => {
 
   // Inside checkWinner, replace the userId and bonus awarding logic
   const checkWinner = useCallback(async () => {
+    // Prevent checking if game is already ended
+    if (isGameEnded) {
+      try {
+        const audio = new Audio(finished);
+        audio.play();
+      } catch (e) {
+        console.error("Failed to play finished audio", e);
+      }
+      return;
+    }
+
     if (!cardIdInput) {
       toast.error("Please enter a card ID");
       return;

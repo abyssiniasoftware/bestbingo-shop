@@ -110,7 +110,6 @@ const Game = () => {
       <GameStartModal
         isOpen={showStartModal && !hasGameStarted}
         onClose={() => setShowStartModal(false)}
-        onStart={handleStartGame}
         hasReservation={hasReservation}
         roundNumber={gameData?.game?.gameId || 1}
       />
