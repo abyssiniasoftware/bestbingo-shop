@@ -12,16 +12,17 @@ const RecentBallsStrip = ({ recentCalls = [] }) => {
       sx={{
         display: "flex",
         alignItems: "center",
-        gap: "12px",
-        padding: "10px 20px",
-        borderRadius: "50px",
-        background: "rgba(0, 0, 0, 0.4)", // Darker, cleaner bar
-        border: "1px solid rgba(255, 255, 255, 0.1)",
-        boxShadow: "inset 0 0 20px rgba(0,0,0,1)",
-        height: "85px",
-        minWidth: "380px",
+        gap: "15px",
+        padding: "5px 15px",
+        borderRadius: "15px",
+        background: "linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, rgba(0,0,0,0.2) 100%)",
+        border: "1px solid rgba(255, 255, 255, 0.2)",
+        boxShadow: "0 4px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.1)",
+        height: "80px",
+        minWidth: "420px",
         position: "relative",
-        overflow: "hidden",
+        overflow: "visible",
+        backdropFilter: "blur(10px)",
       }}
     >
       {displayBalls.map((number, index) => (
@@ -60,14 +61,15 @@ const RecentBallsStrip = ({ recentCalls = [] }) => {
             src={getBallImage(parseInt(number))}
             alt={`Ball ${number}`}
             sx={{
-              width: index === 0 ? "68px" : "55px", // Newest is slightly larger
-              height: index === 0 ? "68px" : "55px",
+              width: "62px",
+              height: "62px",
               filter:
                 index === 0
-                  ? "drop-shadow(0 0 10px rgba(0,255,255,0.7))"
-                  : "brightness(1) grayscale(0)",
+                  ? "drop-shadow(0 0 15px rgba(255,255,255,0.8))"
+                  : "drop-shadow(0 2px 4px rgba(0,0,0,0.5))",
               zIndex: 1,
               transition: "all 0.5s ease",
+              transform: index === 0 ? "scale(1.1)" : "scale(1)",
             }}
           />
         </Box>

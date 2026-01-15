@@ -39,51 +39,24 @@ const GameTopSection = ({
         sx={{
           flex: "0 0 45%",
           position: "relative",
-          background: "linear-gradient(90deg, #1a1a1a 0%, #000022 100%)",
+          background: "linear-gradient(90deg, #0a0a0a 0%, #151525 100%)",
           display: "flex",
           alignItems: "center",
-          borderRight: "2px solid #333",
+          borderRight: "4px solid #333",
+          paddingLeft: "10px",
         }}
       >
-        {/* Header Text Overlay */}
+        {/* Blower (Left) */}
         <Box
           sx={{
-            position: "absolute",
-            top: "10px",
-            left: "220px", // Pushes text to the right of the blower
-            zIndex: 10,
-          }}
-        >
-          <Typography
-            sx={{
-              color: "#fff",
-              fontSize: "2.2rem",
-              fontWeight: "800",
-              lineHeight: 1,
-              textShadow: "0 2px 4px rgba(0,0,0,0.8)",
-            }}
-          >
-            Recent 5 Balls
-          </Typography>
-          <Typography
-            sx={{
-              color: "#00ffff", // Cyan
-              fontSize: "1.8rem",
-              fontWeight: "bold",
-              mt: 1,
-            }}
-          >
-            ጥሪ <span style={{ color: "#ffd700" }}>{callCount}</span>/75
-          </Typography>
-        </Box>
-
-        {/* Blower (Far Left) */}
-        <Box
-          sx={{
-            width: "220px",
+            width: "280px",
             height: "100%",
             position: "relative",
             zIndex: 2,
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <BlowerAnimation
@@ -94,18 +67,56 @@ const GameTopSection = ({
           />
         </Box>
 
-        {/* Ball Strip (Center Left) */}
+        {/* Info & Strip (Right of Blower) */}
         <Box
           sx={{
             flex: 1,
+            height: "100%",
             display: "flex",
-            alignItems: "flex-end", // Align balls to bottom
-            justifyContent: "flex-start",
-            paddingBottom: "40px",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center", // Center text and strip horizontally in this column
             paddingLeft: "10px",
+            zIndex: 5,
           }}
         >
-          <RecentBallsStrip recentCalls={recentCalls} />
+          {/* Header Text */}
+          <Box sx={{ mb: 1, textAlign: "center" }}>
+            <Typography
+              sx={{
+                color: "#fff",
+                fontSize: "2.4rem",
+                fontWeight: "900",
+                lineHeight: 1,
+                textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                letterSpacing: "1px",
+              }}
+            >
+              Recent 5 Balls
+            </Typography>
+            <Typography
+              sx={{
+                color: "#00ffff", // Cyan
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                mt: 0.5,
+              }}
+            >
+              ጥሪ <span style={{ color: "#ffd700" }}>{callCount}</span>/75
+            </Typography>
+          </Box>
+
+          {/* Ball Strip */}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              mt: 1,
+            }}
+          >
+            <RecentBallsStrip recentCalls={recentCalls} />
+          </Box>
         </Box>
       </Box>
 
@@ -170,7 +181,7 @@ const GameTopSection = ({
         {/* 3A. Prize List Box */}
         <Box
           sx={{
-            width: "45%",
+            width: "35%",
             background: "#222",
             display: "flex",
             flexDirection: "column",

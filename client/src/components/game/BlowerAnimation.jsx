@@ -10,16 +10,20 @@ const generateBallPositions = (calledNumbers) => {
   const positions = [];
   const calledSet = new Set(calledNumbers.map((n) => parseInt(n)));
 
+  // Increase count to make it look full (approx 70 balls)
   for (let i = 1; i <= 75; i++) {
     if (!calledSet.has(i)) {
-      // Use deterministic position based on ball number
-      const angle = (i / 75) * Math.PI * 2;
-      const radiusOffset = (i % 3) * 15;
-      const radius = 20 + radiusOffset;
+      // Create more chaotic, packed positions
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.sqrt(Math.random()) * 60; // Concentrated but spread
       const x = Math.cos(angle) * radius;
       const y = Math.sin(angle) * radius;
-      const delay = (i % 5) * 0.4;
-      const duration = 1.5 + (i % 3) * 0.5;
+
+      // Randomize animation timings for chaos
+      const delay = Math.random() * 2;
+      const duration = 1.0 + Math.random() * 1.5;
+      const driftX = (Math.random() - 0.5) * 30;
+      const driftY = (Math.random() - 0.5) * 30;
 
       positions.push({
         num: i,
@@ -27,6 +31,8 @@ const generateBallPositions = (calledNumbers) => {
         y,
         delay,
         duration,
+        driftX,
+        driftY
       });
     }
   }
@@ -52,8 +58,8 @@ const BlowerAnimation = ({
       <Box
         sx={{
           position: "relative",
-          width: { xs: 150, sm: 180, md: 250 },
-          height: { xs: 150, sm: 180, md: 250 },
+          width: { xs: 150, sm: 180, md: 500 },
+          height: { xs: 150, sm: 180, md: 550 },
         }}
       >
         <Box
@@ -86,7 +92,7 @@ const BlowerAnimation = ({
             zIndex: 1,
           }}
         >
-          {ballPositions.slice(0, 25).map((ball) => (
+          {ballPositions.map((ball) => (
             <Box
               key={ball.num}
               component="img"
@@ -94,13 +100,16 @@ const BlowerAnimation = ({
               alt={`Ball ${ball.num}`}
               sx={{
                 position: "absolute",
-                width: { xs: 18, sm: 22, md: 25 },
-                height: { xs: 18, sm: 22, md: 25 },
+                width: { xs: 15, sm: 18, md: 22 }, // Slightly smaller to fit more
+                height: { xs: 15, sm: 18, md: 22 },
                 borderRadius: "50%",
                 left: `calc(50% + ${ball.x}px)`,
                 top: `calc(50% + ${ball.y}px)`,
                 transform: "translate(-50%, -50%)",
-                animation: `ballBounce ${ball.duration}s ease-in-out ${ball.delay}s infinite`,
+                animation: `ballChaos ${ball.duration}s ease-in-out ${ball.delay}s infinite alternate`,
+                opacity: 0.9,
+                "--drift-x": `${ball.driftX}px`, // Custom properties for animation
+                "--drift-y": `${ball.driftY}px`,
               }}
             />
           ))}
@@ -154,10 +163,16 @@ const BlowerAnimation = ({
 
         <style>
           {`
+            @keyframes ballChaos {
+                0% { transform: translate(-50%, -50%) translate(0, 0); }
+                33% { transform: translate(-50%, -50%) translate(var(--drift-x), var(--drift-y)); }
+                66% { transform: translate(-50%, -50%) translate(calc(var(--drift-x) * -0.5), calc(var(--drift-y) * 1.2)); }
+                100% { transform: translate(-50%, -50%) translate(calc(var(--drift-x) * 0.8), calc(var(--drift-y) * -0.6)); }
+            }
             @keyframes zoomAndVanish {
-                0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
-                50% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; }
-                100% { transform: translate(-50%, -50%) scale(5); opacity: 0; }
+                0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; filter: brightness(1); }
+                50% { transform: translate(-50%, -50%) scale(2.5); opacity: 1; filter: brightness(1.5); }
+                100% { transform: translate(-50%, -50%) scale(5); opacity: 0; filter: brightness(2); }
             }
           `}
         </style>
