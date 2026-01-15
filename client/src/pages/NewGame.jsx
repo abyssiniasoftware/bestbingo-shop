@@ -20,6 +20,12 @@ import { BINGO_PATTERNS, META_PATTERNS } from "../utils/patterns";
 import { formatPatternName } from "../utils/gameUtils";
 import "../styles/game-redesign.css";
 
+const blinkAnimation = `
+  @keyframes blinker {
+    50% { opacity: 0; }
+  }
+`;
+
 const NewGame = () => {
   const {
     cartela,
@@ -32,7 +38,9 @@ const NewGame = () => {
   } = useGameStore();
 
   const { cardIds, isLoading: cardIdsLoading } = useCardIds();
-  const { refreshWallet } = useWallet();
+  const { wallet, refreshWallet } = useWallet();
+  const balance = wallet?.package ?? wallet?.packageBalance ?? wallet?.balance ?? 0;
+  const isBalanceLow = balance < 10;
   const { userId } = useUserStore();
   const [addModalOpen, setAddModalOpen] = useState(false);
 
@@ -127,6 +135,7 @@ const NewGame = () => {
         color: "#fff",
       }}
     >
+      <style>{blinkAnimation}</style>
       {/* Header */}
       <Box
         sx={{
@@ -247,6 +256,29 @@ const NewGame = () => {
       </Box>
 
       <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+        {isBalanceLow && (
+          <Box
+            sx={{
+              backgroundColor: "rgba(239, 68, 68, 0.2)",
+              border: "1px solid #ef4444",
+              borderRadius: "8px",
+              p: 1.5,
+              mb: 2,
+              textAlign: "center",
+              animation: "blinker 1s linear infinite",
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#ef4444",
+                fontWeight: "bold",
+                fontSize: "1.1rem",
+              }}
+            >
+              Your balance is low ({balance} ብር), please call to admin!
+            </Typography>
+          </Box>
+        )}
 
         {/* Round Header */}
         <Typography
@@ -545,18 +577,19 @@ const NewGame = () => {
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
               <button
                 onClick={handleStartGame}
-                disabled={isLoading || cartela.length === 0}
+                disabled={isLoading || cartela.length === 0 || isBalanceLow}
                 style={{
                   width: "100%",
-                  backgroundColor: "#0000ff",
+                  backgroundColor: isBalanceLow ? "#4b5563" : "#0000ff",
                   color: "white",
                   fontSize: "1.75rem",
                   fontWeight: "bold",
-                  padding: "8px",
+                  padding: "16px",
                   borderRadius: "8px",
                   border: "none",
-                  cursor: (isLoading || cartela.length === 0) ? "not-allowed" : "pointer",
+                  cursor: (isLoading || cartela.length === 0 || isBalanceLow) ? "not-allowed" : "pointer",
                   boxShadow: "0 4px 6px rgba(0,0,0,0.3)",
+                  opacity: isBalanceLow ? 0.6 : 1,
                 }}
               >
                 PLAY

@@ -21,7 +21,7 @@ const Game = () => {
   const { stake, players, winAmount } = useParams();
   const navigate = useNavigate();
   const { gameData } = useGameStore();
-  const [showStartModal, setShowStartModal] = useState(false);
+  const [showStartModal, setShowStartModal] = useState(true);
   const {
     calledNumbers,
     recentCalls,
@@ -102,7 +102,7 @@ const Game = () => {
         onClose={() => setShowStartModal(false)}
         onStart={handleStartGame}
         hasReservation={hasReservation}
-        roundNumber={1}
+        roundNumber={gameData?.game?.gameId || 1}
       />
 
       {/* Main game content */}
