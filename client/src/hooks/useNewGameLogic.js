@@ -20,6 +20,10 @@ const useNewGameLogic = ({
   );
   const [cutAmount, setCutAmount] = useState(35);
   const [lastGameId, setLastGameId] = useState(0);
+  const [previousCartela, setPreviousCartela] = useState(() => {
+    const stored = localStorage.getItem("previousGameCartela");
+    return stored ? JSON.parse(stored) : [];
+  });
   const [cartelaInput, setCartelaInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [winAmount, setWinAmount] = useState(0);
@@ -72,6 +76,11 @@ const useNewGameLogic = ({
         setCutAmount(cutResp.cutAmount || 35);
         if (gameResp && gameResp.gameId) {
           setLastGameId(gameResp.gameId);
+          if (gameResp.cartela && Array.isArray(gameResp.cartela)) {
+            const lastCards = gameResp.cartela.map(String);
+            setPreviousCartela(lastCards);
+            localStorage.setItem("previousGameCartela", JSON.stringify(lastCards));
+          }
         }
       } catch {
         toast.error("Failed to fetch initial settings");
@@ -250,6 +259,11 @@ const useNewGameLogic = ({
       localStorage.removeItem("previousNumber");
       localStorage.removeItem("callCount");
       localStorage.removeItem("hasGameStarted");
+
+      // Save previous cartela for next game
+      localStorage.setItem("previousGameCartela", JSON.stringify(cartela));
+      setPreviousCartela(cartela);
+
       setGameData({ ...response, cartela });
       navigate(`/game/${betAmount}/${cartela.length}/${winAmount}`);
     } catch (error) {
@@ -312,6 +326,15 @@ const useNewGameLogic = ({
     }
   };
 
+  const handleContinuePrevious = () => {
+    if (previousCartela && previousCartela.length > 0) {
+      setCartela(previousCartela);
+      toast.success(`${previousCartela.length} cards restored from previous game`);
+    } else {
+      toast.info("No previous game cards found");
+    }
+  };
+
   return {
     handleRefreshCards,
     handleRefreshCutAmount,
@@ -355,6 +378,8 @@ const useNewGameLogic = ({
     bonusPattern,
     setBonusPattern,
     lastGameId,
+    handleContinuePrevious,
+    previousCartela,
   };
 };
 
