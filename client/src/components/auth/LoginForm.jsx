@@ -113,7 +113,7 @@ const LoginForm = ({ handleLogin, config }) => {
                 </Typography>
 
                 {/* BINGO Text - Darker shadow for better contrast */}
-                <Typography
+                {/* <Typography
                   variant="h1"
                   sx={{
                     color: themeColors.darkBlue,
@@ -127,7 +127,28 @@ const LoginForm = ({ handleLogin, config }) => {
                   }}
                 >
                   BINGO
-                </Typography>
+                </Typography> */}
+ <Box
+  sx={{
+    height: { xs: "30px", sm: "40px" },
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    mb: 3,
+  }}
+>
+  <img
+    src="/images/bingo.png"
+    alt="BINGO"
+    style={{
+      height: "100%",
+      width: "auto",
+      objectFit: "contain",
+      display: "block",
+    }}
+  />
+</Box>
+
 
                 {/* Subtitle - Changed from white to dark blue for contrast */}
                 <Typography
@@ -168,7 +189,7 @@ const LoginForm = ({ handleLogin, config }) => {
                     textShadow: "0 1px 2px rgba(255,255,255,0.8)",
                   }}
                 >
-                  ከ{config.bingoName} Bingo ጋር የቢንጎ ጨዋታዎችን በተሻለ ሁኔታ ያግኙ። አሁኑኑ
+                  ከ{config.bingoName} ጋር የቢንጎ ጨዋታዎችን በተሻለ ሁኔታ ያግኙ። አሁኑኑ
                   ይቀላቀሉ!
                 </Typography>
 

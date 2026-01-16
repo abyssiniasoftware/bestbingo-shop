@@ -194,8 +194,8 @@ const ViewCartela = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-2 sm:p-4">
-      <div className="w-full max-w-8xl">
+    <div className="w-full">
+      <div className="w-full">
         {user ? (
           <div>
             {isLoading ? (
@@ -203,18 +203,18 @@ const ViewCartela = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
               </div>
             ) : cardIds.length === 0 ? (
-              <div className="bg-gray-800 p-4 rounded-lg text-center">
+              <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
                 <p
-                  className="text-red-500 text-xl sm:text-2xl mb-2"
+                  className="text-red-500 text-xl sm:text-2xl mb-2 font-bold"
                   aria-live="assertive"
                 >
                   ምንም ካርቴላ አልተገኘም።
                 </p>
-                <p className="mb-4">እባክዎ አንዳንድ ያክሉ</p>
-                <div className="flex flex-wrap gap-2 justify-center">
+                <p className="mb-6 text-gray-600">እባክዎ አዲስ ካርቴላዎችን ያክሉ።</p>
+                <div className="flex flex-wrap gap-3 justify-center">
                   <button
                     onClick={toggleAddModal}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105"
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-6 rounded-lg shadow transition transform hover:-translate-y-0.5"
                   >
                     ካርቴላ ያክሉ
                   </button>
@@ -234,63 +234,57 @@ const ViewCartela = () => {
                   )}
                   {/* New Animated Toggle Button for Global Bonus Activation */}
                   {role === "cashier" && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-300">
+                    <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                         ግሎባል ቦነስ:
                       </span>
                       <button
                         onClick={handleToggleGlobalBonus}
-                        className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ease-in-out focus:outline-none ${
-                          isBonusGloballyActive ? "bg-green-500" : "bg-gray-600"
-                        }`}
+                        className={`relative inline-flex items-center h-5 rounded-full w-9 transition-colors duration-200 ease-in-out focus:outline-none ${isBonusGloballyActive ? "bg-green-500" : "bg-gray-300"
+                          }`}
                         aria-pressed={isBonusGloballyActive}
                       >
                         <span
-                          className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${
-                            isBonusGloballyActive
-                              ? "translate-x-6"
-                              : "translate-x-1"
-                          }`}
+                          className={`inline-block w-3 h-3 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${isBonusGloballyActive
+                            ? "translate-x-5"
+                            : "translate-x-1"
+                            }`}
                         />
                       </button>
                     </div>
                   )}
                   {role === "cashier" && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-300">
-                        ዳይናሚክ ቦነስ አሳይ:
+                    <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        ዳይናሚክ ቦነስ:
                       </span>
                       <button
                         onClick={handleToggleBonusHidden}
-                        className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ease-in-out focus:outline-none ${
-                          isBonusHidden ? "bg-green-500" : "bg-gray-600"
-                        }`}
+                        className={`relative inline-flex items-center h-5 rounded-full w-9 transition-colors duration-200 ease-in-out focus:outline-none ${isBonusHidden ? "bg-green-500" : "bg-gray-300"
+                          }`}
                         aria-pressed={isBonusHidden}
                       >
                         <span
-                          className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${
-                            isBonusHidden ? "translate-x-6" : "translate-x-1"
-                          }`}
+                          className={`inline-block w-3 h-3 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${isBonusHidden ? "translate-x-5" : "translate-x-1"
+                            }`}
                         />
                       </button>
                     </div>
                   )}
                   {role === "cashier" && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-300">
+                    <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                         ባድ ቢንጎ:
                       </span>
                       <button
                         onClick={handleToggleBadBingo}
-                        className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ease-in-out focus:outline-none ${
-                          isBadBingoActive ? "bg-green-500" : "bg-gray-600"
-                        }`}
+                        className={`relative inline-flex items-center h-5 rounded-full w-9 transition-colors duration-200 ease-in-out focus:outline-none ${isBadBingoActive ? "bg-green-500" : "bg-gray-300"
+                          }`}
                         aria-pressed={isBadBingoActive}
                       >
                         <span
-                          className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${
-                            isBadBingoActive ? "translate-x-6" : "translate-x-1"
-                          }`}
+                          className={`inline-block w-3 h-3 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${isBadBingoActive ? "translate-x-5" : "translate-x-1"
+                            }`}
                         />
                       </button>
                     </div>
@@ -322,77 +316,74 @@ const ViewCartela = () => {
                   )}
                   {/* New Animated Toggle Button for Global Bonus Activation */}
                   {role === "cashier" && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-300">
+                    <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                         ግሎባል ቦነስ:
                       </span>
                       <button
                         onClick={handleToggleGlobalBonus}
-                        className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ease-in-out focus:outline-none ${
-                          isBonusGloballyActive ? "bg-green-500" : "bg-gray-600"
-                        }`}
+                        className={`relative inline-flex items-center h-5 rounded-full w-9 transition-colors duration-200 ease-in-out focus:outline-none ${isBonusGloballyActive ? "bg-green-500" : "bg-gray-300"
+                          }`}
                         aria-pressed={isBonusGloballyActive}
                       >
                         <span
-                          className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${
-                            isBonusGloballyActive
-                              ? "translate-x-6"
-                              : "translate-x-1"
-                          }`}
+                          className={`inline-block w-3 h-3 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${isBonusGloballyActive
+                            ? "translate-x-5"
+                            : "translate-x-1"
+                            }`}
                         />
                       </button>
                     </div>
                   )}
                   {role === "cashier" && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-300">
-                        ዳይናሚክ ቦነስ አሳይ:
+                    <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        ዳይናሚክ ቦነስ:
                       </span>
                       <button
                         onClick={handleToggleBonusHidden}
-                        className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ease-in-out focus:outline-none ${
-                          isBonusHidden ? "bg-green-500" : "bg-gray-600"
-                        }`}
+                        className={`relative inline-flex items-center h-5 rounded-full w-9 transition-colors duration-200 ease-in-out focus:outline-none ${isBonusHidden ? "bg-green-500" : "bg-gray-300"
+                          }`}
                         aria-pressed={isBonusHidden}
                       >
                         <span
-                          className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${
-                            isBonusHidden ? "translate-x-6" : "translate-x-1"
-                          }`}
+                          className={`inline-block w-3 h-3 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${isBonusHidden ? "translate-x-5" : "translate-x-1"
+                            }`}
                         />
                       </button>
                     </div>
                   )}
                   {role === "cashier" && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-gray-300">
+                    <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
+                      <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                         ባድ ቢንጎ:
                       </span>
                       <button
                         onClick={handleToggleBadBingo}
-                        className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors duration-200 ease-in-out focus:outline-none ${
-                          isBadBingoActive ? "bg-green-500" : "bg-gray-600"
-                        }`}
+                        className={`relative inline-flex items-center h-5 rounded-full w-9 transition-colors duration-200 ease-in-out focus:outline-none ${isBadBingoActive ? "bg-green-500" : "bg-gray-300"
+                          }`}
                         aria-pressed={isBadBingoActive}
                       >
                         <span
-                          className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${
-                            isBadBingoActive ? "translate-x-6" : "translate-x-1"
-                          }`}
+                          className={`inline-block w-3 h-3 transform bg-white rounded-full transition-transform duration-200 ease-in-out ${isBadBingoActive ? "translate-x-5" : "translate-x-1"
+                            }`}
                         />
                       </button>
                     </div>
                   )}
                 </div>
-                <div className="bg-gray-800 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold mb-2">የተገኙ ካርቴላዎች</h3>
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(clamp(50px,15vw,80px),1fr))] gap-1 sm:gap-2">
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
+                    <span className="w-2 h-6 bg-red-600 rounded-full"></span>
+                    የተገኙ ካርቴላዎች
+                  </h3>
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(clamp(60px,18vw,90px),1fr))] gap-3 sm:gap-4">
                     {" "}
                     {cardIds.map((cardId) => (
                       <button
                         key={cardId}
                         onClick={() => toggleEditModal(cardId)}
-                        className="w-full aspect-square rounded-lg font-bold text-[clamp(1.5rem,8vw,2rem)] bg-gray-700 text-white hover:bg-gray-600 transition-all duration-300 transform hover:scale-105"
+                        className="w-full aspect-square rounded-xl font-bold text-[clamp(1.5rem,6vw,2.2rem)] bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 hover:border-red-300 hover:text-red-600 shadow-sm transition-all duration-300 transform hover:-translate-y-1"
                         aria-label={`ካርቴላ ${cardId} ይመልከቱ`}
                       >
                         {cardId}

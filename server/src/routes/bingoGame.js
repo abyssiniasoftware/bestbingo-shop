@@ -73,7 +73,7 @@ router.get(
 );
 router.get(
   "/house/:houseId/bonuses",
-  auth(["house_admin"]),
+  auth(["house_admin","cashier"]),
   isIdValid("houseId"),
   validate,
   bingoGameController.getBonusesByHouse

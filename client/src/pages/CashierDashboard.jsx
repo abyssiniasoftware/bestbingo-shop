@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Typography, Button } from "@mui/material";
-import { FaSignOutAlt, FaGamepad, FaIdCard, FaChartBar, FaEye, FaEyeSlash } from "react-icons/fa";
+import { Box, Typography, Button, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from "@mui/material";
+import {
+  FaSignOutAlt, FaGamepad, FaIdCard, FaChartBar, FaEye, FaEyeSlash,
+  FaFileAlt, FaClipboardList, FaGift, FaWallet, FaCalendarWeek, FaHistory
+} from "react-icons/fa";
 
 import ViewCartela from "./ViewCartela";
 import Reports from "./Reports";
-
+import HouseReportsCashier from "./HouseReportsCashier";
+import HouseBonusListCashier from "./HouseBonusListCashier";
+import HouseStatsCashier from "./HouseStatsCashier";
 import useWallet from "../hooks/useWallet";
 import useUserStore from "../stores/userStore";
 
@@ -13,9 +18,9 @@ const CashierDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "game-board");
+  const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "reports");
   const { wallet, isLoading: walletLoading } = useWallet();
-  const { username, clearUser } = useUserStore();
+  const { clearUser } = useUserStore();
   const [showBalance, setShowBalance] = useState(
     () => JSON.parse(localStorage.getItem("showBalance")) ?? false,
   );
@@ -23,7 +28,6 @@ const CashierDashboard = () => {
   useEffect(() => {
     localStorage.setItem("showBalance", JSON.stringify(showBalance));
   }, [showBalance]);
-
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -39,144 +43,176 @@ const CashierDashboard = () => {
     setActiveTab(tab);
   };
 
-
   const renderTabContent = () => {
     switch (activeTab) {
-      case "game-board":
-        return null;
-      case "bingo-cards":
-        return <ViewCartela />;
       case "reports":
         return <Reports />;
-      default:
+      case "detail-report":
+        return <HouseReportsCashier />;
+      case "bonus-report":
+        return <HouseBonusListCashier />;
+      case "stats":
+        return <HouseStatsCashier />;
+      case "get-bonus":
+        return (
+          <Box sx={{ p: 4, textAlign: "center" }}>
+            <Typography variant="h5">Get Bonus</Typography>
+            <Typography sx={{ color: "#666", mt: 2 }}>This feature is coming soon.</Typography>
+          </Box>
+        );
+      case "weekly-claims":
+        return (
+          <Box sx={{ p: 4, textAlign: "center" }}>
+            <Typography variant="h5">Weekly Claims</Typography>
+            <Typography sx={{ color: "#666", mt: 2 }}>This feature is coming soon.</Typography>
+          </Box>
+        );
+      case "bingo-cards":
         return <ViewCartela />;
+      default:
+        return <Reports />;
     }
   };
 
+  const sidebarItems = [
+    { id: "reports", label: "Report", icon: <FaFileAlt /> },
+    { id: "detail-report", label: "Detail Report", icon: <FaClipboardList /> },
+    { id: "bonus-report", label: "Bonus Report", icon: <FaGift /> },
+    { id: "stats", label: "Stats", icon: <FaChartBar /> },
+    { id: "get-bonus", label: "Get Bonus", icon: <FaWallet /> },
+    { id: "weekly-claims", label: "Weekly Claims", icon: <FaCalendarWeek /> },
+    { id: "bingo-cards", label: "View Cards", icon: <FaIdCard /> },
+  ];
+
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        background: "#f6f6f6",
-        position: "relative",
-      }}
-    >
-      {/* Main Content */}
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "#f6f6f6" }}>
+      {/* Full-width Header */}
       <Box
         sx={{
-          transition: "filter 0.3s ease",
+          height: 64,
+          background: "white",
+          borderBottom: "1px solid #e0e0e0",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          px: 3,
+          flexShrink: 0,
+          zIndex: 1100, // Ensure header is on top
         }}
       >
-        {/* Header bar */}
         <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            p: 2,
-            background: "#1f2937",
-            borderBottom: "2px solid #374151",
-          }}
+          sx={{ display: "flex", alignItems: "center", gap: 1.5, cursor: "pointer" }}
+          onClick={() => navigate("/game")}
         >
-          {/* Navigation tabs */}
-          <Button
-            onClick={() => navigate("/game")}
-            startIcon={<FaGamepad />}
-            sx={{
-              color: activeTab === "game-board" ? "#fbbf24" : "#9ca3af",
-              borderBottom:
-                activeTab === "game-board" ? "2px solid #fbbf24" : "none",
-              borderRadius: 0,
-              px: 2,
-              "&:hover": { color: "#fbbf24" },
-            }}
-          >
-            Game Board
-          </Button>
-          <Button
-            onClick={() => handleNavigate("bingo-cards")}
-            startIcon={<FaIdCard />}
-            sx={{
-              color: activeTab === "bingo-cards" ? "#fbbf24" : "#9ca3af",
-              borderBottom:
-                activeTab === "bingo-cards" ? "2px solid #fbbf24" : "none",
-              borderRadius: 0,
-              px: 2,
-              "&:hover": { color: "#fbbf24" },
-            }}
-          >
-            Cards
-          </Button>
-          <Button
-            onClick={() => handleNavigate("reports")}
-            startIcon={<FaChartBar />}
-            sx={{
-              color: activeTab === "reports" ? "#fbbf24" : "#9ca3af",
-              borderBottom:
-                activeTab === "reports" ? "2px solid #fbbf24" : "none",
-              borderRadius: 0,
-              px: 2,
-              "&:hover": { color: "#fbbf24" },
-            }}
-          >
-            Reports
-          </Button>
+          <Typography variant="h6" sx={{ color: "#2980b9", fontWeight: "bold", fontSize: "1.1rem" }}>
+            Play Bingo
+          </Typography>
+          <img src="/images/bingo.png" alt="Bingo" style={{ height: 24 }} />
         </Box>
 
-        {/* User info and wallet */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Typography sx={{ color: "#9ca3af" }}>
-            {username || "Cashier"}
-          </Typography>
-          <Box
-            sx={{
-              background: "#374151",
-              px: 2,
-              py: 1,
-              borderRadius: "20px",
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-            }}
-          >
-            <Typography sx={{ color: "#fbbf24", fontWeight: "bold" }}>
-              {walletLoading || !wallet
+        <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography sx={{ fontWeight: "bold", color: "#333", fontSize: "0.95rem" }}>
+              ቀሪ ሂሳብ: {walletLoading || !wallet
                 ? "..."
                 : showBalance
-                  ? `${wallet?.package ?? wallet?.packageBalance ?? wallet?.balance ?? 0} ብር`
-                  : "**** ብር"}
+                  ? `${wallet?.package ?? wallet?.packageBalance ?? wallet?.balance ?? 0}`
+                  : "****"}
             </Typography>
-            <button
+            <IconButton
+              size="small"
               onClick={() => setShowBalance(!showBalance)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#9ca3af",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-              }}
+              sx={{ color: "#333" }}
             >
-              {showBalance ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
-            </button>
+              {showBalance ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+            </IconButton>
           </Box>
-          <Button
-            onClick={handleLogout}
-            startIcon={<FaSignOutAlt />}
-            sx={{
-              color: "#ef4444",
-              "&:hover": { background: "rgba(239,68,68,0.1)" },
-            }}
-          >
-            Logout
-          </Button>
         </Box>
       </Box>
 
-      {/* Tab content */}
-      <Box>{renderTabContent()}</Box>
-    </Box>
+      {/* Body Area: Sidebar + Content */}
+      <Box sx={{ display: "flex", flexGrow: 1, overflow: "hidden" }}>
+        {/* Sidebar */}
+        <Box
+          sx={{
+            width: 200,
+            background: "#1d2b36",
+            color: "white",
+            display: "flex",
+            flexDirection: "column",
+            flexShrink: 0,
+            height: "100%",
+            overflowY: "auto",
+          }}
+        >
+          <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }}>
+            {/* Logo placeholder if needed */}
+          </Box>
 
+          <List sx={{ flexGrow: 1, px: 1, mt: 2 }}>
+            {sidebarItems.map((item) => (
+              <ListItem key={item.id} disablePadding>
+                <ListItemButton
+                  onClick={() => handleNavigate(item.id)}
+                  selected={activeTab === item.id}
+                  sx={{
+                    py: 1.5,
+                    borderRadius: "0px",
+                    "&.Mui-selected": {
+                      background: "rgba(255, 255, 255, 0.05)",
+                      "&:hover": {
+                        background: "rgba(255, 255, 255, 0.1)",
+                      },
+                    },
+                    "&:hover": {
+                      background: "rgba(255, 255, 255, 0.05)",
+                    },
+                  }}
+                >
+                  <ListItemIcon sx={{ color: "inherit", minWidth: 32, fontSize: 16 }}>
+                    {item.icon}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={item.label}
+                    primaryTypographyProps={{
+                      fontSize: "0.85rem",
+                      fontWeight: activeTab === item.id ? 600 : 400
+                    }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+
+          <Divider sx={{ background: "rgba(255,255,255,0.1)", my: 1 }} />
+
+          <List sx={{ px: 1, pb: 2 }}>
+            <ListItem disablePadding>
+              <ListItemButton
+                onClick={handleLogout}
+                sx={{
+                  borderRadius: "8px",
+                  color: "#e74c3c",
+                  "&:hover": {
+                    background: "rgba(231, 76, 60, 0.1)",
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ color: "inherit", minWidth: 40, fontSize: 18 }}>
+                  <FaSignOutAlt />
+                </ListItemIcon>
+                <ListItemText primary="Logout" primaryTypographyProps={{ fontSize: "0.95rem" }} />
+              </ListItemButton>
+            </ListItem>
+          </List>
+        </Box>
+
+        {/* content Area */}
+        <Box sx={{ flexGrow: 1, p: 3, overflowY: "auto" }}>
+          {renderTabContent()}
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

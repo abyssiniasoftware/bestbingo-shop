@@ -204,11 +204,10 @@ const Reports = () => {
         <button
           key={i}
           onClick={() => handlePageChange(i)}
-          className={`px-3 py-1 rounded ${
-            currentPage === i
-              ? "bg-blue-500 text-white"
-              : "bg-gray-700 text-gray-300 hover:bg-gray-600"
-          }`}
+          className={`px-3 py-1 rounded ${currentPage === i
+            ? "bg-blue-600 text-white"
+            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
         >
           {i}
         </button>,
@@ -216,11 +215,11 @@ const Reports = () => {
     }
 
     return (
-      <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
+      <div className="flex items-center justify-center gap-2 mt-4 flex-wrap pb-4">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="px-3 py-1 bg-gray-700 rounded text-gray-300 hover:bg-gray-600 disabled:opacity-50"
+          className="px-3 py-1 bg-gray-100 rounded text-gray-700 hover:bg-gray-200 disabled:opacity-50"
         >
           ቀዳሚ
         </button>
@@ -228,16 +227,16 @@ const Reports = () => {
         <button
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="px-3 py-1 bg-gray-700 rounded text-gray-300 hover:bg-gray-600 disabled:opacity-50"
+          className="px-3 py-1 bg-gray-100 rounded text-gray-700 hover:bg-gray-200 disabled:opacity-50"
         >
           ቀጣይ
         </button>
         <div className="flex items-center gap-2">
-          <label className="text-gray-300">ረድፎች በገጽ:</label>
+          <label className="text-gray-600">ረድፎች በገጽ:</label>
           <select
             value={itemsPerPage}
             onChange={handleItemsPerPageChange}
-            className="p-1 bg-gray-700 rounded text-white border border-gray-600"
+            className="p-1 bg-white rounded text-gray-800 border border-gray-300"
           >
             {[5, 10, 25, 50, 75, 100].map((value) => (
               <option key={value} value={value}>
@@ -251,8 +250,8 @@ const Reports = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-4 sm:p-6">
-      <h1 className="text-2xl font-bold mb-6 flex items-center gap-2 w-full">
+    <div className="flex flex-col items-center">
+      <h1 className="text-2xl font-bold mb-6 flex items-center gap-2 w-full text-gray-800">
         <FaChartLine /> ዕለታዊ ሪፖርቶች
       </h1>
 
@@ -272,21 +271,21 @@ const Reports = () => {
         <div className="w-full">
           {/* Summary Metrics */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-gray-800 p-4 rounded-lg shadow">
-              <h2 className="text-lg font-semibold">ቀሪ ሒሳብ (ብር)</h2>
-              <p className="text-2xl text-green-400">
+            <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-600">ቀሪ ሒሳብ (ብር)</h2>
+              <p className="text-2xl text-green-600 font-bold">
                 {formatCurrency(stats.packageBalance)}
               </p>
             </div>
-            <div className="bg-gray-800 p-4 rounded-lg shadow">
-              <h2 className="text-lg font-semibold">ዕለታዊ አጠቃላይ ትርፍ (ብር)</h2>
-              <p className="text-2xl text-green-400">
+            <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-600">ዕለታዊ አጠቃላይ ትርፍ (ብር)</h2>
+              <p className="text-2xl text-green-600 font-bold">
                 {formatCurrency(stats.totalDailyEarnings)}
               </p>
             </div>
-            <div className="bg-gray-800 p-4 rounded-lg shadow">
-              <h2 className="text-lg font-semibold">አጠቃላይ የተጫወቱ ጨዋታዎች</h2>
-              <p className="text-2xl text-blue-400">{stats.totalGamesPlayed}</p>
+            <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-600">አጠቃላይ የተጫወቱ ጨዋታዎች</h2>
+              <p className="text-2xl text-blue-600 font-bold">{stats.totalGamesPlayed}</p>
             </div>
           </div>
 
@@ -302,9 +301,9 @@ const Reports = () => {
 
           {/* Filters */}
           {showFilters && (
-            <div className="bg-gray-800 p-4 rounded-lg shadow mb-6 w-full">
+            <div className="bg-white p-4 rounded-lg shadow border border-gray-200 mb-6 w-full">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold">ፊልተሮች</h2>
+                <h2 className="text-lg font-semibold text-gray-800">ፊልተሮች</h2>
                 <button
                   onClick={resetFilters}
                   className="flex items-center gap-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
@@ -314,7 +313,7 @@ const Reports = () => {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">
+                  <label className="block text-sm font-medium mb-1 text-gray-700">
                     የተጫዋቾች ብዛት
                   </label>
                   <div className="flex gap-2">
@@ -325,7 +324,7 @@ const Reports = () => {
                       onChange={(e) =>
                         handleFilterChange(e, "numberOfPlayers", "min")
                       }
-                      className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400"
+                      className="w-full p-2 bg-gray-50 rounded border border-gray-300 text-gray-800 placeholder-gray-400"
                     />
                     <input
                       type="number"
@@ -334,7 +333,7 @@ const Reports = () => {
                       onChange={(e) =>
                         handleFilterChange(e, "numberOfPlayers", "max")
                       }
-                      className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400"
+                      className="w-full p-2 bg-gray-50 rounded border border-gray-300 text-gray-800 placeholder-gray-400"
                     />
                   </div>
                 </div>
@@ -478,17 +477,17 @@ const Reports = () => {
           )}
 
           {/* Game History Table */}
-          <div className="bg-gray-800 rounded-lg shadow overflow-x-auto w-full">
-            <h2 className="text-lg font-semibold p-4">የጨዋታ ታሪክ</h2>
+          <div className="bg-white rounded-lg shadow border border-gray-200 overflow-x-auto w-full">
+            <h2 className="text-lg font-semibold p-4 text-gray-800 border-b border-gray-100">የጨዋታ ታሪክ</h2>
             {filteredAndSortedGames.length === 0 ? (
-              <p className="p-4 text-gray-400">
+              <p className="p-4 text-gray-500">
                 ምንም ጨዋታዎች ከአሁኑ ፊልተሮች ጋር አይመሳሰሉም።
               </p>
             ) : (
               <>
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="bg-gray-700">
+                    <tr className="bg-gray-50 text-gray-700 border-b border-gray-100">
                       {[
                         { label: "የጨዋታ ቀን እና ሰዓት", key: "date" },
                         { label: "ውርርድ በተጫዋች (ብር)", key: "betAmount" },
@@ -501,7 +500,7 @@ const Reports = () => {
                       ].map(({ label, key }) => (
                         <th
                           key={key}
-                          className="p-3 cursor-pointer hover:bg-gray-600"
+                          className="p-3 cursor-pointer hover:bg-gray-100"
                           onClick={() => handleSort(key)}
                         >
                           <div className="flex items-center gap-1">
@@ -513,7 +512,7 @@ const Reports = () => {
                                 <FaSortDown />
                               )
                             ) : (
-                              <FaSort className="text-gray-400" />
+                              <FaSort className="text-gray-300" />
                             )}
                           </div>
                         </th>
@@ -524,7 +523,7 @@ const Reports = () => {
                     {paginatedGames.map((game, index) => (
                       <tr
                         key={index}
-                        className="border-t border-gray-700 hover:bg-gray-700"
+                        className="border-t border-gray-100 hover:bg-gray-50 text-gray-700"
                       >
                         <td className="p-3">{formatDate(game.date)}</td>
                         <td className="p-3">
