@@ -7,7 +7,6 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import "../../styles/game-redesign.css";
 
 const GameControlsBar = ({
   isPlaying,

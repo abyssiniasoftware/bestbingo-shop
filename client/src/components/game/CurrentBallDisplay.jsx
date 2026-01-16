@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import "../../styles/game-redesign.css";
 
 // Get ball image path from public folder
 const getBallImage = (num) => `/balls/${num}.png`;

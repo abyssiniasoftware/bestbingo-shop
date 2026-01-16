@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Typography, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import "../../styles/game-redesign.css";
+import { useNavigate, useParams } from "react-router-dom";
 import { ready } from "../../voice/utilVoice";
+import LowBalanceAlert from "../ui/LowBalanceAlert";
 
 const GameStartModal = ({
   isOpen,
@@ -13,6 +13,8 @@ const GameStartModal = ({
   onLogout,
 }) => {
   const navigate = useNavigate();
+  const { winAmount } = useParams();
+  const [isBalanceLow, setIsBalanceLow] = React.useState(false);
 
   if (!isOpen) return null;
 
@@ -133,11 +135,13 @@ const GameStartModal = ({
           className="game-modal-body"
           sx={{ padding: "20px", textAlign: "center" }}
         >
+         
+
           {/* Message */}
           <Typography sx={{ mb: 2, color: "#333" }}>
             {hasReservation
-              ? `የተጫዋች ቁሳት ከ ${Object.keys(bingoNumbers).length > 0 ? 12 : 0} ባላይ ካሆነ ጎላስ መስጠት ይድምሰል!`
-              : "ምንም ቦታ ተያዥ የለም። እባክዎ ካርዶች ይምረጡ።"}
+              ? "የተጫዋች ብዛት ከ12 በላይ ከሆነ ቦነስ መስጠት ይጀምራል!"
+              : "ምንም ካርቴላ አልያዙም። እባክዎ ካርዶች ይምረጡ።"}
           </Typography>
 
           {/* BINGO Card Preview */}
@@ -208,7 +212,13 @@ const GameStartModal = ({
               )}
             </Box>
           </Box>
-
+          {winAmount && (
+            <Box sx={{ mt: 1, fontWeight: "bold", color: "#1d4ed8", fontSize: "1.1rem" }}>
+              Win Amount: {winAmount} ብር
+            </Box>
+          )}
+          {/* Low Balance Alert */}
+          <LowBalanceAlert onStatusChange={setIsBalanceLow} />
           {/* Start Button */}
           <Button
             className="start-button"
@@ -219,21 +229,21 @@ const GameStartModal = ({
                 onClose();
               };
             }}
-            disabled={!hasReservation}
+            disabled={!hasReservation || isBalanceLow}
             sx={{
               width: "100%",
-              padding: "16px",
+              padding: "12px",
               fontSize: "1.25rem",
               fontWeight: "bold",
               color: "white",
-              background: hasReservation
+              background: (hasReservation && !isBalanceLow)
                 ? "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)"
                 : "#9ca3af",
               border: "none",
               borderRadius: "8px",
-              cursor: hasReservation ? "pointer" : "not-allowed",
+              cursor: (hasReservation && !isBalanceLow) ? "pointer" : "not-allowed",
               transition: "all 0.3s",
-              "&:hover": hasReservation
+              "&:hover": (hasReservation && !isBalanceLow)
                 ? {
                   transform: "translateY(-2px)",
                   boxShadow: "0 5px 20px rgba(37, 99, 235, 0.4)",
@@ -241,7 +251,7 @@ const GameStartModal = ({
                 : {},
             }}
           >
-            Start
+            {isBalanceLow ? "Balance Low" : "Start"}
           </Button>
         </Box>
       </Box>

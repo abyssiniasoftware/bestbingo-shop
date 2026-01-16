@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 
 import { Box, Grid, Typography, styled } from "@mui/material";
 
-import "../../styles/game-redesign.css";
 
 // Define animations
 

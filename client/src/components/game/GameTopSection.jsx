@@ -4,7 +4,6 @@ import BlowerAnimation from "./BlowerAnimation";
 import RecentBallsStrip from "./RecentBallsStrip";
 import PatternGrid from "./PatternGrid";
 import BonusDisplay from "./BonusDisplay";
-import "../../styles/game-redesign.css";
 import config from "../../constants/config";
 
 const GameTopSection = ({

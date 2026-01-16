@@ -1349,7 +1349,7 @@ const useGameLogic = () => {
     },
     showCentralBall,
     isCentralBallMoving,
-    moveDuration: Math.max(400, Math.floor(600 * (drawSpeed / 3000))), // Expose for overlay
+    moveDuration: Math.max(400, Math.floor(600 * (drawSpeed / 3000))), 
     blowerZoomBall,
   };
 };

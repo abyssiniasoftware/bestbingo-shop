@@ -8,17 +8,16 @@ import {
   InputLabel,
 } from "@mui/material";
 import { FaSync, FaPlay, FaTimes, FaEye, FaEyeSlash, FaIdCard } from "react-icons/fa";
-
+import config from "../constants/config";
 import useGameStore from "../stores/gameStore";
 import useNewGameLogic from "../hooks/useNewGameLogic";
 import useCardIds from "../hooks/useCardIds";
 import useWallet from "../hooks/useWallet";
 import useUserStore from "../stores/userStore";
 import AddCartelaModal from "../components/ui/AddCartelaModal";
-
 import { BINGO_PATTERNS, META_PATTERNS } from "../utils/patterns";
 import { formatPatternName } from "../utils/gameUtils";
-import "../styles/game-redesign.css";
+import LowBalanceAlert from "../components/ui/LowBalanceAlert";
 
 const blinkAnimation = `
   @keyframes blinker {
@@ -38,9 +37,8 @@ const NewGame = () => {
   } = useGameStore();
 
   const { cardIds, isLoading: cardIdsLoading } = useCardIds();
-  const { wallet, refreshWallet } = useWallet();
-  const balance = wallet?.package ?? wallet?.packageBalance ?? wallet?.balance ?? 0;
-  const isBalanceLow = balance < 10;
+  const { refreshWallet } = useWallet();
+  const [isBalanceLow, setIsBalanceLow] = useState(false);
   const { userId } = useUserStore();
   const [addModalOpen, setAddModalOpen] = useState(false);
 
@@ -160,7 +158,22 @@ const NewGame = () => {
             }}
           />
         </Box>
-
+        <Box
+          sx={{
+            mt: 2,
+            paddingLeft: "70px",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "#374151",
+              fontSize: "1.6rem",
+              fontWeight: "bold",
+            }}
+          >
+            Call us: {config.phoneNumber}
+          </Typography>
+        </Box>
         <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
           {/* Cut Amount Toggle & Selector (Discreet in Header) */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -256,29 +269,7 @@ const NewGame = () => {
       </Box>
 
       <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
-        {isBalanceLow && (
-          <Box
-            sx={{
-              backgroundColor: "rgba(239, 68, 68, 0.2)",
-              border: "1px solid #ef4444",
-              borderRadius: "8px",
-              p: 1.5,
-              mb: 2,
-              textAlign: "center",
-              animation: "blinker 1s linear infinite",
-            }}
-          >
-            <Typography
-              sx={{
-                color: "#ef4444",
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-              }}
-            >
-              Your balance is low ({balance} ብር), please call to admin!
-            </Typography>
-          </Box>
-        )}
+        <LowBalanceAlert onStatusChange={setIsBalanceLow} />
 
         {/* Round Header */}
         <Typography
