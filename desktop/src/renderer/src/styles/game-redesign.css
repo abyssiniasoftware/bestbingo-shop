@@ -1,0 +1,555 @@
+/* Game Redesign Styles - Bingo Cashier UI */
+
+/* ============================================
+   BLOWER ANIMATION
+   ============================================ */
+.blower-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blower-sphere {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    #4a4a4a 0%,
+    #1a1a1a 50%,
+    #000 100%
+  );
+  box-shadow:
+    inset -10px -10px 30px rgba(0, 0, 0, 0.8),
+    inset 10px 10px 30px rgba(100, 100, 100, 0.3),
+    0 10px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: sphereRotate 8s linear infinite;
+}
+
+.blower-sphere::before {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 30%;
+  height: 15%;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.4), transparent);
+  border-radius: 50%;
+}
+
+@keyframes sphereRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.balls-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  animation: ballsFloat 2s ease-in-out infinite;
+}
+
+@keyframes ballsFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.blower-ball {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  animation: ballBounce 1.5s ease-in-out infinite;
+}
+
+@keyframes ballBounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.05);
+  }
+}
+
+/* Ball tube connecting to recent calls */
+.ball-tube {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 80px;
+  height: 50px;
+  background: linear-gradient(to right, #333 0%, #555 50%, #333 100%);
+  border-radius: 10px;
+  box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   CURRENT CALLED NUMBER
+   ============================================ */
+.current-number-display {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    #ffd700 0%,
+    #ffa500 50%,
+    #ff8c00 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 30px rgba(255, 165, 0, 0.6),
+    0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: numberPulse 0.5s ease-out;
+}
+
+@keyframes numberPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.current-number-text {
+  font-size: 4rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   RECENT BALLS STRIP
+   ============================================ */
+.recent-balls-strip {
+  display: flex;
+  gap: 8px;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  border-radius: 25px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.recent-ball {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  animation: ballEnter 0.3s ease-out;
+}
+
+@keyframes ballEnter {
+  0% {
+    transform: scale(0) translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   BINGO GRID
+   ============================================ */
+.bingo-grid-container {
+  background: #1a1a1a;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.bingo-letter {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  border-radius: 4px;
+}
+
+.bingo-letter-b {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+}
+
+.bingo-letter-i {
+  background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%);
+}
+
+.bingo-letter-n {
+  background: linear-gradient(135deg, #854d0e 0%, #eab308 100%);
+}
+
+.bingo-letter-g {
+  background: linear-gradient(135deg, #14532d 0%, #22c55e 100%);
+}
+
+.bingo-letter-o {
+  background: linear-gradient(135deg, #374151 0%, #6b7280 100%);
+}
+
+.bingo-number-cell {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  background: transparent;
+  border: 1px solid #333;
+  transition: all 0.3s ease;
+}
+
+.bingo-number-cell.called {
+  background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+  animation: cellCalled 0.3s ease-out;
+}
+
+@keyframes cellCalled {
+  0% {
+    transform: scale(1.2);
+    background: #fbbf24;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ============================================
+   GAME START MODAL
+   ============================================ */
+.game-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.game-modal-content {
+  background: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.game-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #333;
+  color: white;
+  border-radius: 12px 12px 0 0;
+}
+
+.game-modal-header button {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid #fff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.game-modal-header button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.game-modal-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.bingo-card-preview {
+  margin: 20px auto;
+  border: 3px solid #fbbf24;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.bingo-card-header {
+  display: flex;
+  background: #fbbf24;
+}
+
+.bingo-card-header span {
+  flex: 1;
+  padding: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #dc2626;
+}
+
+.bingo-card-body {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.bingo-card-cell {
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  font-size: 1.25rem;
+  font-weight: bold;
+  background: #fffef7;
+}
+
+.bingo-card-cell.free {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.start-button {
+  width: 100%;
+  padding: 16px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.start-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(37, 99, 235, 0.4);
+}
+
+.start-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   CARD REGISTRATION PAGE
+   ============================================ */
+.card-grid-oval {
+  display: grid;
+  grid-template-columns: repeat(17, 1fr);
+  gap: 4px;
+}
+
+.card-oval {
+  width: 40px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid #b45309;
+  background: #1f2937;
+  color: #9ca3af;
+}
+
+.card-oval:hover {
+  transform: scale(1.1);
+  border-color: #f59e0b;
+}
+
+.card-oval.selected {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  border-color: #fbbf24;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+/* ============================================
+   PRIZE TIER DISPLAY
+   ============================================ */
+.prize-tier-box {
+  background: #1a1a1a;
+  border: 2px solid #fbbf24;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 150px;
+}
+
+.prize-tier-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #fbbf24;
+  color: #fbbf24;
+  font-weight: bold;
+}
+
+.prize-tier-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 6px 0;
+  color: white;
+}
+
+/* ============================================
+   BOTTOM CONTROLS BAR
+   ============================================ */
+.game-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 15px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.control-btn {
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.control-btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+}
+
+.control-btn-secondary {
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: white;
+}
+
+.control-btn-success {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  color: white;
+}
+
+.control-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.speed-slider {
+  width: 80px;
+}
+
+.voice-select {
+  padding: 8px 12px;
+  background: #374151;
+  color: white;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+}
+
+.card-input {
+  padding: 8px 12px;
+  background: #374151;
+  color: white;
+  border: 1px solid #4b5563;
+  border-radius: 4px;
+  width: 120px;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 768px) {
+  .blower-container {
+    width: 150px;
+    height: 150px;
+  }
+
+  .blower-sphere {
+    width: 130px;
+    height: 130px;
+  }
+
+  .current-number-display {
+    width: 100px;
+    height: 100px;
+  }
+
+  .current-number-text {
+    font-size: 2.5rem;
+  }
+
+  .bingo-letter,
+  .bingo-number-cell {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .card-oval {
+    width: 30px;
+    height: 24px;
+    font-size: 0.75rem;
+  }
+
+  .card-grid-oval {
+    grid-template-columns: repeat(10, 1fr);
+  }
+}
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  80% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Ensure the Blower doesn't overflow */
+.blower-container {
+  overflow: visible;
+}
