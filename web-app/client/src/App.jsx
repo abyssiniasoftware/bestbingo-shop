@@ -1,4 +1,4 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import Game from "./pages/Game";
 import Register from "./pages/Register";

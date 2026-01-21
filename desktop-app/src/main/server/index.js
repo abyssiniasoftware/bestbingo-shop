@@ -108,6 +108,7 @@ async function registerStaticUsersAndHouse() {
   }
 }
 
+
 const PORT = process.env.PORT || 4004;
 
 app.listen(PORT, async () => {
