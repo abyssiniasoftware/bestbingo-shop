@@ -7,6 +7,8 @@ const errorHandler = require("./src/middleware/error");
 const logger = require("./src/utils/logger");
 const auth = require("./src/middleware/auth");
 const caseRoutes = require("./src/routes/caseRoutes");
+const User = require('./src/models/User');
+
 const app = express();
 
 // CORS configuration
@@ -48,7 +50,18 @@ app.use("/api/payment", async (req, res) => {
 });
 // Protected route for authenticated user info
 app.get("/api/me", auth(), async (req, res) => {
-  res.json(req.user);
+ try {
+    const user = await User.findOne({ _id: req.user.id });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    // Remove sensitive data before sending
+    const { password, ...userData } = user;
+    res.json(userData);
+  } catch (error) {
+    logger.error('Error in /api/me:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
 // Health check

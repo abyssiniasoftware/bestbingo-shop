@@ -25,6 +25,7 @@ const getDailyStats = async (req, res) => {
       totalDailyEarnings: totalEarnings,
       totalGamesPlayed: totalGames,
       gameHistory: games.map((game) => ({
+         gameId: game.gameId,
         date: game.startedAt,
         betAmount: game.stakeAmount,
         numberOfPlayers: game.numberOfPlayers,
@@ -92,6 +93,7 @@ const getHouseStats = async (req, res) => {
       totalGamesPlayed: totalGames,
       todaysGames: todaysGamesCount,
       gameHistory: games.map((game) => ({
+        gameId: game.gameId,
         date: game.startedAt,
         betAmount: game.stakeAmount,
         numberOfPlayers: game.numberOfPlayers,
@@ -160,6 +162,7 @@ const getSuperAdminStats = async (req, res) => {
             },
             {
               $project: {
+                gameId:1,
                 startedAt: 1,
                 stakeAmount: 1,
                 numberOfPlayers: 1,
@@ -210,6 +213,7 @@ const getSuperAdminStats = async (req, res) => {
               input: "$games",
               as: "game",
               in: {
+                gameId: "$$game.gameId",
                 date: "$$game.startedAt",
                 betAmount: "$$game.stakeAmount",
                 numberOfPlayers: "$$game.numberOfPlayers",
@@ -372,6 +376,7 @@ const getAgentStats = async (req, res) => {
           todayRechargeAmount,
           todayCommissions,
           gameHistory: games.map((game) => ({
+            gameId: game.gameId,
             date: game.startedAt,
             betAmount: game.stakeAmount,
             numberOfPlayers: game.numberOfPlayers,
