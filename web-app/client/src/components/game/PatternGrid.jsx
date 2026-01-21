@@ -82,7 +82,7 @@ const PatternGrid = ({ progressGrid }) => {
                 sx={{
                   color: "#7c2d12",
                   fontSize: "1.8rem",
-                  backgroundImage: "url(images/called.png)",
+                  backgroundImage: "url(/images/called.png)",
                   backgroundSize: "100% 100%",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",

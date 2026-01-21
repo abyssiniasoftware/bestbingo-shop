@@ -105,8 +105,8 @@ const StyledNumberCell = styled(Box, {
   backgroundImage: isShuffling
     ? "linear-gradient(45deg, #FFD700, #FF8C00, #FF4500, #FFD700)"
     : called
-      ? "url(images/called.png)"
-      : "url(images/num.png)",
+      ? "url(/images/called.png)"
+      : "url(/images/num.png)",
 
   backgroundSize: isShuffling ? "300% 300%" : "100% 100%", // Larger size for gradient movement
   backgroundRepeat: "no-repeat",

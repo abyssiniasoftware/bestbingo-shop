@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 
 // Get ball image path from public folder
-const getBallImage = (num) => `balls/${num}.png`;
+const getBallImage = (num) => `/balls/${num}.png`;
 
 // Get BINGO letter for number
 const getBingoLetter = (num) => {

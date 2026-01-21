@@ -138,7 +138,7 @@ const LoginForm = ({ handleLogin, config }) => {
   }}
 >
   <img
-    src="images/bingo.png"
+    src="/images/bingo.png"
     alt="BINGO"
     style={{
       height: "100%",

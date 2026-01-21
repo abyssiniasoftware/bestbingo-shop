@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 
-const getBallImage = (num) => `balls/${num}.png`;
+const getBallImage = (num) => `/balls/${num}.png`;
 
 const CentralBallOverlay = ({ currentNumber, show, isMoving, moveDuration = 600 }) => {
   const numValue = parseInt(currentNumber) || 0;

@@ -64,7 +64,7 @@ const BlowerAnimation = ({
         frictionAir: 0.012, // TWEAK: Increased slightly from 0.007 to slow down top speed
         render: {
           sprite: {
-            texture: `balls/${i}.png`,
+            texture: `/balls/${i}.png`,
             xScale: 0.4,
             yScale: 0.4
           }
@@ -175,7 +175,7 @@ const BlowerAnimation = ({
       />
       <Box
         component="img"
-        src="images/blower.png"
+        src="/images/blower.png"
         sx={{
           width: "120%",
           height: "120%",

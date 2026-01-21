@@ -148,7 +148,7 @@ const NewGame = () => {
       >
         <Box sx={{ height: { xs: "30px", sm: "40px" }, display: "flex", alignItems: "center" }}>
           <img
-            src="images/bingo.png"
+            src="/images/bingo.png"
             alt="BINGO"
             style={{
               height: "100%",
