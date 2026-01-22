@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import {
   FaSignOutAlt, FaGamepad, FaIdCard, FaChartBar, FaEye, FaEyeSlash,
-  FaFileAlt, FaClipboardList, FaGift, FaWallet, FaCalendarWeek, FaHistory
+  FaFileAlt, FaClipboardList, FaGift, FaWallet, FaCalendarWeek, FaHistory, FaReadme
 } from "react-icons/fa";
 import { bingo } from "../images/images";
 
@@ -15,12 +15,12 @@ import HouseStatsCashier from "./HouseStatsCashier";
 import Game from "./Game";
 import useWallet from "../hooks/useWallet";
 import useUserStore from "../stores/userStore";
-
+import Settings from "./Settings";
 const CashierDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "reports");
+  const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "game");
   const [prevIncomingTab, setPrevIncomingTab] = useState(location.state?.activeTab);
 
   // Synchronize state when location state changes (derived state)
@@ -78,18 +78,21 @@ const CashierDashboard = () => {
         return <HouseStatsCashier />;
       case "bingo-cards":
         return <ViewCartela />;
+      case "settings":
+        return <Settings />;
       default:
         return <Reports />;
     }
   };
 
   const sidebarItems = [
+    { id: "reports", label: "Dashboard", icon: <FaFileAlt /> },
     { id: "game", label: "Play Bingo", icon: <FaGamepad /> },
-    { id: "reports", label: "Daily Report", icon: <FaFileAlt /> },
-    { id: "detail-report", label: "Detail Report", icon: <FaClipboardList /> },
+    { id: "detail-report", label: "Win History", icon: <FaClipboardList /> },
+    { id: "bingo-cards", label: "View Cartela", icon: <FaIdCard /> },
+    { id: "settings", label: "Settings", icon: <FaReadme /> },
     { id: "bonus-report", label: "Get Bonus", icon: <FaGift /> },
     { id: "stats", label: "Stats", icon: <FaChartBar /> },
-    { id: "bingo-cards", label: "View Cards", icon: <FaIdCard /> },
   ];
 
   return (

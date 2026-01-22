@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Box, IconButton, Button, Dialog, DialogContent, Typography } from "@mui/material";
-import GameStartModal from "../components/game/GameStartModal";
 import GameTopSection from "../components/game/GameTopSection";
 import GameControlsBar from "../components/game/GameControlsBar";
 import NewGameConfirmDialog from "../components/game/NewGameConfirmDialog";
@@ -25,7 +24,6 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
 
   const navigate = useNavigate();
   const { gameData } = useGameStore();
-  const [showStartModal, setShowStartModal] = useState(true);
   const {
     calledNumbers,
     recentCalls,
@@ -93,7 +91,7 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
   // Check if there's a reservation (cards selected)
   // And if we have basic game data to render
   const hasReservation = gameData?.cartela?.length > 0;
-
+console.log("reservation found",hasReservation)
 
   return (
     <Box
@@ -106,15 +104,6 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
       }}
     >
       <style>{pulseAnimation}</style>
-
-      {/* Game Start Modal - shows over the game background */}
-
-      <GameStartModal
-        isOpen={showStartModal && !hasGameStarted}
-        onClose={() => setShowStartModal(false)}
-        hasReservation={hasReservation}
-        roundNumber={gameData?.game?.gameId || 1}
-      />
 
       {/* Main game content */}
 
@@ -183,7 +172,6 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
         onClose={() => setOpenNewGameConfirm(false)}
         onConfirm={() => {
           handleReset();
-          setShowStartModal(true);
           setOpenNewGameConfirm(false);
         }}
       />
