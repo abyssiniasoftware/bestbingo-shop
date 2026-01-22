@@ -1,11 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Typography, Button, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from "@mui/material";
 import {
-  FaSignOutAlt, FaGamepad, FaIdCard, FaChartBar, FaEye, FaEyeSlash,
-  FaFileAlt, FaClipboardList, FaGift, FaWallet, FaCalendarWeek, FaHistory, FaReadme
-} from "react-icons/fa";
-import { bingo } from "../images/images";
+  Box, Typography, Button, IconButton, List, ListItem,
+  ListItemButton, ListItemIcon, ListItemText, Divider,
+  Select, MenuItem, FormControl
+} from "@mui/material";
+import SettingsIcon from '@mui/icons-material/Settings';
+
+import {
+  dashboard as dashboardIcon,
+  play as playIcon,
+  history as historyIcon,
+  view as viewIcon,
+  logo as logoIcon,
+  logout as logoutIcon,
+  menu as menuIcon,
+  day as dayIcon,
+  night as nightIcon,
+  full as FullscreenIcon
+} from "../images/icon.js";
+
+import { logo as fullLogo, user as userIcon } from "../images/images";
+
 
 import ViewCartela from "./ViewCartela";
 import Reports from "./Reports";
@@ -13,9 +29,11 @@ import HouseReportsCashier from "./HouseReportsCashier";
 import HouseBonusListCashier from "./HouseBonusListCashier";
 import HouseStatsCashier from "./HouseStatsCashier";
 import Game from "./Game";
-import useWallet from "../hooks/useWallet";
+import { voiceOptions } from "../constants/constants";
 import useUserStore from "../stores/userStore";
 import Settings from "./Settings";
+
+
 const CashierDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,29 +50,25 @@ const CashierDashboard = () => {
     }
   }
 
-  const { wallet, isLoading: walletLoading } = useWallet();
-  const { clearUser } = useUserStore();
-  const [showBalance, setShowBalance] = useState(
-    () => JSON.parse(localStorage.getItem("showBalance")) ?? false,
-  );
+  const { user, clearUser } = useUserStore();
 
-  useEffect(() => {
-    localStorage.setItem("showBalance", JSON.stringify(showBalance));
-  }, [showBalance]);
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false); // Default to expanded as per screenshot
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [voiceOption, setVoiceOption] = useState("l"); // Default voice
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-    localStorage.removeItem("houseId");
-    localStorage.removeItem("tokenExpiration");
+    localStorage.clear();
     clearUser();
     navigate("/login");
   };
 
-  const handleNavigate = (tab) => {
-    setActiveTab(tab);
+  const toggleSidebar = () => setIsSidebarMinimized(!isSidebarMinimized);
+
+  const handleVoiceChange = (event) => {
+    setVoiceOption(event.target.value);
   };
+
+
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -65,8 +79,10 @@ const CashierDashboard = () => {
             stake={gameParams.stake}
             players={gameParams.players}
             winAmount={gameParams.winAmount}
+            voiceOption={voiceOption}
           />
         );
+
       }
       case "reports":
         return <Reports />;
@@ -86,145 +102,199 @@ const CashierDashboard = () => {
   };
 
   const sidebarItems = [
-    { id: "reports", label: "Dashboard", icon: <FaFileAlt /> },
-    { id: "game", label: "Play Bingo", icon: <FaGamepad /> },
-    { id: "detail-report", label: "Win History", icon: <FaClipboardList /> },
-    { id: "bingo-cards", label: "View Cartela", icon: <FaIdCard /> },
-    { id: "settings", label: "Settings", icon: <FaReadme /> },
-    { id: "bonus-report", label: "Get Bonus", icon: <FaGift /> },
-    { id: "stats", label: "Stats", icon: <FaChartBar /> },
+    { id: "reports", label: "Dashboard", icon: dashboardIcon },
+    { id: "game", label: "Play Bingo", icon: playIcon },
+    { id: "detail-report", label: "Win History", icon: historyIcon },
+    { id: "bingo-cards", label: "View Cartela", icon: viewIcon },
+    { id: "settings", label: "Settings", muiIcon: <SettingsIcon /> },
   ];
 
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "#f6f6f6" }}>
-      {/* Full-width Header */}
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "#00b2ff" }}>
+      {/* Redesigned Header */}
       <Box
         sx={{
-          height: 64,
-          background: "white",
-          borderBottom: "1px solid #e0e0e0",
+          height: 70,
+          background: "#017299",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          px: 3,
+          px: 2,
           flexShrink: 0,
-          zIndex: 1100, // Ensure header is on top
+          zIndex: 1100,
+          color: "white",
         }}
       >
-        <Box
-          sx={{ display: "flex", alignItems: "center", gap: 1.5, cursor: "pointer" }}
-          onClick={() => setActiveTab("game")}
-        >
-          <Typography variant="h6" sx={{ color: "#2980b9", fontWeight: "bold", fontSize: "1.1rem" }}>
-            Play Bingo
-          </Typography>
-          <img src={bingo} alt="Bingo" style={{ height: 24 }} />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <img src={logoIcon} alt="Dallol" style={{ height: 40 }} />
+          <IconButton onClick={toggleSidebar} sx={{ color: "white", ml: 20 }}>
+            <img src={menuIcon} alt="Menu" style={{ height: 24 }} />
+          </IconButton>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+        <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center" }}>
+          <img src={fullLogo} alt="Dallol Bingo!" style={{ height: 50 }} />
+        </Box>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography sx={{ fontWeight: "bold", color: "#333", fontSize: "0.95rem" }}>
-              ቀሪ ሂሳብ: {walletLoading || !wallet
-                ? "..."
-                : showBalance
-                  ? `${wallet?.package ?? wallet?.packageBalance ?? wallet?.balance ?? 0}`
-                  : "****"}
-            </Typography>
-            <IconButton
-              size="small"
-              onClick={() => setShowBalance(!showBalance)}
-              sx={{ color: "#333" }}
-            >
-              {showBalance ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
-            </IconButton>
+            <img src={userIcon} alt="User" style={{ height: 24, borderRadius: "50%" }} />
+            <Typography sx={{ fontWeight: "bold" }}>{user?.username || "Admin"}</Typography>
           </Box>
+
+          {/* Voice Selector in Header */}
+          <Select
+            value={voiceOption}
+            onChange={handleVoiceChange}
+            size="small"
+            sx={{
+              color: "white",
+              background: "rgba(255,255,255,0.1)",
+              borderRadius: "5px",
+              height: 35,
+              "& .MuiSelect-select": { py: 0.5, px: 1 },
+              "& fieldset": { border: "none" },
+              "& .MuiSvgIcon-root": { color: "white" }
+            }}
+          >
+            {voiceOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <IconButton onClick={() => setIsDarkMode(!isDarkMode)} sx={{ color: "white" }}>
+            <img src={isDarkMode ? nightIcon : dayIcon} alt="Theme" style={{ height: 24 }} />
+          </IconButton>
+          <IconButton sx={{ color: "white" }}>
+            <img src={FullscreenIcon} alt="Theme" style={{ height: 24 }} />
+          </IconButton>
         </Box>
       </Box>
 
-      {/* Body Area: Sidebar + Content */}
+
+      {/* Main Area */}
       <Box sx={{ display: "flex", flexGrow: 1, overflow: "hidden" }}>
-        {/* Sidebar */}
+        {/* Minimized Sidebar */}
         <Box
           sx={{
-            width: 200,
-            background: "#1d2b36",
-            color: "white",
+            width: isSidebarMinimized ? 80 : 240,
+            background: "#017299",
+            transition: "width 0.3s ease",
             display: "flex",
             flexDirection: "column",
-            flexShrink: 0,
-            height: "100%",
-            overflowY: "auto",
+            overflow: "hidden",
+            borderRight: "1px solid rgba(255,255,255,0.1)",
           }}
         >
-          <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }}>
-            {/* Logo placeholder if needed */}
-          </Box>
-
-          <List sx={{ flexGrow: 1, px: 1, mt: 2 }}>
+          <List sx={{ mt: 2, px: 1 }}>
             {sidebarItems.map((item) => (
-              <ListItem key={item.id} disablePadding>
+              <ListItem key={item.id} disablePadding sx={{ mb: 1, position: "relative" }}>
                 <ListItemButton
-                  onClick={() => handleNavigate(item.id)}
+                  onClick={() => setActiveTab(item.id)}
                   selected={activeTab === item.id}
                   sx={{
-                    py: 1.5,
-                    borderRadius: "0px",
+                    borderRadius: isSidebarMinimized ? "10px" : "25px 0 0 25px",
+                    justifyContent: isSidebarMinimized ? "center" : "flex-start",
+                    px: isSidebarMinimized ? 0 : 2,
+                    height: 50,
+                    ml: isSidebarMinimized ? 0 : 2,
+                    transition: "all 0.3s ease",
+                    backgroundColor: activeTab === item.id ? "white" : "transparent",
+                    color: activeTab === item.id ? "#007fa5" : "white",
                     "&.Mui-selected": {
-                      background: "rgba(255, 255, 255, 0.05)",
+                      backgroundColor: "white",
+                      color: "#007fa5",
                       "&:hover": {
-                        background: "rgba(255, 255, 255, 0.1)",
+                        backgroundColor: "rgba(255,255,255,0.9)",
                       },
                     },
                     "&:hover": {
-                      background: "rgba(255, 255, 255, 0.05)",
+                      backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      color: activeTab === item.id ? "#007fa5" : "white",
                     },
                   }}
                 >
-                  <ListItemIcon sx={{ color: "inherit", minWidth: 32, fontSize: 16 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.label}
-                    primaryTypographyProps={{
-                      fontSize: "0.85rem",
-                      fontWeight: activeTab === item.id ? 600 : 400
+                  <ListItemIcon
+                    sx={{
+                      minWidth: isSidebarMinimized ? 0 : 40,
+                      justifyContent: "center",
+                      color: activeTab === item.id ? "#007fa5" : "white",
                     }}
-                  />
+                  >
+                    {item.muiIcon ? React.cloneElement(item.muiIcon, { style: { color: activeTab === item.id ? "#007fa5" : "white" } }) : <img src={item.icon} alt={item.label} style={{ height: 24, width: 24, filter: activeTab === item.id ? "invert(40%) sepia(20%) saturate(2000%) hue-rotate(160deg)" : "none" }} />}
+                  </ListItemIcon>
+                  {!isSidebarMinimized && (
+                    <ListItemText
+                      primary={item.label}
+                      primaryTypographyProps={{
+                        fontWeight: activeTab === item.id ? "bold" : "normal",
+                        fontSize: "1rem",
+                      }}
+                    />
+                  )}
                 </ListItemButton>
               </ListItem>
             ))}
+
+
           </List>
 
-          <Divider sx={{ background: "rgba(255,255,255,0.1)", my: 1 }} />
-
-          <List sx={{ px: 1, pb: 2 }}>
+          <Box sx={{ mt: "auto", mb: 2, px: 1 }}>
             <ListItem disablePadding>
               <ListItemButton
                 onClick={handleLogout}
                 sx={{
-                  borderRadius: "8px",
-                  color: "#e74c3c",
+                  borderRadius: "10px",
+                  justifyContent: isSidebarMinimized ? "center" : "flex-start",
+                  px: isSidebarMinimized ? 0 : 2,
+                  color: "#ff5252",
                   "&:hover": {
-                    background: "rgba(231, 76, 60, 0.1)",
+                    backgroundColor: "rgba(255, 82, 82, 0.1)",
                   },
                 }}
               >
-                <ListItemIcon sx={{ color: "inherit", minWidth: 40, fontSize: 18 }}>
-                  <FaSignOutAlt />
+                <ListItemIcon sx={{ minWidth: isSidebarMinimized ? 0 : 40, justifyContent: "center", color: "inherit" }}>
+                  <img src={logoutIcon} alt="Logout" style={{ height: 24, width: 24 }} />
                 </ListItemIcon>
-                <ListItemText primary="Logout" primaryTypographyProps={{ fontSize: "0.95rem" }} />
+                {!isSidebarMinimized && (
+                  <ListItemText
+                    primary="Logout"
+                    primaryTypographyProps={{
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                    }}
+                  />
+                )}
               </ListItemButton>
             </ListItem>
-          </List>
+          </Box>
         </Box>
 
-        {/* content Area */}
-        <Box sx={{ flexGrow: 1, p: 3, overflowY: "auto" }}>
-          {renderTabContent()}
+        {/* Content Area with Rounded Container */}
+        <Box sx={{ flexGrow: 1, p: 2, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              background: "white",
+              borderRadius: "20px",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+              overflow: "hidden",
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Box sx={{ flexGrow: 1, overflowY: "auto", p: activeTab === "game" ? 0 : 3 }}>
+              {renderTabContent()}
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>
   );
 };
 
-export default CashierDashboard;
+ export default CashierDashboard;

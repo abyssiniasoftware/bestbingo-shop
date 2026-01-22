@@ -25,7 +25,8 @@ const PRECOMPUTED_PATTERNS = Object.keys(BINGO_PATTERNS).reduce(
   {},
 );
 
-const useGameLogic = () => {
+const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
+
   // State declarations
   const validPatterns = Object.keys(BINGO_PATTERNS).concat(
     Object.keys(META_PATTERNS),
@@ -66,8 +67,16 @@ const useGameLogic = () => {
   );
   const [patternAnchorEl, setPatternAnchorEl] = useState(null);
   const [voiceOption, setVoiceOption] = useState(
-    () => localStorage.getItem("selectedVoice") || "a",
+    () => passedVoiceOption || localStorage.getItem("selectedVoice") || "a",
   );
+
+  // Sync with passedVoiceOption
+  useEffect(() => {
+    if (passedVoiceOption && passedVoiceOption !== voiceOption) {
+      setVoiceOption(passedVoiceOption);
+    }
+  }, [passedVoiceOption]);
+
   const [showCentralBall, setShowCentralBall] = useState(false);
   const [isCentralBallMoving, setIsCentralBallMoving] = useState(false);
   const [blowerZoomBall, setBlowerZoomBall] = useState(null);

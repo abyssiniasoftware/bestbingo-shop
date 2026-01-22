@@ -57,89 +57,71 @@ const numberFlipAnimation = `
 // BINGO letter styles
 
 const letterColors = {
-  B: "linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)",
-
-  I: "linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)",
-
-  N: "linear-gradient(135deg, #854d0e 0%, #eab308 100%)",
-
-  G: "linear-gradient(135deg, #14532d 0%, #22c55e 100%)",
-
-  O: "linear-gradient(135deg, #374151 0%, #6b7280 100%)",
+  B: "radial-gradient(circle at 30% 30%, #40c4ff 0%, #0091ea 100%)",
+  I: "radial-gradient(circle at 30% 30%, #ff5252 0%, #d50000 100%)",
+  N: "radial-gradient(circle at 30% 30%, #ffeb3b 0%, #fbc02d 100%)",
+  G: "radial-gradient(circle at 30% 30%, #69f0ae 0%, #00c853 100%)",
+  O: "radial-gradient(circle at 30% 30%, #757575 0%, #212121 100%)",
 };
 
-import { called, num } from "../../images/images";
 
-const StyledBingoLetter = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "letter",
-})(({ letter }) => ({
-  width: "100%", // Fill the column width
-  height: "50px",
+const StyledBingoLetter = styled(Box)(({ letter }) => ({
+  width: "60px",
+  height: "60px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   fontSize: "2rem",
   fontWeight: "bold",
   color: "#fff",
-  // Simple gradients for headers
   background: letterColors[letter] || letterColors.B,
-  borderRadius: "4px",
-  marginBottom: "4px", // Small gap between header and numbers
+  borderRadius: "50%",
+  boxShadow: "0 6px 12px rgba(0,0,0,0.4), inset 0 2px 4px rgba(255,255,255,0.3)",
+  border: "3px solid white",
+  marginRight: "20px",
+  textShadow: "0 2px 4px rgba(0,0,0,0.3)",
 }));
 
-const StyledNumberCell = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "called" && prop !== "isShuffling",
-})(({ theme, called: isCalled, isShuffling }) => ({
-  // Dimensions: Set width to fill the grid column, fixed height for the "bar" look
-  width: "100%",
-  height: "65px", // Increased height to match the tall rectangular look in screenshot
+
+const StyledNumberCell = styled(Box)(({ theme, called: isCalled, isShuffling }) => ({
+  width: "58px",
+  height: "58px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-
-  // Typography
-  fontSize: "2rem", // Larger font to match screenshot
-  fontWeight: "900", // Extra bold
-  color: "#fff",
-  textShadow: "0px 2px 4px rgba(0,0,0,0.6)", // Text shadow for better readability
-
-  backgroundImage: isShuffling
-    ? "linear-gradient(45deg, #FFD700, #FF8C00, #FF4500, #FFD700)"
-    : isCalled
-      ? `url(${called})`
-      : `url(${num})`,
-
-  backgroundSize: isShuffling ? "300% 300%" : "100% 100%", // Larger size for gradient movement
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
-  backgroundColor: "transparent", // Ensure no solid color sits behind
-
+  fontSize: "1.4rem",
+  fontWeight: "900",
+  borderRadius: "50%",
+  transition: "all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
   cursor: "default",
   userSelect: "none",
+  boxShadow: isCalled
+    ? "0 6px 12px rgba(0, 0, 0, 0.3), inset 0 -4px 8px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.5)"
+    : "0 3px 6px rgba(0,0,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8)",
 
-  // Animations
-  transition: "all 0.2s ease",
-  zIndex: isShuffling ? 10 : 1,
-  animation: isShuffling
-    ? "shuffleBackground 0.8s ease infinite, numberFlip 0.3s ease-in-out infinite"
-    : called
-      ? "calledPulse 0.4s ease-in-out"
-      : "none",
+  // Background logic - High contrast
+  background: isShuffling
+    ? "radial-gradient(circle at 30% 30%, #FFD700 0%, #FF8C00 100%)"
+    : isCalled
+      ? "radial-gradient(circle at 30% 30%, #ffff00 0%, #fbc02d 60%, #e65100 100%)" // Glossy yellow/orange
+      : "radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 60%, #bdbdbd 100%)", // Glossy white/grey
 
-  // Responsive Breakpoints
-  [theme.breakpoints.down("lg")]: {
-    height: "55px",
-    fontSize: "1.75rem",
+  color: isCalled ? "#000" : "#333",
+  border: isCalled ? "1px solid #ff6f00" : "1px solid #cfd8dc",
+
+  animation: isCalled ? "calledPulse 0.4s ease-out" : "none",
+
+  "&:hover": {
+    transform: "scale(1.1) translateY(-2px)",
+    zIndex: 10,
+    boxShadow: "0 10px 20px rgba(0,0,0,0.2)",
   },
-  [theme.breakpoints.down("md")]: {
-    height: "45px",
-    fontSize: "1.4rem",
-  },
-  [theme.breakpoints.down("sm")]: {
-    height: "35px",
-    fontSize: "1rem",
-  },
+
+  [theme.breakpoints.down("lg")]: { width: "48px", height: "48px", fontSize: "1.2rem" },
+  [theme.breakpoints.down("md")]: { width: "40px", height: "40px", fontSize: "1rem" },
+  [theme.breakpoints.down("sm")]: { width: "32px", height: "32px", fontSize: "0.8rem" },
 }));
+
 
 // Utility functions
 const getRandomInt = (min, max) =>
@@ -265,13 +247,12 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
       <Box
         className="bingo-grid-container"
         sx={{
-          background: "#1a1a1a",
-
-          padding: { xs: "5px", sm: "10px" },
-
-          borderRadius: "8px",
-
-          overflowX: "auto",
+          background: "rgba(255,255,255,0.1)",
+          padding: { xs: "10px", sm: "20px" },
+          borderRadius: "15px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
         }}
       >
         {letters.map((letter, rowIdx) => {
