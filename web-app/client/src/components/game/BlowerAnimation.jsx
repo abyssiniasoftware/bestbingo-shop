@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import Matter from "matter-js";
 import { Box } from "@mui/material";
+import { balls } from "../../images/balls";
+import { blower } from "../../images/images";
 
 const BlowerAnimation = ({
   calledNumbers = [],
@@ -15,7 +17,7 @@ const BlowerAnimation = ({
     const { Engine, Render, World, Bodies, Body, Runner, Events } = Matter;
 
     const engine = Engine.create();
-    engine.gravity.y = 0.6; 
+    engine.gravity.y = 0.6;
     engineRef.current = engine;
     worldRef.current = engine.world;
 
@@ -36,7 +38,7 @@ const BlowerAnimation = ({
     // 1. REINFORCED BOUNDARY
     const centerX = width / 2;
     const centerY = height / 2;
-    const r = width * 0.48; 
+    const r = width * 0.48;
     const pegCount = 72;
     for (let i = 0; i < pegCount; i++) {
       const angle = (i / pegCount) * Math.PI * 2;
@@ -47,14 +49,14 @@ const BlowerAnimation = ({
         isStatic: true,
         render: { fillStyle: "transparent" },
         friction: 0,
-        restitution: 1.05 
+        restitution: 1.05
       });
       World.add(engine.world, peg);
     }
 
     // 2. CREATE BALLS (3D PERSPECTIVE)
     const calledSet = new Set(calledNumbers.map(n => parseInt(n)));
-    
+
     for (let i = 1; i <= 75; i++) {
       if (calledSet.has(i)) continue;
 
@@ -64,14 +66,14 @@ const BlowerAnimation = ({
         frictionAir: 0.012, // TWEAK: Increased slightly from 0.007 to slow down top speed
         render: {
           sprite: {
-            texture: `/balls/${i}.png`,
+            texture: balls[i],
             xScale: 0.4,
             yScale: 0.4
           }
         }
       });
 
-      ball.z = Math.random(); 
+      ball.z = Math.random();
       ball.zSpeed = (Math.random() - 0.5) * 0.02; // TWEAK: Slightly slower depth change
       ballsRef.current[i] = ball;
       World.add(engine.world, ball);
@@ -103,7 +105,7 @@ const BlowerAnimation = ({
         if (ball.position.y >= height - 85) {
           Body.applyForce(ball, ball.position, { x: (Math.random() - 0.5) * 0.002, y: -forceMag * 2.3 });
         }
-        
+
         // Circular swirl (Strength tuned for space utilization)
         const swirlX = (centerY - ball.position.y) * 0.000025;
         const swirlY = (ball.position.x - centerX) * 0.000025;
@@ -131,7 +133,7 @@ const BlowerAnimation = ({
       Render.stop(render);
       Runner.stop(runner);
       Engine.clear(engine);
-      if(render.canvas) render.canvas.remove();
+      if (render.canvas) render.canvas.remove();
     };
   }, []);
 
@@ -139,7 +141,7 @@ const BlowerAnimation = ({
   useEffect(() => {
     if (!worldRef.current) return;
     const calledSet = new Set(calledNumbers.map(n => parseInt(n)));
-    
+
     Object.keys(ballsRef.current).forEach(numStr => {
       const num = parseInt(numStr);
       if (calledSet.has(num)) {
@@ -175,7 +177,7 @@ const BlowerAnimation = ({
       />
       <Box
         component="img"
-        src="/images/blower.png"
+        src={blower}
         sx={{
           width: "120%",
           height: "120%",
@@ -191,7 +193,7 @@ const BlowerAnimation = ({
       {zoomingBallNum && (
         <Box
           component="img"
-          src={`balls/${parseInt(zoomingBallNum)}.png`}
+          src={balls[parseInt(zoomingBallNum)]}
           sx={{
             position: "absolute",
             width: "100px",

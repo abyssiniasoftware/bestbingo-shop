@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // 2. Health check (Keep this light)
 app.get("/", (req, res) => {
-  res.json({ name: "ቤስት ቢንጎ ጨዋታዎች" });
+  res.json({ name: "ዳሎል ቢንጎ ጨዋታዎች" });
 });
 
 // 3. API Routes

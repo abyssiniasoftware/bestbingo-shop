@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { FaSync, FaPlay, FaTimes, FaEye, FaEyeSlash, FaIdCard } from "react-icons/fa";
 import config from "../constants/config";
+import { bingo } from "../images/images";
 import useGameStore from "../stores/gameStore";
 import useNewGameLogic from "../hooks/useNewGameLogic";
 import useCardIds from "../hooks/useCardIds";
@@ -148,7 +149,7 @@ const NewGame = () => {
       >
         <Box sx={{ height: { xs: "30px", sm: "40px" }, display: "flex", alignItems: "center" }}>
           <img
-            src="/images/bingo.png"
+            src={bingo}
             alt="BINGO"
             style={{
               height: "100%",

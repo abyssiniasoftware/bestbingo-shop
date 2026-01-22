@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
+import { balls } from "../../images/balls";
 
-const getBallImage = (num) => `/balls/${num}.png`;
+const getBallImage = (num) => balls[num];
 
 const CentralBallOverlay = ({ currentNumber, show, isMoving, moveDuration = 600 }) => {
   const numValue = parseInt(currentNumber) || 0;
@@ -15,22 +16,22 @@ const CentralBallOverlay = ({ currentNumber, show, isMoving, moveDuration = 600 
   const animationFrameRef = useRef(null);
 
   useEffect(() => {
-  if (!show || numValue <= 0) return;
+    if (!show || numValue <= 0) return;
 
-  // Reset to center when showing (defer state update)
-  requestAnimationFrame(() => {
-    setTransform({
-      x: 0,
-      y: 0,
-      scale: 1
+    // Reset to center when showing (defer state update)
+    requestAnimationFrame(() => {
+      setTransform({
+        x: 0,
+        y: 0,
+        scale: 1
+      });
+      setOpacity(1);
+
+      if (ballRef.current) {
+        ballRef.current.style.transition = 'none';
+      }
     });
-    setOpacity(1);
-
-    if (ballRef.current) {
-      ballRef.current.style.transition = 'none';
-    }
-  });
-}, [show, numValue]);
+  }, [show, numValue]);
 
 
   useEffect(() => {
@@ -81,7 +82,7 @@ const CentralBallOverlay = ({ currentNumber, show, isMoving, moveDuration = 600 
         if (ballRef.current) {
           ballRef.current.style.transition = `transform ${moveDuration}ms cubic-bezier(0.22, 1, 0.36, 1), opacity ${moveDuration * 0.3}ms ease ${moveDuration * 0.7}ms`;
         }
-        
+
         // Start the movement animation
         setTransform({
           x: deltaX,

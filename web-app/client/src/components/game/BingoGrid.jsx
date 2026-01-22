@@ -68,6 +68,8 @@ const letterColors = {
   O: "linear-gradient(135deg, #374151 0%, #6b7280 100%)",
 };
 
+import { called, num } from "../../images/images";
+
 const StyledBingoLetter = styled(Box, {
   shouldForwardProp: (prop) => prop !== "letter",
 })(({ letter }) => ({
@@ -87,11 +89,10 @@ const StyledBingoLetter = styled(Box, {
 
 const StyledNumberCell = styled(Box, {
   shouldForwardProp: (prop) => prop !== "called" && prop !== "isShuffling",
-})(({ theme, called, isShuffling }) => ({
+})(({ theme, called: isCalled, isShuffling }) => ({
   // Dimensions: Set width to fill the grid column, fixed height for the "bar" look
   width: "100%",
   height: "65px", // Increased height to match the tall rectangular look in screenshot
-
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -104,9 +105,9 @@ const StyledNumberCell = styled(Box, {
 
   backgroundImage: isShuffling
     ? "linear-gradient(45deg, #FFD700, #FF8C00, #FF4500, #FFD700)"
-    : called
-      ? "url(/images/called.png)"
-      : "url(/images/num.png)",
+    : isCalled
+      ? `url(${called})`
+      : `url(${num})`,
 
   backgroundSize: isShuffling ? "300% 300%" : "100% 100%", // Larger size for gradient movement
   backgroundRepeat: "no-repeat",
