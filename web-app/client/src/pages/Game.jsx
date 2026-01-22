@@ -17,8 +17,11 @@ import {
   BINGO_PATTERNS,
 } from "../constants/constants";
 
-const Game = () => {
-  const { stake, players, winAmount } = useParams();
+const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount }) => {
+  const params = useParams();
+  const stake = propStake || params.stake;
+  const players = propPlayers || params.players;
+  const winAmount = propWinAmount || params.winAmount;
 
   const navigate = useNavigate();
   const { gameData } = useGameStore();
@@ -75,7 +78,7 @@ const Game = () => {
     playLoseAudio,
   } = useGameLogic(stake, players, winAmount);
 
-  
+
   const [openNewGameConfirm, setOpenNewGameConfirm] = useState(false);
 
   const backgroundStyle = backgroundOptions.find(
@@ -176,14 +179,14 @@ const Game = () => {
 
       {/* New Game Confirmation Modal */}
       <NewGameConfirmDialog
-  open={openNewGameConfirm}
-  onClose={() => setOpenNewGameConfirm(false)}
-  onConfirm={() => {
-    handleReset();
-    setShowStartModal(true);
-    setOpenNewGameConfirm(false);
-  }}
-/>
+        open={openNewGameConfirm}
+        onClose={() => setOpenNewGameConfirm(false)}
+        onConfirm={() => {
+          handleReset();
+          setShowStartModal(true);
+          setOpenNewGameConfirm(false);
+        }}
+      />
       {/* Winner Dialog */}
 
       <WinnerDialog

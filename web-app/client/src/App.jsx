@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./components/common/ProtectedRoute";
-import Game from "./pages/Game";
 import Register from "./pages/Register";
 import HouseAdminDashboard from "./pages/HouseAdminDashboard";
 import CashierDashboard from "./pages/CashierDashboard";
@@ -71,22 +70,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/game"
-          element={
-            <ProtectedRoute allowedRoles={["cashier"]}>
-              <Game />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/game/:stake/:players/:winAmount"
-          element={
-            <ProtectedRoute allowedRoles={["cashier"]}>
-              <Game />
-            </ProtectedRoute>
-          }
-        />
+
         <Route
           path="/users-list"
           element={<ProtectedRoute element={<UserList />} />}

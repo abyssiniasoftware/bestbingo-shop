@@ -256,7 +256,7 @@ const useGameLogic = () => {
         useGameStore.getState().setGameData({ ...useGameStore.getState().gameData, game: details });
       } catch (error) {
         // toast.error(error.message);
-        navigate("/game");
+        navigate("/dashboard");
       }
     };
     fetchGameDetails();
@@ -327,7 +327,7 @@ const useGameLogic = () => {
     const fetchAllCardNumbers = async () => {
       if (!gameData || !gameData.cartela || !userId) {
         setIsLoading(false);
-        navigate("/game");
+        navigate("/dashboard");
         return;
       }
       const token = localStorage.getItem("token");

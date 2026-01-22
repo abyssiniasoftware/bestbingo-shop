@@ -271,7 +271,16 @@ const useNewGameLogic = ({
 
       setGameData({ ...response, cartela });
       refreshWallet();
-      navigate(`/game/${betAmount}/${cartela.length}/${winAmount}`);
+      navigate(`/dashboard`, {
+        state: {
+          activeTab: "game",
+          gameParams: {
+            stake: betAmount,
+            players: cartela.length,
+            winAmount,
+          },
+        },
+      });
     } catch (error) {
       toast.error(error.message);
     } finally {

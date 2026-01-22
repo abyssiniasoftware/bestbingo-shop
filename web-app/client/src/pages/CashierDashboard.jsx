@@ -12,6 +12,7 @@ import Reports from "./Reports";
 import HouseReportsCashier from "./HouseReportsCashier";
 import HouseBonusListCashier from "./HouseBonusListCashier";
 import HouseStatsCashier from "./HouseStatsCashier";
+import Game from "./Game";
 import useWallet from "../hooks/useWallet";
 import useUserStore from "../stores/userStore";
 
@@ -20,6 +21,17 @@ const CashierDashboard = () => {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "reports");
+  const [prevIncomingTab, setPrevIncomingTab] = useState(location.state?.activeTab);
+
+  // Synchronize state when location state changes (derived state)
+  const incomingTab = location.state?.activeTab;
+  if (incomingTab !== prevIncomingTab) {
+    setPrevIncomingTab(incomingTab);
+    if (incomingTab) {
+      setActiveTab(incomingTab);
+    }
+  }
+
   const { wallet, isLoading: walletLoading } = useWallet();
   const { clearUser } = useUserStore();
   const [showBalance, setShowBalance] = useState(
@@ -46,6 +58,16 @@ const CashierDashboard = () => {
 
   const renderTabContent = () => {
     switch (activeTab) {
+      case "game": {
+        const gameParams = location.state?.gameParams || {};
+        return (
+          <Game
+            stake={gameParams.stake}
+            players={gameParams.players}
+            winAmount={gameParams.winAmount}
+          />
+        );
+      }
       case "reports":
         return <Reports />;
       case "detail-report":
@@ -62,6 +84,7 @@ const CashierDashboard = () => {
   };
 
   const sidebarItems = [
+    { id: "game", label: "Play Bingo", icon: <FaGamepad /> },
     { id: "reports", label: "Daily Report", icon: <FaFileAlt /> },
     { id: "detail-report", label: "Detail Report", icon: <FaClipboardList /> },
     { id: "bonus-report", label: "Get Bonus", icon: <FaGift /> },
@@ -87,7 +110,7 @@ const CashierDashboard = () => {
       >
         <Box
           sx={{ display: "flex", alignItems: "center", gap: 1.5, cursor: "pointer" }}
-          onClick={() => navigate("/game")}
+          onClick={() => setActiveTab("game")}
         >
           <Typography variant="h6" sx={{ color: "#2980b9", fontWeight: "bold", fontSize: "1.1rem" }}>
             Play Bingo
