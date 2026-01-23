@@ -1369,6 +1369,8 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
     isCentralBallMoving,
     moveDuration: Math.max(400, Math.floor(600 * (drawSpeed / 3000))),
     blowerZoomBall,
+    // Manual call function for GameControlsBar
+    callNextNumber: drawNumber,
   };
 };
 
