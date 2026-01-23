@@ -5,16 +5,11 @@ import GameControlsBar from "../components/game/GameControlsBar";
 import NewGameConfirmDialog from "../components/game/NewGameConfirmDialog";
 import BingoGrid from "../components/game/BingoGrid";
 import WinnerDialog from "../components/game/WinnerDialog";
-import { pulseAnimation } from "../components/game/GameStyles";
 import useGameLogic from "../hooks/useGameLogic";
 import useGameStore from "../stores/gameStore";
-import {
-  BINGO_PATTERNS,
-} from "../constants/constants";
+import { BINGO_PATTERNS } from "../constants/constants";
 
-import { money } from "../images/icon";
-
-// Status Badge Component matching screenshot design
+// Status Badge matching styles.css .stat-box
 const StatusBadge = ({ label, value }) => (
   <Box sx={{
     background: "linear-gradient(to bottom, #fff521, #9d9302)",
@@ -27,42 +22,31 @@ const StatusBadge = ({ label, value }) => (
     display: "flex",
     alignItems: "center",
     gap: 0.5,
+    fontSize: "18px",
+    fontFamily: "'poetsen', sans-serif",
+    mx: 0.5,
     textTransform: "uppercase",
-    fontSize: "0.85rem",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-    height: "fit-content",
-    fontFamily: "'Roboto', sans-serif",
   }}>
-    <Typography sx={{ fontWeight: "700", color: "#333", fontSize: "0.75rem" }}>{label}</Typography>
-    {value && <Typography sx={{ fontWeight: "900", fontSize: "0.9rem" }}>{value}</Typography>}
+    {label}{value ? ` ${value}` : ''}
   </Box>
 );
 
-// Recent Balls Tag Component
-const RecentBallTag = ({ ball }) => {
+// Recent Called Number Badge matching styles.css .last-called-num
+const RecentBallBadge = ({ ball }) => {
   const letter = ball?.charAt(0) || "";
   const number = ball?.substring(1) || "";
-
-  const letterColors = {
-    B: "#8a00ff",
-    I: "#E91E63",
-    N: "#0037ff",
-    G: "#dbcd0a",
-    O: "#2fe91e"
-  };
 
   return (
     <Box sx={{
       background: "linear-gradient(to bottom, #fff521, #9d9302)",
-      border: `1px solid ${letterColors[letter] || "#FFF521"}`,
-      px: 0.8,
-      py: 0.2,
-      borderRadius: "5px",
-      fontWeight: "bold",
-      fontSize: "0.75rem",
+      border: "1px solid #FFF521",
+      px: 0.5,
+      py: 0.25,
       color: "#000",
-      minWidth: 35,
-      textAlign: "center"
+      borderRadius: "5px",
+      fontSize: "15px",
+      mx: 0.25,
+      fontWeight: "bold",
     }}>
       {letter} {number}
     </Box>
@@ -71,9 +55,9 @@ const RecentBallTag = ({ ball }) => {
 
 const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount, voiceOption: passedVoiceOption }) => {
   const params = useParams();
-  const stake = propStake || params.stake;
-  const players = propPlayers || params.players;
-  const winAmount = propWinAmount || params.winAmount;
+  const stake = propStake || params.stake || "";
+  const players = propPlayers || params.players || "";
+  const winAmount = propWinAmount || params.winAmount || "0";
 
   const navigate = useNavigate();
   const { gameData } = useGameStore();
@@ -105,9 +89,6 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
     bonusAwarded,
     bonusAmountGiven,
     isManual,
-    setIsManual,
-    isAutomatic,
-    setIsAutomatic,
     declareWinnerManually,
     handleReset,
     primaryPattern,
@@ -131,206 +112,213 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
     }
   };
 
-  // Check if there's a reservation (cards selected)
   const hasReservation = gameData?.cartela?.length > 0;
 
-  // Get letter for current number
+  // Get letter and number from current call
   const currentLetter = currentNumber?.charAt(0) || "";
-  const currentNum = currentNumber?.substring(1) || "";
+  const currentNum = currentNumber?.substring(1) || "0";
 
-  // Letter color mapping matching screenshots
-  const letterColors = {
-    B: { border: "#8a00ff", text: "#8a00ff" },
-    I: { border: "#E91E63", text: "#E91E63" },
-    N: { border: "#0037ff", text: "#0037ff" },
-    G: { border: "#dbcd0a", text: "#333" },
-    O: { border: "#2fe91e", text: "#2fe91e" }
+  // Letter colors for current ball border
+  const letterBorderColors = {
+    B: 'hsl(259, 100%, 50%)', // purple
+    I: '#E91E63', // pink
+    N: 'hsl(237, 100%, 50%)', // blue
+    G: '#dbcd0a', // yellow
+    O: '#2fe91e', // green
   };
 
   return (
     <Box
+      className="bingo-container"
       sx={{
-        height: "100%",
+        ml: 1.5,
+        mt: 1,
         color: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        background: "var(--content-bg, #00b2ff)",
-        position: "relative",
-        overflow: "hidden",
-        width: "100%",
-        fontFamily: "'Roboto', sans-serif"
+        fontFamily: "'poetsen', sans-serif",
       }}
     >
-      <style>{pulseAnimation}</style>
-
-      {/* Header Section */}
-      <Box sx={{ px: 3, py: 1.5, display: "flex", alignItems: "center", gap: 2 }}>
-        <Typography
-          variant="h3"
-          sx={{
-            fontWeight: "900",
-            color: "white",
-            textShadow: "3px 3px 0px rgba(0,0,0,0.15)",
-            fontSize: "2.5rem",
-            fontFamily: "'Arial Black', sans-serif"
-          }}
-        >
+      {/* BINGO Header with stat boxes - matching styles.css .bingo-stat */}
+      <Box className="bingo-stat" sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+        <Typography sx={{
+          fontFamily: "'jaro', sans-serif",
+          fontSize: "3.5rem",
+          fontWeight: "bold",
+          color: "white",
+          textTransform: "uppercase",
+          mr: 1,
+        }}>
           BINGO
         </Typography>
-
-        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-          <StatusBadge label={isPlaying ? "GAME PLAYING" : "GAME"} />
-          <StatusBadge label="STAKE" value={stake || ""} />
-          <StatusBadge label="WIN PRICE" value={winAmount || ""} />
-          <StatusBadge label={`${callCount} CALLED`} />
-        </Box>
+        <StatusBadge label={isPlaying ? "GAME PLAYING" : "GAME"} />
+        <StatusBadge label="STAKE" value={stake} />
+        <StatusBadge label="WIN PRICE" value={winAmount} />
+        <StatusBadge label={`${callCount} CALLED`} />
       </Box>
 
-      {/* Main Content Area */}
-      <Box sx={{ display: "flex", flexGrow: 1, px: 3, gap: 3, overflow: "hidden" }}>
+      {/* Main Panel: 85% grid, 15% current ball - matching styles.css .bingo-panel */}
+      <Box
+        className="bingo-panel"
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "85% 15%",
+          gap: 1.25,
+        }}
+      >
         {/* Left: Bingo Grid */}
-        <Box sx={{ flex: "1 1 75%", overflow: "auto" }}>
-          <BingoGrid calledNumbers={calledNumbers} shuffling={isShuffling} />
+        <Box>
+          <BingoGrid
+            calledNumbers={calledNumbers}
+            shuffling={isShuffling}
+          />
         </Box>
 
-        {/* Right: Current Ball + Recent Calls + Win Money */}
-        <Box sx={{
-          flex: "0 0 200px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          py: 1
-        }}>
-          {/* Large Current Ball */}
-          <Box
-            sx={{
-              width: 140,
-              height: 140,
-              borderRadius: "50%",
-              background: "radial-gradient(circle at 35% 35%, #fff176 0%, #ffc107 40%, #e65100 100%)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 15px 30px rgba(0,0,0,0.4), inset 0 -6px 12px rgba(0,0,0,0.25), inset 0 6px 12px rgba(255,255,255,0.35)",
-              border: "6px solid #ffcc80",
-              position: "relative",
-            }}
-          >
+        {/* Right: Current Ball + Recent Calls */}
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          {/* Large Current Ball - matching styles.css .last-called */}
+          <Box sx={{
+            fontSize: "50px",
+            color: "#000",
+            border: `10px solid ${letterBorderColors[currentLetter] || '#ffc839'}`,
+            borderRadius: "50%",
+            background: "linear-gradient(to bottom, #ffc839, #e4840c)",
+            textAlign: "center",
+            m: 1,
+            p: 2.5,
+            boxShadow: "10px 10px 10px rgba(0, 0, 0, 0.5), 0 0 6px rgba(0, 0, 0, 0.4) inset",
+            transition: "background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
+            width: 120,
+            height: 120,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
             <Typography sx={{
-              fontSize: "2rem",
-              fontWeight: "900",
-              color: letterColors[currentLetter]?.text || "#000",
+              fontSize: "2.5rem",
+              fontWeight: "bold",
               lineHeight: 1,
-              textShadow: "0 1px 2px rgba(0,0,0,0.2)"
+              m: 0,
+              color: "#000"
             }}>
               {currentLetter || "B"}
             </Typography>
             <Typography sx={{
-              fontSize: "3.5rem",
-              fontWeight: "900",
-              color: "#000",
+              fontSize: "3rem",
+              fontWeight: "bold",
               lineHeight: 1,
-              textShadow: "0 1px 2px rgba(0,0,0,0.2)",
-              mt: -0.5
+              m: 0,
+              color: "#000"
             }}>
               {currentNum || "1"}
             </Typography>
           </Box>
 
-          {/* Recent Balls Strip */}
-          <Box sx={{ mt: 2, width: "100%" }}>
-            <Box sx={{ display: "flex", gap: 0.5, justifyContent: "center", flexWrap: "wrap", mb: 0.5 }}>
-              {recentCalls.slice(0, 4).map((num, idx) => (
-                <RecentBallTag key={idx} ball={num} />
-              ))}
-            </Box>
-            <Typography
-              sx={{
-                color: "#333",
-                fontSize: "0.7rem",
-                textAlign: "center",
-                cursor: "pointer",
-                textDecoration: "underline",
-                "&:hover": { color: "#000" }
-              }}
-            >
-              view all
-            </Typography>
+          {/* Recent Calls - matching styles.css .last-called-numbers */}
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mt: 1, flexWrap: "wrap" }}>
+            {recentCalls.slice(0, 4).map((num, idx) => (
+              <RecentBallBadge key={idx} ball={num} />
+            ))}
           </Box>
 
-          {/* WIN MONEY Section */}
-          <Box sx={{
-            mt: "auto",
-            textAlign: "center",
+          {/* View All Link */}
+          <Typography
+            sx={{
+              mt: 0.5,
+              cursor: "pointer",
+              fontSize: "14px",
+              color: "#000",
+              textDecoration: "none",
+              "&:hover": { textDecoration: "underline" }
+            }}
+          >
+            view all
+          </Typography>
+        </Box>
+      </Box>
+
+      {/* Action Panel: 65% controls, 35% win money - matching styles.css .action-panel */}
+      <Box
+        className="action-panel"
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "65% 35%",
+          gap: 1.25,
+          mt: 2.5,
+        }}
+      >
+        {/* Left: Controls */}
+        <Box>
+          <GameControlsBar
+            isPlaying={isPlaying}
+            isShuffling={isShuffling}
+            togglePlayPause={togglePlayPause}
+            handleShuffleClick={handleShuffleClick}
+            drawSpeed={drawSpeed}
+            setDrawSpeed={setDrawSpeed}
+            cardIdInput={cardIdInput}
+            setCardIdInput={setCardIdInput}
+            checkWinner={checkWinner}
+            handleBack={handleBack}
+            isGameEnded={isGameEnded}
+            hasGameStarted={hasGameStarted}
+            handleEndGame={handleEndGame}
+            hasReservation={hasReservation}
+            onNewGameClick={handleNewGameClick}
+            onCallNext={callNextNumber}
+          />
+        </Box>
+
+        {/* Right: WIN MONEY - matching styles.css .winner */}
+        <Box
+          className="winner"
+          sx={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: "center"
-          }}>
+            alignItems: "center",
+            justifyContent: "flex-end",
+            fontSize: "50px",
+            color: "#fff",
+          }}
+        >
+          <Box sx={{ textAlign: "right", mr: 1 }}>
             <Typography sx={{
-              fontSize: "1.8rem",
-              fontWeight: "900",
+              fontSize: "2.2rem",
+              fontWeight: "bold",
+              fontFamily: "'poetsen', sans-serif",
               color: "white",
-              textShadow: "2px 2px 0 rgba(0,0,0,0.2)",
-              fontFamily: "'Arial Black', sans-serif",
-              lineHeight: 1.1
+              lineHeight: 1,
             }}>
               WIN MONEY
             </Typography>
             <Typography sx={{
-              fontSize: "1.5rem",
-              fontWeight: "900",
+              fontSize: "2rem",
+              fontWeight: "bold",
+              fontFamily: "'poetsen', sans-serif",
               color: "white",
-              textShadow: "2px 2px 0 rgba(0,0,0,0.2)",
-              fontFamily: "'Arial Black', sans-serif"
             }}>
-              {winAmount || "0"} Birr
+              {winAmount} Birr
             </Typography>
-            <img
-              src={money}
-              alt="Money"
-              style={{
-                height: 100,
-                objectFit: "contain",
-                marginTop: 8
-              }}
-            />
           </Box>
+          <img
+            src="/icon/money.png"
+            alt="Money"
+            style={{ height: 120 }}
+            onError={(e) => { e.target.style.display = 'none'; }}
+          />
         </Box>
       </Box>
 
-      {/* Bottom Controls Bar */}
-      <Box sx={{ px: 3, py: 1.5 }}>
-        <GameControlsBar
-          isPlaying={isPlaying}
-          isShuffling={isShuffling}
-          togglePlayPause={togglePlayPause}
-          handleShuffleClick={handleShuffleClick}
-          drawSpeed={drawSpeed}
-          setDrawSpeed={setDrawSpeed}
-          cardIdInput={cardIdInput}
-          setCardIdInput={setCardIdInput}
-          checkWinner={checkWinner}
-          handleBack={handleBack}
-          isGameEnded={isGameEnded}
-          hasGameStarted={hasGameStarted}
-          handleEndGame={handleEndGame}
-          hasReservation={hasReservation}
-          onNewGameClick={handleNewGameClick}
-          onCallNext={callNextNumber}
-        />
-      </Box>
-
       {/* Footer */}
-      <Typography sx={{
-        textAlign: "center",
-        color: "white",
-        fontSize: "0.7rem",
-        pb: 1,
-        opacity: 0.8
-      }}>
-        © {new Date().getFullYear()} Dallol Technologies. All rights reserved.
-      </Typography>
+      <Box
+        component="footer"
+        sx={{
+          textAlign: "center",
+          color: "#fff",
+          mt: 2,
+          pb: 1,
+        }}
+      >
+        © 2024 Dallol Technologies. All rights reserved.
+      </Box>
 
       {/* New Game Confirmation Modal */}
       <NewGameConfirmDialog
@@ -362,7 +350,6 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
         bonusAmount={bonusAmountGiven.toFixed(0)}
         handleEndGame={handleEndGame}
         isManual={isManual}
-        isAutomatic={isAutomatic}
         declareWinnerManually={declareWinnerManually}
         handleReset={handleReset}
         onNewGameClick={() => setOpenNewGameConfirm(true)}

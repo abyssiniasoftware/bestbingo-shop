@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  Box, Typography, IconButton, List, ListItem,
-  ListItemButton, ListItemIcon, ListItemText,
-  Select, MenuItem
+  Box, Typography, IconButton, Select, MenuItem
 } from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -20,8 +18,6 @@ import {
   full as FullscreenIcon
 } from "../images/icon.js";
 
-import { logo as fullLogo, user as userIcon } from "../images/images";
-
 import ViewCartela from "./ViewCartela";
 import Reports from "./Reports";
 import HouseReportsCashier from "./HouseReportsCashier";
@@ -32,6 +28,98 @@ import { voiceOptions } from "../constants/constants";
 import useUserStore from "../stores/userStore";
 import Settings from "./Settings";
 
+// Sidebar Menu Item Component matching base.css exactly
+const SidebarItem = ({ icon, muiIcon, label, isActive, onClick, isMinimized, isLogout }) => {
+  return (
+    <li
+      onClick={onClick}
+      style={{
+        height: 50,
+        background: isActive ? 'var(--grey, #03c0ff)' : 'transparent',
+        marginLeft: 6,
+        borderRadius: '48px 0 0 48px',
+        padding: 4,
+        position: 'relative',
+        cursor: 'pointer',
+        marginBottom: 4,
+      }}
+    >
+      {/* Curved shadow effects for active tab */}
+      {isActive && !isMinimized && (
+        <>
+          <div style={{
+            content: '',
+            position: 'absolute',
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            top: -40,
+            right: 0,
+            boxShadow: '20px 20px 0 var(--grey, #03c0ff)',
+            zIndex: -1,
+          }} />
+          <div style={{
+            content: '',
+            position: 'absolute',
+            width: 40,
+            height: 40,
+            borderRadius: '50%',
+            bottom: -40,
+            right: 0,
+            boxShadow: '20px -20px 0 var(--grey, #03c0ff)',
+            zIndex: -1,
+          }} />
+        </>
+      )}
+      <a
+        style={{
+          width: '100%',
+          height: '100%',
+          background: 'var(--light, #017299)',
+          display: 'flex',
+          alignItems: 'center',
+          borderRadius: 48,
+          fontSize: 18,
+          fontFamily: "'poetsen', sans-serif",
+          color: isLogout ? '#DB504A' : (isActive ? 'var(--blue, #e5db19)' : 'white'),
+          whiteSpace: 'nowrap',
+          overflowX: 'hidden',
+          textDecoration: 'none',
+          transition: 'color 0.3s ease',
+        }}
+      >
+        <span style={{
+          minWidth: isMinimized ? 48 : 'calc(60px - ((4px + 6px) * 2))',
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
+          {muiIcon ? (
+            React.cloneElement(muiIcon, {
+              style: {
+                color: isLogout ? '#DB504A' : (isActive ? 'var(--blue, #e5db19)' : 'white'),
+                fontSize: 22
+              }
+            })
+          ) : (
+            <img
+              src={icon}
+              alt={label}
+              style={{
+                width: 22,
+                height: 22,
+                filter: isActive ? 'brightness(0) saturate(100%) invert(90%) sepia(50%) saturate(500%) hue-rotate(5deg) brightness(100%)' : 'brightness(0) invert(1)'
+              }}
+            />
+          )}
+        </span>
+        {!isMinimized && (
+          <span style={{ marginLeft: 8 }}>{label}</span>
+        )}
+      </a>
+    </li>
+  );
+};
+
 const CashierDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,7 +127,6 @@ const CashierDashboard = () => {
   const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "game");
   const [prevIncomingTab, setPrevIncomingTab] = useState(location.state?.activeTab);
 
-  // Synchronize state when location state changes
   const incomingTab = location.state?.activeTab;
   if (incomingTab !== prevIncomingTab) {
     setPrevIncomingTab(incomingTab);
@@ -50,20 +137,31 @@ const CashierDashboard = () => {
 
   const { user, clearUser } = useUserStore();
 
-  const [isSidebarMinimized, setIsSidebarMinimized] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark/cyan mode
   const [voiceOption, setVoiceOption] = useState("l");
-  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Apply theme to document
+  // Apply theme CSS variables to document
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    if (isDarkMode) {
+      document.body.classList.add('dark');
+      document.documentElement.style.setProperty('--light', '#017299');
+      document.documentElement.style.setProperty('--grey', '#03c0ff');
+      document.documentElement.style.setProperty('--body', '#03c0ff');
+      document.documentElement.style.setProperty('--blue', '#e5db19');
+    } else {
+      document.body.classList.remove('dark');
+      document.documentElement.style.setProperty('--light', '#030728');
+      document.documentElement.style.setProperty('--grey', '#08105b');
+      document.documentElement.style.setProperty('--body', '#08105b');
+      document.documentElement.style.setProperty('--blue', '#e5db19');
+    }
   }, [isDarkMode]);
 
-  // Fullscreen change listener
+  // Fullscreen handling
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      // Update state if needed
     };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
@@ -131,78 +229,173 @@ const CashierDashboard = () => {
     { id: "settings", label: "Settings", muiIcon: <SettingsIcon /> },
   ];
 
-  // Check if on game page for header behavior
-  const isGamePage = activeTab === "game";
-
-  // Theme-aware colors
-  const sidebarBg = isDarkMode ? "#16213e" : "#017299";
-  const headerBg = isDarkMode ? "#16213e" : "transparent";
-  const contentBg = isDarkMode ? "#1a1a2e" : "#00b2ff";
-  const activeBg = isDarkMode ? "#1a1a2e" : "#03c0ff";
-  const activeText = isDarkMode ? "#ffc107" : "#fff521";
+  const sidebarWidth = isSidebarMinimized ? 60 : 200;
+  const contentWidth = `calc(100% - ${sidebarWidth}px)`;
 
   return (
-    <Box sx={{ 
-      display: "flex", 
-      flexDirection: "column", 
-      height: "100vh", 
-      overflow: "hidden", 
-      background: contentBg,
-      transition: "background 0.3s ease"
+    <Box sx={{
+      display: "flex",
+      minHeight: "100vh",
+      background: 'var(--body, #03c0ff)',
+      fontFamily: "'poetsen', sans-serif",
     }}>
-      {/* Header */}
+      {/* Sidebar - matching base.css #sidebar */}
       <Box
+        component="aside"
         sx={{
-          height: 56,
-          background: headerBg,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          px: 2,
-          flexShrink: 0,
-          zIndex: 1100,
-          color: "white",
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: sidebarWidth,
+          height: '100%',
+          background: 'var(--light, #017299)',
+          zIndex: 2000,
+          transition: '0.3s ease',
+          overflowX: 'hidden',
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': { display: 'none' },
         }}
       >
-        {/* Left: Logo + Menu */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <img src={logoIcon} alt="Dallol" style={{ height: 32, cursor: "pointer" }} />
-          <Typography sx={{ 
-            fontFamily: "'Dancing Script', cursive", 
-            fontSize: "1.5rem", 
-            fontWeight: "bold",
-            color: "#ffc107",
-            display: isSidebarMinimized ? "none" : "block"
+        {/* Brand */}
+        <Box sx={{
+          fontFamily: "'poetsen', sans-serif",
+          fontSize: isSidebarMinimized ? 0 : 28,
+          fontWeight: 700,
+          height: 56,
+          display: 'flex',
+          alignItems: 'center',
+          color: 'var(--blue, #e5db19)',
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          background: 'var(--light, #017299)',
+          zIndex: 500,
+          pb: 2.5,
+          pt: 1.5,
+          boxSizing: 'content-box',
+        }}>
+          <Box sx={{ minWidth: 60, display: 'flex', justifyContent: 'center' }}>
+            <img src={logoIcon} alt="Dallol" style={{ width: 32, height: 32 }} />
+          </Box>
+          {!isSidebarMinimized && <span>Dallol</span>}
+        </Box>
+
+        {/* Side Menu */}
+        <ul style={{
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+          width: '100%',
+          marginTop: 17,
+        }}>
+          {sidebarItems.map((item) => (
+            <SidebarItem
+              key={item.id}
+              icon={item.icon}
+              muiIcon={item.muiIcon}
+              label={item.label}
+              isActive={activeTab === item.id}
+              onClick={() => setActiveTab(item.id)}
+              isMinimized={isSidebarMinimized}
+            />
+          ))}
+
+          {/* Logout */}
+          <SidebarItem
+            icon={logoutIcon}
+            label="Logout"
+            isActive={false}
+            onClick={handleLogout}
+            isMinimized={isSidebarMinimized}
+            isLogout={true}
+          />
+        </ul>
+      </Box>
+
+      {/* Content Area - matching base.css #content */}
+      <Box
+        component="main"
+        sx={{
+          position: 'relative',
+          width: contentWidth,
+          marginLeft: `${sidebarWidth}px`,
+          transition: '0.3s ease',
+          minHeight: '100vh',
+        }}
+      >
+        {/* Navbar - matching base.css #content nav */}
+        <Box
+          component="nav"
+          sx={{
+            height: 56,
+            background: 'var(--light, #017299)',
+            px: 3,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 3,
+            position: 'sticky',
+            top: 0,
+            left: 0,
+            zIndex: 1000,
+            '&::before': {
+              content: '""',
+              position: 'absolute',
+              width: 40,
+              height: 40,
+              bottom: -40,
+              left: 0,
+              borderRadius: '50%',
+              boxShadow: '-20px -20px 0 var(--light, #017299)',
+            }
+          }}
+        >
+          {/* Left: Menu button */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <IconButton onClick={toggleSidebar} sx={{ color: 'white' }}>
+              <img src={menuIcon} alt="Menu" style={{ width: 24, height: 24 }} />
+            </IconButton>
+          </Box>
+
+          {/* Center: Dallol Bingo! Logo */}
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: 1,
           }}>
-            Dallol
-          </Typography>
-          <IconButton onClick={toggleSidebar} sx={{ color: "white", ml: 2 }}>
-            <img src={menuIcon} alt="Menu" style={{ height: 20 }} />
-          </IconButton>
-        </Box>
+            <Typography sx={{
+              fontFamily: "'pacifico', 'Dancing Script', cursive",
+              fontSize: '2.8rem',
+              color: '#ffffff',
+              letterSpacing: 2,
+            }}>
+              <span style={{ color: '#ff8d50' }}>D</span>
+              allol{' '}
+              B
+              <span style={{ color: '#15ff00' }}>i</span>
+              ngo!
+            </Typography>
+          </Box>
 
-        {/* Center: Logo */}
-        <Box sx={{ position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
-          <img src={fullLogo} alt="Dallol Bingo!" style={{ height: 40 }} />
-        </Box>
-
-        {/* Right: Controls */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-          {/* Voice Selector - Shows on game page */}
-          {isGamePage && (
+          {/* Right: Controls */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            {/* Voice Selector */}
             <Select
               value={voiceOption}
               onChange={handleVoiceChange}
               size="small"
               sx={{
-                color: "white",
-                background: "rgba(255,255,255,0.1)",
-                borderRadius: "5px",
+                color: 'black',
+                background: '#fff',
+                borderRadius: '5px',
                 height: 32,
-                fontSize: "0.85rem",
+                width: 70,
+                fontSize: '15px',
+                fontFamily: "'poetsen', sans-serif",
                 "& .MuiSelect-select": { py: 0.5, px: 1 },
-                "& fieldset": { border: "none" },
-                "& .MuiSvgIcon-root": { color: "white" }
+                "& fieldset": { border: '1px solid #ccc' },
+                "& .MuiSvgIcon-root": { color: 'black' }
               }}
             >
               {voiceOptions.map((option) => (
@@ -211,250 +404,43 @@ const CashierDashboard = () => {
                 </MenuItem>
               ))}
             </Select>
-          )}
 
-          {/* Profile - Shows on non-game pages */}
-          {!isGamePage && (
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <img src={userIcon} alt="User" style={{ height: 20, borderRadius: "50%" }} />
-              <Typography sx={{ fontWeight: "500", fontSize: "0.9rem" }}>
-                {user?.username || "Admin"}
-              </Typography>
+            {/* Theme Toggle */}
+            <Box
+              onClick={toggleTheme}
+              sx={{
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease',
+                '&:hover': { transform: 'scale(1.1)' }
+              }}
+            >
+              <img
+                src={isDarkMode ? dayIcon : nightIcon}
+                alt="Theme"
+                style={{ width: 32, height: 32 }}
+              />
             </Box>
-          )}
 
-          {/* Theme Toggle */}
-          <Box 
-            onClick={toggleTheme}
-            sx={{ 
-              display: "flex", 
-              alignItems: "center", 
-              cursor: "pointer",
-              background: isDarkMode ? "#1a1a2e" : "#03c0ff",
-              borderRadius: "20px",
-              p: 0.5,
-              gap: 0.5
-            }}
-          >
-            <Box sx={{
-              width: 24,
-              height: 24,
-              borderRadius: "50%",
-              background: isDarkMode ? "transparent" : "#ffc107",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }}>
-              {!isDarkMode && <img src={dayIcon} alt="Light" style={{ height: 16 }} />}
+            {/* Fullscreen Toggle */}
+            <Box
+              onClick={toggleFullscreen}
+              sx={{
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease',
+                '&:hover': { transform: 'scale(1.1)' }
+              }}
+            >
+              <img src={FullscreenIcon} alt="Fullscreen" style={{ width: 32, height: 32 }} />
             </Box>
-            <Box sx={{
-              width: 24,
-              height: 24,
-              borderRadius: "50%",
-              background: isDarkMode ? "#ffc107" : "transparent",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }}>
-              {isDarkMode && <img src={nightIcon} alt="Dark" style={{ height: 16 }} />}
-            </Box>
-          </Box>
-
-          {/* Fullscreen Toggle */}
-          <IconButton 
-            onClick={toggleFullscreen} 
-            sx={{ 
-              color: "white",
-              p: 0.5,
-              "&:hover": { background: "rgba(255,255,255,0.1)" }
-            }}
-          >
-            <img src={FullscreenIcon} alt="Fullscreen" style={{ height: 20 }} />
-          </IconButton>
-        </Box>
-      </Box>
-
-      {/* Main Area */}
-      <Box sx={{ display: "flex", flexGrow: 1, overflow: "hidden" }}>
-        {/* Sidebar */}
-        <Box
-          sx={{
-            width: isSidebarMinimized ? 60 : 200,
-            background: sidebarBg,
-            transition: "width 0.3s ease, background 0.3s ease",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-            flexShrink: 0,
-          }}
-        >
-          <List sx={{ mt: 2, px: 0.5 }}>
-            {sidebarItems.map((item) => {
-              const isActive = activeTab === item.id;
-              return (
-                <ListItem key={item.id} disablePadding sx={{ mb: 0.5, position: "relative" }}>
-                  {/* Active tab curved effect - top */}
-                  {isActive && !isSidebarMinimized && (
-                    <>
-                      <Box sx={{
-                        position: "absolute",
-                        width: 30,
-                        height: 30,
-                        top: -30,
-                        right: 0,
-                        background: sidebarBg,
-                        "&::after": {
-                          content: '""',
-                          position: "absolute",
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: "0 0 50% 0",
-                          background: activeBg,
-                        }
-                      }} />
-                      <Box sx={{
-                        position: "absolute",
-                        width: 30,
-                        height: 30,
-                        bottom: -30,
-                        right: 0,
-                        background: sidebarBg,
-                        "&::after": {
-                          content: '""',
-                          position: "absolute",
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: "0 50% 0 0",
-                          background: activeBg,
-                        }
-                      }} />
-                    </>
-                  )}
-                  <ListItemButton
-                    onClick={() => setActiveTab(item.id)}
-                    selected={isActive}
-                    sx={{
-                      borderRadius: isSidebarMinimized 
-                        ? "8px"
-                        : isActive 
-                          ? "48px 0 0 48px" 
-                          : "48px",
-                      justifyContent: isSidebarMinimized ? "center" : "flex-start",
-                      px: isSidebarMinimized ? 0 : 2,
-                      py: 1.2,
-                      ml: isSidebarMinimized ? 0.5 : 0.5,
-                      mr: isSidebarMinimized ? 0.5 : 0,
-                      transition: "all 0.2s ease",
-                      backgroundColor: isActive ? activeBg : "transparent",
-                      color: isActive ? activeText : "white",
-                      "&.Mui-selected": {
-                        backgroundColor: activeBg,
-                        color: activeText,
-                        "&:hover": {
-                          backgroundColor: activeBg,
-                        },
-                      },
-                      "&:hover": {
-                        backgroundColor: isActive ? activeBg : "rgba(255, 255, 255, 0.1)",
-                        color: isActive ? activeText : "white",
-                      },
-                    }}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: isSidebarMinimized ? 0 : 36,
-                        justifyContent: "center",
-                        color: isActive ? activeText : "white",
-                      }}
-                    >
-                      {item.muiIcon 
-                        ? React.cloneElement(item.muiIcon, { 
-                            style: { 
-                              color: isActive ? activeText : "white",
-                              fontSize: "1.3rem"
-                            } 
-                          }) 
-                        : <img 
-                            src={item.icon} 
-                            alt={item.label} 
-                            style={{ 
-                              height: 20, 
-                              width: 20,
-                              filter: isActive ? "brightness(0) saturate(100%) invert(88%) sepia(40%) saturate(1000%) hue-rotate(5deg)" : "none"
-                            }} 
-                          />
-                      }
-                    </ListItemIcon>
-                    {!isSidebarMinimized && (
-                      <ListItemText
-                        primary={item.label}
-                        primaryTypographyProps={{
-                          fontWeight: isActive ? "700" : "500",
-                          fontSize: "0.9rem",
-                        }}
-                      />
-                    )}
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List>
-
-          {/* Logout Button */}
-          <Box sx={{ mt: "auto", mb: 2, px: 0.5 }}>
-            <ListItem disablePadding>
-              <ListItemButton
-                onClick={handleLogout}
-                sx={{
-                  borderRadius: "8px",
-                  justifyContent: isSidebarMinimized ? "center" : "flex-start",
-                  px: isSidebarMinimized ? 0 : 2,
-                  py: 1,
-                  ml: 0.5,
-                  mr: 0.5,
-                  color: "#ff5252",
-                  "&:hover": {
-                    backgroundColor: "rgba(255, 82, 82, 0.15)",
-                  },
-                }}
-              >
-                <ListItemIcon sx={{ 
-                  minWidth: isSidebarMinimized ? 0 : 36, 
-                  justifyContent: "center", 
-                  color: "inherit" 
-                }}>
-                  <img src={logoutIcon} alt="Logout" style={{ height: 20, width: 20 }} />
-                </ListItemIcon>
-                {!isSidebarMinimized && (
-                  <ListItemText
-                    primary="Logout"
-                    primaryTypographyProps={{
-                      fontWeight: "600",
-                      fontSize: "0.9rem",
-                    }}
-                  />
-                )}
-              </ListItemButton>
-            </ListItem>
           </Box>
         </Box>
 
-        {/* Content Area */}
-        <Box sx={{ 
-          flexGrow: 1, 
-          overflow: "hidden", 
-          display: "flex", 
-          flexDirection: "column",
-          background: contentBg,
-          transition: "background 0.3s ease"
+        {/* Main Content */}
+        <Box sx={{
+          p: activeTab === "game" ? 0 : 2,
+          minHeight: 'calc(100vh - 56px)',
         }}>
-          <Box sx={{ 
-            flexGrow: 1, 
-            overflowY: "auto", 
-            p: activeTab === "game" ? 0 : 2 
-          }}>
-            {renderTabContent()}
-          </Box>
+          {renderTabContent()}
         </Box>
       </Box>
     </Box>

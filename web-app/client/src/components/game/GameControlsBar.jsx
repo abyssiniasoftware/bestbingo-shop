@@ -1,79 +1,51 @@
-import React, { useState, useRef } from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Slider,
-  styled,
-  Typography,
-} from "@mui/material";
+import React, { useState } from "react";
+import { Box, TextField, Slider, Typography } from "@mui/material";
 
-const ControlButton = styled(Button)(({ theme, variant: btnVariant }) => {
-  const variants = {
-    yellow: {
-      background: "linear-gradient(to bottom, #fff521, #9d9302)",
-      border: "2px solid #FFF521",
-      color: "#000000",
+// Control Button matching styles.css .cutm-btn-2 (dark teal style from screenshots)
+const ControlButton = ({ children, onClick, disabled, variant = "default" }) => {
+  const styles = {
+    default: {
+      background: 'transparent',
+      border: '2px solid rgba(255,255,255,0.5)',
+      color: '#ffffff',
     },
-    green: {
-      background: "linear-gradient(to bottom, #4caf50, #2e7d32)",
-      border: "2px solid #4caf50",
-      color: "#ffffff",
+    primary: {
+      background: 'transparent',
+      border: '2px solid rgba(255,255,255,0.5)',
+      color: '#ffffff',
     },
-    red: {
-      background: "linear-gradient(to bottom, #ff5252, #c62828)",
-      border: "2px solid #ff5252",
-      color: "#ffffff",
-    },
-    blue: {
-      background: "linear-gradient(to bottom, #039be5, #01579b)",
-      border: "2px solid #039be5",
-      color: "#ffffff",
-    },
-    purple: {
-      background: "linear-gradient(to bottom, #7e57c2, #4527a0)",
-      border: "2px solid #7e57c2",
-      color: "#ffffff",
-    },
-    olive: {
-      background: "linear-gradient(to bottom, #a4b545, #6b7730)",
-      border: "2px solid #a4b545",
-      color: "#000000",
-    },
-    disabled: {
-      background: "#90a4ae",
-      border: "2px solid #78909c",
-      color: "rgba(255,255,255,0.7)",
+    stop: {
+      background: 'rgba(255,50,50,0.3)',
+      border: '2px solid #ff5252',
+      color: '#ffffff',
     }
   };
 
-  const style = variants[btnVariant] || variants.yellow;
+  const style = styles[variant] || styles.default;
 
-  return {
-    ...style,
-    fontWeight: "900",
-    fontSize: "0.85rem",
-    padding: "8px 16px",
-    borderRadius: "5px",
-    textTransform: "uppercase",
-    fontFamily: "'Roboto', sans-serif",
-    letterSpacing: "0.5px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-    minWidth: "auto",
-    whiteSpace: "nowrap",
-    transition: "all 0.2s ease",
-    "&:hover": {
-      opacity: 0.9,
-      transform: "translateY(-1px)",
-      boxShadow: "0 4px 8px rgba(0,0,0,0.3)",
-    },
-    "&:disabled": {
-      ...variants.disabled,
-      cursor: "not-allowed",
-      transform: "none",
-    }
-  };
-});
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      style={{
+        ...style,
+        padding: '8px 16px',
+        borderRadius: '5px',
+        fontSize: '16px',
+        fontFamily: "'poetsen', sans-serif",
+        cursor: disabled ? 'not-allowed' : 'pointer',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        textAlign: 'center',
+        opacity: disabled ? 0.5 : 1,
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+        marginRight: 8,
+      }}
+    >
+      {children}
+    </button>
+  );
+};
 
 const GameControlsBar = ({
   isPlaying,
@@ -92,7 +64,6 @@ const GameControlsBar = ({
   onNewGameClick,
   onCallNext,
 }) => {
-  // Track if autoplay has ever been started this game session
   const [autoplayEverStarted, setAutoplayEverStarted] = useState(false);
 
   const handleAutoPlayToggle = () => {
@@ -111,162 +82,102 @@ const GameControlsBar = ({
   // Convert drawSpeed (ms) to seconds for display
   const speedInSeconds = Math.round(drawSpeed / 1000);
 
-  // Determine which set of controls to show
+  // Determine which controls to show
   const showFullControls = hasReservation && hasGameStarted && !isGameEnded;
 
   return (
-    <Box
-      className="game-controls-bar"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 1.5,
-      }}
-    >
-      {/* Main Controls Row */}
-      <Box sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        gap: 1.5
-      }}>
-        {/* Left: Action Buttons */}
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
-          {showFullControls ? (
-            <>
-              {/* Full control set when game is active with reservation */}
-              <ControlButton
-                variant={isPlaying ? "red" : "yellow"}
-                onClick={handleAutoPlayToggle}
-              >
-                {isPlaying ? "Stop Auto Play" : "Start Auto Play"}
-              </ControlButton>
-
-              <ControlButton
-                variant="yellow"
-                onClick={onCallNext}
-                disabled={autoplayEverStarted || isPlaying}
-              >
-                Call Next
-              </ControlButton>
-
-              <ControlButton
-                variant="yellow"
-                onClick={handleEndGame}
-              >
-                Finish
-              </ControlButton>
-
-              <ControlButton
-                variant="olive"
-                onClick={handleShuffleClick}
-                disabled={isPlaying || hasGameStarted}
-              >
-                {isShuffling ? "Stop" : "Shuffle"}
-              </ControlButton>
-            </>
-          ) : (
-            <>
-              {/* Limited controls when no reservation or game not started */}
-              <ControlButton
-                variant="yellow"
-                onClick={onNewGameClick}
-              >
-                Start New Game
-              </ControlButton>
-
-              <ControlButton
-                variant="olive"
-                onClick={handleShuffleClick}
-                disabled={isPlaying}
-              >
-                {isShuffling ? "Stop" : "Shuffle"}
-              </ControlButton>
-            </>
-          )}
-        </Box>
-
-        {/* Right side: Win Amount (shown inline on same row) */}
-        {/* This space intentionally left for alignment - Win amount shown in Game.jsx */}
+    <Box className="controls-section">
+      {/* Actions Row - matching styles.css .actions */}
+      <Box
+        className="actions"
+        sx={{
+          display: "flex",
+          mb: 2,
+        }}
+      >
+        {showFullControls ? (
+          <>
+            <ControlButton onClick={handleAutoPlayToggle}>
+              {isPlaying ? "STOP AUTO PLAY" : "START AUTO PLAY"}
+            </ControlButton>
+            <ControlButton
+              onClick={onCallNext}
+              disabled={autoplayEverStarted || isPlaying}
+            >
+              CALL NEXT
+            </ControlButton>
+            <ControlButton onClick={handleEndGame}>
+              FINSH
+            </ControlButton>
+            <ControlButton
+              onClick={handleShuffleClick}
+              disabled={isPlaying || hasGameStarted}
+            >
+              {isShuffling ? "STOP" : "SHUFFLE"}
+            </ControlButton>
+          </>
+        ) : (
+          <>
+            <ControlButton onClick={onNewGameClick}>
+              START NEW GAME
+            </ControlButton>
+            <ControlButton onClick={handleShuffleClick}>
+              {isShuffling ? "STOP" : "SHUFFLE"}
+            </ControlButton>
+          </>
+        )}
       </Box>
 
-      {/* Second Row: Speed Slider + Card Input */}
-      <Box sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 3,
-        flexWrap: "wrap"
-      }}>
-        {/* Speed Slider Group */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Slider
+      {/* Form Group Row - matching styles.css .form-group */}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        {/* Speed Slider - matching styles.css input[type="range"] */}
+        <Box className="form-group">
+          <input
+            type="range"
             value={drawSpeed}
-            onChange={(e, newValue) => setDrawSpeed(newValue)}
+            onChange={(e) => setDrawSpeed(parseInt(e.target.value))}
             min={2000}
             max={7500}
             step={500}
-            sx={{
-              width: 150,
-              color: "#4A90E2",
-              "& .MuiSlider-thumb": {
-                width: 14,
-                height: 14,
-                backgroundColor: "#fff",
-                "&:hover, &.Mui-focusVisible": {
-                  boxShadow: "0 0 0 6px rgba(74, 144, 226, 0.3)"
-                }
-              },
-              "& .MuiSlider-track": {
-                backgroundColor: "#4A90E2",
-                height: 4
-              },
-              "& .MuiSlider-rail": {
-                backgroundColor: "rgba(255,255,255,0.3)",
-                height: 4
-              },
+            style={{
+              WebkitAppearance: 'none',
+              appearance: 'none',
+              background: 'transparent',
+              cursor: 'pointer',
+              width: 170,
             }}
           />
           <Typography sx={{
             color: "white",
-            fontSize: "0.8rem",
-            fontWeight: "500",
-            whiteSpace: "nowrap"
+            fontSize: "14px",
+            fontFamily: "'poetsen', sans-serif",
+            mt: 0.5,
           }}>
-            Auto call {speedInSeconds} seconds
+            Auto call {speedInSeconds} secounds
           </Typography>
         </Box>
 
-        {/* Card Input + Check Button */}
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <TextField
+        {/* Card Input - matching styles.css .actions input[type="number"] */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <input
+            type="text"
             placeholder="Enter cartela"
             value={cardIdInput}
             onChange={(e) => setCardIdInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            variant="outlined"
-            size="small"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                background: "rgba(225, 215, 23, 0.5)",
-                borderRadius: "5px",
-                width: 140,
-                height: 36,
-                "& fieldset": { border: "1px solid #ccc" },
-                "& input": {
-                  color: "#000",
-                  fontSize: "0.85rem",
-                  padding: "8px 12px",
-                  "&::placeholder": { color: "#666", opacity: 1 }
-                },
-              },
+            style={{
+              width: 200,
+              border: '1px solid #ccc',
+              backgroundColor: 'rgba(225, 215, 23, 0.5)',
+              borderRadius: 5,
+              padding: '8px 10px',
+              fontSize: 18,
+              fontFamily: "'poetsen', sans-serif",
+              color: '#000000',
             }}
           />
-          <ControlButton
-            variant="blue"
-            onClick={checkWinner}
-          >
-            Check
+          <ControlButton onClick={checkWinner}>
+            CHECK
           </ControlButton>
         </Box>
       </Box>
