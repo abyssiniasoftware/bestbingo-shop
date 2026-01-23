@@ -194,8 +194,8 @@ const CashierDashboard = () => {
       {/* Content Area */}
       <main style={{
         position: 'relative',
-        width: isSidebarMinimized ? 'calc(100% - 60px)' : 'calc(100% - 280px)',
-        marginLeft: isSidebarMinimized ? 60 : 280,
+        width: isSidebarMinimized ? 'calc(100% - 60px)' : 'calc(100% - 200px)',
+        marginLeft: isSidebarMinimized ? 60 : 200,
         transition: '0.3s ease',
         minHeight: '100vh',
       }}>
@@ -224,11 +224,11 @@ const CashierDashboard = () => {
             flex: 1,
           }}>
             <span className="header-text-gradient">
-              <span className="header-d">D</span>
-              allol{' '}
-              B
-              <span className="header-i">i</span>
-              ngo!
+              <span className="header-d">Dallol</span>
+              {' '}
+              Bin
+              <span className="header-i">g</span>
+              o!
             </span>
           </div>
 

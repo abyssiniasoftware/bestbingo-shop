@@ -17,6 +17,7 @@ const GameControlsBar = ({
   isGameEnded,
   onNewGameClick,
   onCallNext,
+  callCount = 0,
 }) => {
   const [autoplayEverStarted, setAutoplayEverStarted] = useState(false);
 
@@ -37,9 +38,10 @@ const GameControlsBar = ({
   const speedInSeconds = Math.round(drawSpeed / 1000);
 
   // Determine which controls to show based on game state
-  // When there's a reservation and game has started => show full controls
-  // Otherwise => show start new game / shuffle
-  const showFullControls = hasReservation && hasGameStarted && !isGameEnded;
+  // Screenshot 0: No reservation => START NEW GAME + STOP (shuffle)
+  // Screenshot 1: Has reservation, 0 calls (after reservation, before start) => Full controls
+  // Screenshot 2: Has reservation, calls made => Full controls with CALL NEXT disabled if autoplay started
+  const showFullControls = hasReservation && !isGameEnded;
 
   return (
     <div className="controls-section">
@@ -70,10 +72,10 @@ const GameControlsBar = ({
               FINSH
             </button>
             <button
-              className={`cutm-btn ${(isPlaying || hasGameStarted) ? 'inactive' : ''}`}
+              className={`cutm-btn ${(isPlaying || callCount > 0) ? 'inactive' : ''}`}
               id="shuffle"
               onClick={handleShuffleClick}
-              disabled={isPlaying || hasGameStarted}
+              disabled={isPlaying || callCount > 0}
             >
               {isShuffling ? "STOP" : "SHUFFLE"}
             </button>

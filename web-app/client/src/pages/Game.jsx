@@ -82,6 +82,9 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
     O: '#2fe91e',
   };
 
+  // Only show current ball section when there are calls
+  const showCurrentBall = callCount > 0;
+
   return (
     <div className="bingo-container">
       {/* BINGO Header with stat boxes */}
@@ -102,8 +105,13 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
         <span className="stat-box">{callCount} CALLED</span>
       </div>
 
-      {/* Main Panel: 85% grid, 15% current ball */}
-      <div className="bingo-panel">
+      {/* Main Panel: grid layout depends on whether current ball is shown */}
+      <div
+        className="bingo-panel"
+        style={{
+          gridTemplateColumns: showCurrentBall ? '85% 15%' : '100%'
+        }}
+      >
         {/* Left: Bingo Grid */}
         <div>
           <BingoGrid
@@ -112,47 +120,49 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
           />
         </div>
 
-        {/* Right: Current Ball + Recent Calls */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          {/* Large Current Ball */}
-          <div
-            className="last-called"
-            style={{ borderColor: letterBorderColors[currentLetter] || '#ffc839' }}
-          >
-            <p id="last-letter">{currentLetter || "B"}</p>
-            <p>{currentNum || "1"}</p>
-          </div>
-
-          {/* Recent Calls */}
-          <div className="last-called-numbers">
-            {recentCalls.slice(0, 4).map((num, idx) => (
-              <span
-                key={idx}
-                className="last-called-num"
-                data-letter={num?.charAt(0)}
-              >
-                {num}
-              </span>
-            ))}
-          </div>
-
-          {/* View All Link */}
-          <div className="view-all">
-            <button
-              id="viewAllCalledButton"
-              style={{
-                backgroundColor: 'transparent',
-                color: '#000',
-                fontSize: 14,
-                border: 'none',
-                padding: '5px',
-                cursor: 'pointer',
-              }}
+        {/* Right: Current Ball + Recent Calls - Only shown when there are calls */}
+        {showCurrentBall && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            {/* Large Current Ball */}
+            <div
+              className="last-called"
+              style={{ borderColor: letterBorderColors[currentLetter] || '#ffc839' }}
             >
-              view all
-            </button>
+              <p id="last-letter">{currentLetter || "B"}</p>
+              <p>{currentNum || "1"}</p>
+            </div>
+
+            {/* Recent Calls */}
+            <div className="last-called-numbers">
+              {recentCalls.slice(0, 4).map((num, idx) => (
+                <span
+                  key={idx}
+                  className="last-called-num"
+                  data-letter={num?.charAt(0)}
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
+
+            {/* View All Link */}
+            <div className="view-all">
+              <button
+                id="viewAllCalledButton"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  fontSize: 14,
+                  border: 'none',
+                  padding: '5px',
+                  cursor: 'pointer',
+                }}
+              >
+                view all
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Action Panel: 65% controls, 35% win money */}
@@ -176,6 +186,7 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
             hasReservation={hasReservation}
             onNewGameClick={handleNewGameClick}
             onCallNext={callNextNumber}
+            callCount={callCount}
           />
         </div>
 
