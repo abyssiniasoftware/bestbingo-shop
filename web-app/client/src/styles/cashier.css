@@ -150,7 +150,7 @@
     border-radius: 48px;
     font-size: 21px;
     font-family: 'poetsen', sans-serif;
-    color: var(--dark);
+    color: var(--light-blue);
     white-space: nowrap;
     overflow-x: hidden;
     text-decoration: none;
@@ -402,9 +402,7 @@
     }
 }
 
-.number:not(.selected) {
-    animation: rotateNumber 2s infinite linear;
-}
+/* No automatic animation for uncalled - original just highlights randomly */
 
 .number.selected {
     animation: bounceBall 0.5s;

@@ -1,82 +1,56 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-// Utility
-const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
+// Original shuffle logic from script_v2.js - runs until manually stopped
 const BingoGrid = ({ calledNumbers, shuffling }) => {
-  const [shuffledNumber, setShuffledNumber] = useState(null);
-  const [fastShuffleNums, setFastShuffleNums] = useState([]);
-  const [displayNumbers, setDisplayNumbers] = useState({});
-  const [isFastShuffling, setIsFastShuffling] = useState(false);
+  const [highlightedNumbers, setHighlightedNumbers] = useState([]);
+  const shuffleIntervalRef = useRef(null);
 
-  // Shuffle simulation - matching the original animation behavior
+  // Shuffle animation - mirrors original script_v2.js behavior
+  // Runs indefinitely every 115ms until explicitly stopped
   useEffect(() => {
-    if (!shuffling) {
-      const timeout = setTimeout(() => {
-        setShuffledNumber(null);
-        setFastShuffleNums([]);
-        setDisplayNumbers({});
-        setIsFastShuffling(false);
-      }, 0);
-      return () => clearTimeout(timeout);
-    }
+    if (shuffling) {
+      // Clear any existing interval first
+      if (shuffleIntervalRef.current) {
+        clearInterval(shuffleIntervalRef.current);
+      }
 
-    const allNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
-    const uncalledNumbers = allNumbers.filter(num => !calledNumbers.includes(num.toString()));
+      // Start shuffle: randomly highlight 5 numbers every 115ms
+      shuffleIntervalRef.current = setInterval(() => {
+        const allNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
+        const uncalledNumbers = allNumbers.filter(
+          num => !calledNumbers.includes(num.toString())
+        );
 
-    if (uncalledNumbers.length === 0) {
-      setTimeout(() => {
-        setShuffledNumber(null);
-        setFastShuffleNums([]);
-        setDisplayNumbers({});
-        setIsFastShuffling(false);
-      }, 0);
-      return;
-    }
+        if (uncalledNumbers.length > 0) {
+          // Randomly select up to 5 numbers to highlight
+          const randomCount = Math.min(5, uncalledNumbers.length);
+          const highlighted = [];
+          const usedIndices = new Set();
 
-    setIsFastShuffling(true);
-
-    let shuffleCount = 0;
-    const maxShuffleRounds = 50;
-    const numbersToShuffle = 60;
-
-    const fastShuffleInterval = setInterval(() => {
-      shuffleCount += 1;
-      const shuffledIndices = [];
-      const shuffledNumbers = [];
-
-      while (shuffledIndices.length < Math.min(numbersToShuffle, uncalledNumbers.length)) {
-        const randomIndex = Math.floor(Math.random() * uncalledNumbers.length);
-        if (!shuffledIndices.includes(randomIndex)) {
-          shuffledIndices.push(randomIndex);
-          shuffledNumbers.push(uncalledNumbers[randomIndex]);
+          while (highlighted.length < randomCount) {
+            const randomIndex = Math.floor(Math.random() * uncalledNumbers.length);
+            if (!usedIndices.has(randomIndex)) {
+              usedIndices.add(randomIndex);
+              highlighted.push(uncalledNumbers[randomIndex]);
+            }
+          }
+          setHighlightedNumbers(highlighted);
         }
+      }, 115); // Match original: 115ms interval
+    } else {
+      // Stop shuffle - clear interval and highlights
+      if (shuffleIntervalRef.current) {
+        clearInterval(shuffleIntervalRef.current);
+        shuffleIntervalRef.current = null;
       }
+      setHighlightedNumbers([]);
+    }
 
-      setFastShuffleNums(shuffledNumbers);
-
-      const newDisplayNumbers = {};
-      shuffledNumbers.forEach(num => {
-        newDisplayNumbers[num] = getRandomInt(1, 75);
-      });
-      setDisplayNumbers(newDisplayNumbers);
-
-      if (shuffleCount >= maxShuffleRounds) {
-        clearInterval(fastShuffleInterval);
-        setIsFastShuffling(false);
-        setFastShuffleNums([]);
-        setDisplayNumbers({});
-      }
-    }, 100);
-
-    const selectTimeout = setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * uncalledNumbers.length);
-      setShuffledNumber(uncalledNumbers[randomIndex]);
-    }, 100 * maxShuffleRounds + 1200);
-
+    // Cleanup on unmount
     return () => {
-      clearTimeout(selectTimeout);
-      clearInterval(fastShuffleInterval);
+      if (shuffleIntervalRef.current) {
+        clearInterval(shuffleIntervalRef.current);
+      }
     };
   }, [shuffling, calledNumbers]);
 
@@ -111,30 +85,24 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
             {Array.from({ length: 15 }, (_, colIdx) => {
               const num = startNum + colIdx;
               const isCalled = calledNumbers.includes(num.toString());
-              const isShuffled = num === shuffledNumber && !isCalled;
-              const isFastShuffled = fastShuffleNums.includes(num) && isFastShuffling && !isCalled;
-              const displayNum = isFastShuffled ? (displayNumbers[num] || num) : num;
+              const isHighlighted = highlightedNumbers.includes(num) && !isCalled;
 
-              // CSS classes based on state: number, selected, blink
+              // CSS classes: selected = yellow highlight (called or shuffle-highlighted)
               let className = "number";
               if (isCalled) {
                 className += " selected";
-              } else if (isShuffled) {
-                className += " blink";
+              } else if (isHighlighted) {
+                className += " selected"; // Same yellow highlight as original
               }
-              // When shuffling and not called, numbers rotate (handled by CSS)
 
               return (
                 <div
                   key={num}
                   id={`cell-number-${num}`}
+                  data-number={num}
                   className={className}
-                  style={
-                    // Stop rotation animation for called numbers
-                    isCalled ? { animation: 'bounceBall 0.5s' } : {}
-                  }
                 >
-                  {displayNum}
+                  {num}
                 </div>
               );
             })}

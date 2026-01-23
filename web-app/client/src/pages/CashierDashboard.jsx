@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SettingsIcon from '@mui/icons-material/Settings';
+import PersonIcon from '@mui/icons-material/Person';
 
 // Import cashier-specific styles
 import "../styles/cashier.css";
@@ -45,7 +46,8 @@ const CashierDashboard = () => {
 
   const { user, clearUser } = useUserStore();
 
-  const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
+  // Sidebar minimized by default
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [voiceOption, setVoiceOption] = useState("l");
 
@@ -79,6 +81,9 @@ const CashierDashboard = () => {
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
   };
+
+  // Check if we're on the game tab (Play Bingo)
+  const isGameTab = activeTab === "game";
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -117,6 +122,9 @@ const CashierDashboard = () => {
     { id: "bingo-cards", label: "View Cartela", icon: viewIcon },
     { id: "settings", label: "Settings", muiIcon: <SettingsIcon /> },
   ];
+
+  // Get username for display
+  const username = user?.username || user?.name || "User";
 
   return (
     <div className={`cashier-dashboard ${isDarkMode ? 'dark-mode' : ''}`} style={{
@@ -224,38 +232,53 @@ const CashierDashboard = () => {
             flex: 1,
           }}>
             <span className="header-text-gradient">
-              <span className="header-d">Dallol</span>
-              {' '}
-              Bin
-              <span className="header-i">g</span>
-              o!
+              <span className="header-d">D</span>
+              allol{' '}
+              B
+              <span className="header-i">i</span>
+              ngo!
             </span>
           </div>
 
-          {/* Right: Controls */}
+          {/* Right: Conditional - Voice selector on game tab, Profile on others */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {/* Voice Selector */}
-            <select
-              value={voiceOption}
-              onChange={handleVoiceChange}
-              style={{
-                color: 'black',
-                background: '#fff',
-                borderRadius: 5,
-                height: 32,
-                width: 70,
-                fontSize: 15,
+            {isGameTab ? (
+              /* Voice Selector - Only on Play Bingo tab */
+              <select
+                value={voiceOption}
+                onChange={handleVoiceChange}
+                style={{
+                  color: 'black',
+                  background: '#fff',
+                  borderRadius: 5,
+                  height: 32,
+                  width: 70,
+                  fontSize: 15,
+                  fontFamily: "'poetsen', sans-serif",
+                  padding: '5px',
+                  border: '1px solid #ccc',
+                }}
+              >
+                {voiceOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              /* Profile icon + Username - On non-game tabs */
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                color: '#ffce26',
                 fontFamily: "'poetsen', sans-serif",
-                padding: '5px',
-                border: '1px solid #ccc',
-              }}
-            >
-              {voiceOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+                fontSize: 16,
+              }}>
+                <PersonIcon style={{ color: '#ffce26', fontSize: 24 }} />
+                <span>{username}</span>
+              </div>
+            )}
 
             {/* Theme Toggle */}
             <img

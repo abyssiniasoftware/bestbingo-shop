@@ -1121,7 +1121,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
     // toast.info('Game reset');
   };
 
-  // Handle shuffle click
+  // Handle shuffle click - runs indefinitely until manually stopped
   const handleShuffleClick = () => {
     if (isReady || isPlaying) return;
 
@@ -1144,19 +1144,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
         ).sort(() => Math.random() - 0.5);
       }, 50);
       shuffleIntervalRef.current = interval;
-
-      shuffleTimeoutRef.current = setTimeout(() => {
-        setIsShuffling(false);
-        clearInterval(shuffleIntervalRef.current);
-
-        if (currentAudioRef.current) {
-          currentAudioRef.current.pause();
-          currentAudioRef.current.currentTime = 0;
-          currentAudioRef.current = null;
-        }
-        // toast.info('Shuffling paused');
-      }, 3500);
-
+      // NO auto-stop timeout - shuffle runs indefinitely until manually stopped
       // toast.info('Shuffling started');
     }
   };
