@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  Box, Typography, IconButton, Select, MenuItem
-} from "@mui/material";
 import SettingsIcon from '@mui/icons-material/Settings';
+
+// Import cashier-specific styles
+import "../styles/cashier.css";
 
 import {
   dashboard as dashboardIcon,
@@ -28,98 +28,6 @@ import { voiceOptions } from "../constants/constants";
 import useUserStore from "../stores/userStore";
 import Settings from "./Settings";
 
-// Sidebar Menu Item Component matching base.css exactly
-const SidebarItem = ({ icon, muiIcon, label, isActive, onClick, isMinimized, isLogout }) => {
-  return (
-    <li
-      onClick={onClick}
-      style={{
-        height: 50,
-        background: isActive ? 'var(--grey, #03c0ff)' : 'transparent',
-        marginLeft: 6,
-        borderRadius: '48px 0 0 48px',
-        padding: 4,
-        position: 'relative',
-        cursor: 'pointer',
-        marginBottom: 4,
-      }}
-    >
-      {/* Curved shadow effects for active tab */}
-      {isActive && !isMinimized && (
-        <>
-          <div style={{
-            content: '',
-            position: 'absolute',
-            width: 40,
-            height: 40,
-            borderRadius: '50%',
-            top: -40,
-            right: 0,
-            boxShadow: '20px 20px 0 var(--grey, #03c0ff)',
-            zIndex: -1,
-          }} />
-          <div style={{
-            content: '',
-            position: 'absolute',
-            width: 40,
-            height: 40,
-            borderRadius: '50%',
-            bottom: -40,
-            right: 0,
-            boxShadow: '20px -20px 0 var(--grey, #03c0ff)',
-            zIndex: -1,
-          }} />
-        </>
-      )}
-      <a
-        style={{
-          width: '100%',
-          height: '100%',
-          background: 'var(--light, #017299)',
-          display: 'flex',
-          alignItems: 'center',
-          borderRadius: 48,
-          fontSize: 18,
-          fontFamily: "'poetsen', sans-serif",
-          color: isLogout ? '#DB504A' : (isActive ? 'var(--blue, #e5db19)' : 'white'),
-          whiteSpace: 'nowrap',
-          overflowX: 'hidden',
-          textDecoration: 'none',
-          transition: 'color 0.3s ease',
-        }}
-      >
-        <span style={{
-          minWidth: isMinimized ? 48 : 'calc(60px - ((4px + 6px) * 2))',
-          display: 'flex',
-          justifyContent: 'center',
-        }}>
-          {muiIcon ? (
-            React.cloneElement(muiIcon, {
-              style: {
-                color: isLogout ? '#DB504A' : (isActive ? 'var(--blue, #e5db19)' : 'white'),
-                fontSize: 22
-              }
-            })
-          ) : (
-            <img
-              src={icon}
-              alt={label}
-              style={{
-                width: 22,
-                height: 22,
-                filter: isActive ? 'brightness(0) saturate(100%) invert(90%) sepia(50%) saturate(500%) hue-rotate(5deg) brightness(100%)' : 'brightness(0) invert(1)'
-              }}
-            />
-          )}
-        </span>
-        {!isMinimized && (
-          <span style={{ marginLeft: 8 }}>{label}</span>
-        )}
-      </a>
-    </li>
-  );
-};
-
 const CashierDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -138,31 +46,12 @@ const CashierDashboard = () => {
   const { user, clearUser } = useUserStore();
 
   const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark/cyan mode
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [voiceOption, setVoiceOption] = useState("l");
-
-  // Apply theme CSS variables to document
-  useEffect(() => {
-    if (isDarkMode) {
-      document.body.classList.add('dark');
-      document.documentElement.style.setProperty('--light', '#017299');
-      document.documentElement.style.setProperty('--grey', '#03c0ff');
-      document.documentElement.style.setProperty('--body', '#03c0ff');
-      document.documentElement.style.setProperty('--blue', '#e5db19');
-    } else {
-      document.body.classList.remove('dark');
-      document.documentElement.style.setProperty('--light', '#030728');
-      document.documentElement.style.setProperty('--grey', '#08105b');
-      document.documentElement.style.setProperty('--body', '#08105b');
-      document.documentElement.style.setProperty('--blue', '#e5db19');
-    }
-  }, [isDarkMode]);
 
   // Fullscreen handling
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      // Update state if needed
-    };
+    const handleFullscreenChange = () => { };
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
@@ -229,221 +118,182 @@ const CashierDashboard = () => {
     { id: "settings", label: "Settings", muiIcon: <SettingsIcon /> },
   ];
 
-  const sidebarWidth = isSidebarMinimized ? 60 : 200;
-  const contentWidth = `calc(100% - ${sidebarWidth}px)`;
-
   return (
-    <Box sx={{
+    <div className={`cashier-dashboard ${isDarkMode ? 'dark-mode' : ''}`} style={{
       display: "flex",
       minHeight: "100vh",
-      background: 'var(--body, #03c0ff)',
+      backgroundColor: "var(--body)",
       fontFamily: "'poetsen', sans-serif",
     }}>
-      {/* Sidebar - matching base.css #sidebar */}
-      <Box
-        component="aside"
-        sx={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: sidebarWidth,
-          height: '100%',
-          background: 'var(--light, #017299)',
-          zIndex: 2000,
-          transition: '0.3s ease',
-          overflowX: 'hidden',
-          scrollbarWidth: 'none',
-          '&::-webkit-scrollbar': { display: 'none' },
-        }}
-      >
+      {/* Sidebar */}
+      <aside className={`cashier-sidebar ${isSidebarMinimized ? 'hide' : ''}`}>
         {/* Brand */}
-        <Box sx={{
-          fontFamily: "'poetsen', sans-serif",
-          fontSize: isSidebarMinimized ? 0 : 28,
-          fontWeight: 700,
-          height: 56,
-          display: 'flex',
-          alignItems: 'center',
-          color: 'var(--blue, #e5db19)',
-          position: 'sticky',
-          top: 0,
-          left: 0,
-          background: 'var(--light, #017299)',
-          zIndex: 500,
-          pb: 2.5,
-          pt: 1.5,
-          boxSizing: 'content-box',
-        }}>
-          <Box sx={{ minWidth: 60, display: 'flex', justifyContent: 'center' }}>
-            <img src={logoIcon} alt="Dallol" style={{ width: 32, height: 32 }} />
-          </Box>
+        <div className="brand">
+          <span className="bx">
+            <img src={logoIcon} alt="Logo" style={{ width: 32, height: 32 }} />
+          </span>
           {!isSidebarMinimized && <span>Dallol</span>}
-        </Box>
+        </div>
 
         {/* Side Menu */}
-        <ul style={{
-          listStyle: 'none',
-          margin: 0,
-          padding: 0,
-          width: '100%',
-          marginTop: 17,
-        }}>
+        <ul className="side-menu top">
           {sidebarItems.map((item) => (
-            <SidebarItem
+            <li
               key={item.id}
-              icon={item.icon}
-              muiIcon={item.muiIcon}
-              label={item.label}
-              isActive={activeTab === item.id}
+              className={activeTab === item.id ? 'active' : ''}
               onClick={() => setActiveTab(item.id)}
-              isMinimized={isSidebarMinimized}
-            />
+            >
+              <a href="#">
+                <span className="bx">
+                  {item.muiIcon ? (
+                    React.cloneElement(item.muiIcon, {
+                      style: {
+                        color: activeTab === item.id ? 'var(--blue)' : 'rgba(255,255,255,0.8)',
+                        fontSize: 22
+                      }
+                    })
+                  ) : (
+                    <img
+                      src={item.icon}
+                      alt={item.label}
+                      style={{
+                        width: 22,
+                        height: 22,
+                        filter: activeTab === item.id
+                          ? 'brightness(0) saturate(100%) invert(90%) sepia(50%) saturate(500%) hue-rotate(5deg) brightness(100%)'
+                          : 'brightness(0) invert(1) opacity(0.8)'
+                      }}
+                    />
+                  )}
+                </span>
+                {!isSidebarMinimized && <span style={{ marginLeft: 8 }}>{item.label}</span>}
+              </a>
+            </li>
           ))}
 
           {/* Logout */}
-          <SidebarItem
-            icon={logoutIcon}
-            label="Logout"
-            isActive={false}
-            onClick={handleLogout}
-            isMinimized={isSidebarMinimized}
-            isLogout={true}
-          />
+          <li onClick={handleLogout}>
+            <a href="#" className="logout">
+              <span className="bx">
+                <img
+                  src={logoutIcon}
+                  alt="Logout"
+                  style={{
+                    width: 22,
+                    height: 22,
+                    filter: 'invert(35%) sepia(80%) saturate(1000%) hue-rotate(330deg) brightness(90%)'
+                  }}
+                />
+              </span>
+              {!isSidebarMinimized && <span style={{ marginLeft: 8 }}>Logout</span>}
+            </a>
+          </li>
         </ul>
-      </Box>
+      </aside>
 
-      {/* Content Area - matching base.css #content */}
-      <Box
-        component="main"
-        sx={{
-          position: 'relative',
-          width: contentWidth,
-          marginLeft: `${sidebarWidth}px`,
-          transition: '0.3s ease',
-          minHeight: '100vh',
-        }}
-      >
-        {/* Navbar - matching base.css #content nav */}
-        <Box
-          component="nav"
-          sx={{
-            height: 56,
-            background: 'var(--light, #017299)',
-            px: 3,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 3,
-            position: 'sticky',
-            top: 0,
-            left: 0,
-            zIndex: 1000,
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              width: 40,
-              height: 40,
-              bottom: -40,
-              left: 0,
-              borderRadius: '50%',
-              boxShadow: '-20px -20px 0 var(--light, #017299)',
-            }
-          }}
-        >
+      {/* Content Area */}
+      <main style={{
+        position: 'relative',
+        width: isSidebarMinimized ? 'calc(100% - 60px)' : 'calc(100% - 280px)',
+        marginLeft: isSidebarMinimized ? 60 : 280,
+        transition: '0.3s ease',
+        minHeight: '100vh',
+      }}>
+        {/* Navbar */}
+        <nav className="cashier-navbar">
           {/* Left: Menu button */}
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton onClick={toggleSidebar} sx={{ color: 'white' }}>
-              <img src={menuIcon} alt="Menu" style={{ width: 24, height: 24 }} />
-            </IconButton>
-          </Box>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={menuIcon}
+              alt="Menu"
+              onClick={toggleSidebar}
+              style={{
+                width: 24,
+                height: 24,
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease',
+              }}
+            />
+          </div>
 
           {/* Center: Dallol Bingo! Logo */}
-          <Box sx={{
+          <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             flex: 1,
           }}>
-            <Typography sx={{
-              fontFamily: "'pacifico', 'Dancing Script', cursive",
-              fontSize: '2.8rem',
-              color: '#ffffff',
-              letterSpacing: 2,
-            }}>
-              <span style={{ color: '#ff8d50' }}>D</span>
+            <span className="header-text-gradient">
+              <span className="header-d">D</span>
               allol{' '}
               B
-              <span style={{ color: '#15ff00' }}>i</span>
+              <span className="header-i">i</span>
               ngo!
-            </Typography>
-          </Box>
+            </span>
+          </div>
 
           {/* Right: Controls */}
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             {/* Voice Selector */}
-            <Select
+            <select
               value={voiceOption}
               onChange={handleVoiceChange}
-              size="small"
-              sx={{
+              style={{
                 color: 'black',
                 background: '#fff',
-                borderRadius: '5px',
+                borderRadius: 5,
                 height: 32,
                 width: 70,
-                fontSize: '15px',
+                fontSize: 15,
                 fontFamily: "'poetsen', sans-serif",
-                "& .MuiSelect-select": { py: 0.5, px: 1 },
-                "& fieldset": { border: '1px solid #ccc' },
-                "& .MuiSvgIcon-root": { color: 'black' }
+                padding: '5px',
+                border: '1px solid #ccc',
               }}
             >
               {voiceOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
+                <option key={option.value} value={option.value}>
                   {option.label}
-                </MenuItem>
+                </option>
               ))}
-            </Select>
+            </select>
 
             {/* Theme Toggle */}
-            <Box
+            <img
+              src={isDarkMode ? nightIcon : dayIcon}
+              alt="Theme"
               onClick={toggleTheme}
-              sx={{
+              style={{
+                width: 32,
+                height: 32,
                 cursor: 'pointer',
                 transition: 'transform 0.3s ease',
-                '&:hover': { transform: 'scale(1.1)' }
               }}
-            >
-              <img
-                src={isDarkMode ? dayIcon : nightIcon}
-                alt="Theme"
-                style={{ width: 32, height: 32 }}
-              />
-            </Box>
+            />
 
             {/* Fullscreen Toggle */}
-            <Box
+            <img
+              src={FullscreenIcon}
+              alt="Fullscreen"
               onClick={toggleFullscreen}
-              sx={{
+              style={{
+                width: 32,
+                height: 32,
                 cursor: 'pointer',
                 transition: 'transform 0.3s ease',
-                '&:hover': { transform: 'scale(1.1)' }
               }}
-            >
-              <img src={FullscreenIcon} alt="Fullscreen" style={{ width: 32, height: 32 }} />
-            </Box>
-          </Box>
-        </Box>
+            />
+          </div>
+        </nav>
 
         {/* Main Content */}
-        <Box sx={{
-          p: activeTab === "game" ? 0 : 2,
-          minHeight: 'calc(100vh - 56px)',
+        <div style={{
+          padding: activeTab === "game" ? 0 : 16,
+          minHeight: 'calc(100vh - 80px)',
         }}>
           {renderTabContent()}
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </main>
+    </div>
   );
 };
 

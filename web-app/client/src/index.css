@@ -1,128 +1,8 @@
-/* src/index.css */
+/* src/index.css - Global styles */
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap");
 
 @import "tailwindcss";
 
-/* Font faces from static/game/css */
-@font-face {
-  font-family: 'jaro';
-  src: url('/static/game/fonts/Jaro/jaro.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'teko';
-  src: url('/static/game/fonts/Teko/teko.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'poetsen';
-  src: url('/static/game/fonts/Poetsen/poetsen.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: 'pacifico';
-  src: url('/static/game/fonts/harlow.ttf') format('truetype');
-}
-
-/* CSS Variables from base.css */
-:root {
-  --poppins: 'Poppins', sans-serif;
-  --lato: 'Lato', sans-serif;
-  --body: #08105b;
-  --light: #030728;
-  --light-box: #a69c05;
-  --blue: #e5db19;
-  --light-blue: #FBFBFB;
-  --grey: #08105b;
-  --dark-grey: #AAAAAA;
-  --dark: #342E37;
-  --red: #DB504A;
-  --yellow: #FFCE26;
-  --light-yellow: #FFF2C6;
-  --orange: #FD7238;
-  --light-orange: #FFE0D3;
-}
-
-/* Dark mode (cyan theme - default cashier view) */
-body.dark {
-  --light: #017299;
-  --light-box: #fb914f;
-  --grey: #03c0ff;
-  --dark: #FBFBFB;
-  --body: #03c0ff;
-}
-
-/* Global styles */
-html {
-  overflow-x: hidden;
-}
-
-body {
-  background-color: var(--body);
-  overflow-x: hidden;
-  font-family: 'poetsen', sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-a {
-  text-decoration: none;
-}
-
-li {
-  list-style: none;
-}
-
-/* Range slider styling from styles.css */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;
-  cursor: pointer;
-  width: 170px;
-}
-
-input[type="range"]:focus {
-  outline: none;
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-  background-color: #4A90E2;
-  border-radius: 0.5rem;
-  height: 0.4rem;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  margin-top: -6px;
-  background-color: white;
-  height: 1.2rem;
-  width: 1rem;
-  border-radius: 30%;
-}
-
-input[type="range"]::-moz-range-track {
-  background-color: #053a5f;
-  border-radius: 0.5rem;
-  height: 0.5rem;
-}
-
-input[type="range"]::-moz-range-thumb {
-  border: none;
-  border-radius: 0;
-  background-color: #5cd5eb;
-  height: 2rem;
-  width: 1rem;
-}
-
-/* Additional font definitions */
 @font-face {
   font-family: "goodtimes";
   src: url("/fonts/good_times.ttf") format("truetype");
@@ -141,6 +21,23 @@ input[type="range"]::-moz-range-thumb {
 @font-face {
   font-family: "eurosilebold";
   src: url("/fonts/eurosile_becker_bold.ttf") format("truetype");
+}
+
+body {
+  background-image:
+    /* Subtle radial gradient to darken edges */
+    radial-gradient(circle at center, rgba(30, 34, 41, 0.5), rgba(30, 34, 41, 0.8)),
+    /* Lion logo watermark */
+    url("/images/logo.png");
+  background-size:
+    auto, 300px;
+  /* Gradient covers the whole area, logo is 300px wide */
+  background-position: center, center;
+  /* Center both the gradient and logo */
+  background-repeat: no-repeat, no-repeat;
+  /* Don't repeat the logo */
+  background-attachment: fixed;
+  /* Keep the background fixed when scrolling */
 }
 
 .drawText {

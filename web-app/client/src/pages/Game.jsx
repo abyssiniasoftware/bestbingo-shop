@@ -1,6 +1,5 @@
 import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
 import GameControlsBar from "../components/game/GameControlsBar";
 import NewGameConfirmDialog from "../components/game/NewGameConfirmDialog";
 import BingoGrid from "../components/game/BingoGrid";
@@ -8,50 +7,6 @@ import WinnerDialog from "../components/game/WinnerDialog";
 import useGameLogic from "../hooks/useGameLogic";
 import useGameStore from "../stores/gameStore";
 import { BINGO_PATTERNS } from "../constants/constants";
-
-// Status Badge matching styles.css .stat-box
-const StatusBadge = ({ label, value }) => (
-  <Box sx={{
-    background: "linear-gradient(to bottom, #fff521, #9d9302)",
-    border: "2px solid #FFF521",
-    color: "#000",
-    px: 1.5,
-    py: 0.5,
-    borderRadius: "5px",
-    fontWeight: "bold",
-    display: "flex",
-    alignItems: "center",
-    gap: 0.5,
-    fontSize: "18px",
-    fontFamily: "'poetsen', sans-serif",
-    mx: 0.5,
-    textTransform: "uppercase",
-  }}>
-    {label}{value ? ` ${value}` : ''}
-  </Box>
-);
-
-// Recent Called Number Badge matching styles.css .last-called-num
-const RecentBallBadge = ({ ball }) => {
-  const letter = ball?.charAt(0) || "";
-  const number = ball?.substring(1) || "";
-
-  return (
-    <Box sx={{
-      background: "linear-gradient(to bottom, #fff521, #9d9302)",
-      border: "1px solid #FFF521",
-      px: 0.5,
-      py: 0.25,
-      color: "#000",
-      borderRadius: "5px",
-      fontSize: "15px",
-      mx: 0.25,
-      fontWeight: "bold",
-    }}>
-      {letter} {number}
-    </Box>
-  );
-};
 
 const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount, voiceOption: passedVoiceOption }) => {
   const params = useParams();
@@ -118,136 +73,92 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
   const currentLetter = currentNumber?.charAt(0) || "";
   const currentNum = currentNumber?.substring(1) || "0";
 
-  // Letter colors for current ball border
+  // Letter border colors
   const letterBorderColors = {
-    B: 'hsl(259, 100%, 50%)', // purple
-    I: '#E91E63', // pink
-    N: 'hsl(237, 100%, 50%)', // blue
-    G: '#dbcd0a', // yellow
-    O: '#2fe91e', // green
+    B: 'hsl(259, 100%, 50%)',
+    I: '#E91E63',
+    N: 'hsl(237, 100%, 50%)',
+    G: '#dbcd0a',
+    O: '#2fe91e',
   };
 
   return (
-    <Box
-      className="bingo-container"
-      sx={{
-        ml: 1.5,
-        mt: 1,
-        color: "#fff",
-        fontFamily: "'poetsen', sans-serif",
-      }}
-    >
-      {/* BINGO Header with stat boxes - matching styles.css .bingo-stat */}
-      <Box className="bingo-stat" sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-        <Typography sx={{
+    <div className="bingo-container">
+      {/* BINGO Header with stat boxes */}
+      <div className="bingo-stat">
+        <span style={{
           fontFamily: "'jaro', sans-serif",
           fontSize: "3.5rem",
           fontWeight: "bold",
           color: "white",
           textTransform: "uppercase",
-          mr: 1,
+          marginRight: 10,
         }}>
           BINGO
-        </Typography>
-        <StatusBadge label={isPlaying ? "GAME PLAYING" : "GAME"} />
-        <StatusBadge label="STAKE" value={stake} />
-        <StatusBadge label="WIN PRICE" value={winAmount} />
-        <StatusBadge label={`${callCount} CALLED`} />
-      </Box>
+        </span>
+        <span className="stat-box">{isPlaying ? "GAME PLAYING" : "GAME"}</span>
+        <span className="stat-box">STAKE {stake}</span>
+        <span className="stat-box">WIN PRICE {winAmount}</span>
+        <span className="stat-box">{callCount} CALLED</span>
+      </div>
 
-      {/* Main Panel: 85% grid, 15% current ball - matching styles.css .bingo-panel */}
-      <Box
-        className="bingo-panel"
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "85% 15%",
-          gap: 1.25,
-        }}
-      >
+      {/* Main Panel: 85% grid, 15% current ball */}
+      <div className="bingo-panel">
         {/* Left: Bingo Grid */}
-        <Box>
+        <div>
           <BingoGrid
             calledNumbers={calledNumbers}
             shuffling={isShuffling}
           />
-        </Box>
+        </div>
 
         {/* Right: Current Ball + Recent Calls */}
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          {/* Large Current Ball - matching styles.css .last-called */}
-          <Box sx={{
-            fontSize: "50px",
-            color: "#000",
-            border: `10px solid ${letterBorderColors[currentLetter] || '#ffc839'}`,
-            borderRadius: "50%",
-            background: "linear-gradient(to bottom, #ffc839, #e4840c)",
-            textAlign: "center",
-            m: 1,
-            p: 2.5,
-            boxShadow: "10px 10px 10px rgba(0, 0, 0, 0.5), 0 0 6px rgba(0, 0, 0, 0.4) inset",
-            transition: "background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease",
-            width: 120,
-            height: 120,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}>
-            <Typography sx={{
-              fontSize: "2.5rem",
-              fontWeight: "bold",
-              lineHeight: 1,
-              m: 0,
-              color: "#000"
-            }}>
-              {currentLetter || "B"}
-            </Typography>
-            <Typography sx={{
-              fontSize: "3rem",
-              fontWeight: "bold",
-              lineHeight: 1,
-              m: 0,
-              color: "#000"
-            }}>
-              {currentNum || "1"}
-            </Typography>
-          </Box>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          {/* Large Current Ball */}
+          <div
+            className="last-called"
+            style={{ borderColor: letterBorderColors[currentLetter] || '#ffc839' }}
+          >
+            <p id="last-letter">{currentLetter || "B"}</p>
+            <p>{currentNum || "1"}</p>
+          </div>
 
-          {/* Recent Calls - matching styles.css .last-called-numbers */}
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mt: 1, flexWrap: "wrap" }}>
+          {/* Recent Calls */}
+          <div className="last-called-numbers">
             {recentCalls.slice(0, 4).map((num, idx) => (
-              <RecentBallBadge key={idx} ball={num} />
+              <span
+                key={idx}
+                className="last-called-num"
+                data-letter={num?.charAt(0)}
+              >
+                {num}
+              </span>
             ))}
-          </Box>
+          </div>
 
           {/* View All Link */}
-          <Typography
-            sx={{
-              mt: 0.5,
-              cursor: "pointer",
-              fontSize: "14px",
-              color: "#000",
-              textDecoration: "none",
-              "&:hover": { textDecoration: "underline" }
-            }}
-          >
-            view all
-          </Typography>
-        </Box>
-      </Box>
+          <div className="view-all">
+            <button
+              id="viewAllCalledButton"
+              style={{
+                backgroundColor: 'transparent',
+                color: '#000',
+                fontSize: 14,
+                border: 'none',
+                padding: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              view all
+            </button>
+          </div>
+        </div>
+      </div>
 
-      {/* Action Panel: 65% controls, 35% win money - matching styles.css .action-panel */}
-      <Box
-        className="action-panel"
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "65% 35%",
-          gap: 1.25,
-          mt: 2.5,
-        }}
-      >
+      {/* Action Panel: 65% controls, 35% win money */}
+      <div className="action-panel">
         {/* Left: Controls */}
-        <Box>
+        <div>
           <GameControlsBar
             isPlaying={isPlaying}
             isShuffling={isShuffling}
@@ -266,59 +177,39 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
             onNewGameClick={handleNewGameClick}
             onCallNext={callNextNumber}
           />
-        </Box>
+        </div>
 
-        {/* Right: WIN MONEY - matching styles.css .winner */}
-        <Box
-          className="winner"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            fontSize: "50px",
-            color: "#fff",
-          }}
-        >
-          <Box sx={{ textAlign: "right", mr: 1 }}>
-            <Typography sx={{
+        {/* Right: WIN MONEY */}
+        <div className="winner">
+          <div style={{ textAlign: "right", marginRight: 10 }}>
+            <div style={{
               fontSize: "2.2rem",
               fontWeight: "bold",
               fontFamily: "'poetsen', sans-serif",
-              color: "white",
-              lineHeight: 1,
             }}>
               WIN MONEY
-            </Typography>
-            <Typography sx={{
+            </div>
+            <div style={{
               fontSize: "2rem",
               fontWeight: "bold",
               fontFamily: "'poetsen', sans-serif",
-              color: "white",
             }}>
               {winAmount} Birr
-            </Typography>
-          </Box>
+            </div>
+          </div>
           <img
-            src="/icon/money.png"
+            src="/static/game/icon/money.png"
             alt="Money"
-            style={{ height: 120 }}
-            onError={(e) => { e.target.style.display = 'none'; }}
+            style={{ height: 150 }}
+            onError={(e) => { e.target.src = '/icon/money.png'; }}
           />
-        </Box>
-      </Box>
+        </div>
+      </div>
 
       {/* Footer */}
-      <Box
-        component="footer"
-        sx={{
-          textAlign: "center",
-          color: "#fff",
-          mt: 2,
-          pb: 1,
-        }}
-      >
+      <footer className="cashier-footer" style={{ textAlign: "center", marginTop: 16, paddingBottom: 8 }}>
         © 2024 Dallol Technologies. All rights reserved.
-      </Box>
+      </footer>
 
       {/* New Game Confirmation Modal */}
       <NewGameConfirmDialog
@@ -356,7 +247,7 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
         playWinnerAudio={playWinnerAudio}
         playLoseAudio={playLoseAudio}
       />
-    </Box>
+    </div>
   );
 };
 
