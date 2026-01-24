@@ -383,6 +383,7 @@ const useNewGameLogic = ({
     setBonusAmount,
     bonusPattern,
     setBonusPattern,
+    gameId,
     lastGameId,
     handleContinuePrevious,
     previousCartela,

@@ -57,6 +57,7 @@ const NewGame = () => {
     handleStartGame,
     handleClearSelections,
     handleRefreshCards,
+    gameId,
     lastGameId,
     handleContinuePrevious,
     previousCartela,
@@ -123,6 +124,10 @@ const NewGame = () => {
     setCartela(cartela.filter((id) => id !== cardId));
   };
 
+const displayGameId =
+  gameId && gameId !== 0
+    ? lastGameId
+    : lastGameId + 1;
 
   return (
     <Box
@@ -280,7 +285,7 @@ const NewGame = () => {
             mb: 2,
           }}
         >
-          Round {lastGameId + 1}
+          Round {displayGameId}
         </Typography>
 
         {/* Main content - Two columns */}

@@ -110,7 +110,7 @@ const Game = () => {
         isOpen={showStartModal && !hasGameStarted}
         onClose={() => setShowStartModal(false)}
         hasReservation={hasReservation}
-        roundNumber={gameData?.game?.gameId || 1}
+        roundNumber={gameData?.game?.gameId}
       />
 
       {/* Main game content */}

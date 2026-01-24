@@ -9,7 +9,7 @@ const GameStartModal = ({
   onClose,
   hasReservation,
   cartelaData,
-  roundNumber = 1,
+  roundNumber,
   onLogout,
 }) => {
   const navigate = useNavigate();
