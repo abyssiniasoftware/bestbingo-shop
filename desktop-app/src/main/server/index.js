@@ -117,7 +117,7 @@ app.listen(PORT, async () => {
     if (!existingUser) {
       await User.save({
         username: 'super',
-        password: 'super123',
+        password: 'ADE13@BESTBNG',
         role: 'super_admin',
         fullname: 'Admin User',
         address: 'Addis Ababa',

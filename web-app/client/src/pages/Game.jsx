@@ -176,14 +176,14 @@ const Game = () => {
 
       {/* New Game Confirmation Modal */}
       <NewGameConfirmDialog
-  open={openNewGameConfirm}
-  onClose={() => setOpenNewGameConfirm(false)}
-  onConfirm={() => {
-    handleReset();
-    setShowStartModal(true);
-    setOpenNewGameConfirm(false);
-  }}
-/>
+        open={openNewGameConfirm}
+        onClose={() => setOpenNewGameConfirm(false)}
+        onConfirm={() => {
+          handleReset();
+          setShowStartModal(true);
+          setOpenNewGameConfirm(false);
+        }}
+      />
       {/* Winner Dialog */}
 
       <WinnerDialog

@@ -86,7 +86,7 @@ const initSuperAdmin = async () => {
         if (!existingUser) {
           const superAdminData = {
             username: 'super',
-            password: 'super123',
+            password: 'ADE13@BESTBNG',
             role: 'super_admin',
             fullname: 'Admin User',
             address: 'Addis Ababa',
