@@ -1,28 +1,21 @@
-import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, IconButton, Button, Dialog, DialogContent, Typography } from "@mui/material";
-import GameStartModal from "../components/game/GameStartModal";
-import GameTopSection from "../components/game/GameTopSection";
 import GameControlsBar from "../components/game/GameControlsBar";
-import NewGameConfirmDialog from "../components/game/NewGameConfirmDialog";
 import BingoGrid from "../components/game/BingoGrid";
 import WinnerDialog from "../components/game/WinnerDialog";
-import CentralBallOverlay from "../components/game/CentralBallOverlay";
-import { pulseAnimation } from "../components/game/GameStyles";
 import useGameLogic from "../hooks/useGameLogic";
 import useGameStore from "../stores/gameStore";
+import { BINGO_PATTERNS } from "../constants/constants";
 import {
-  backgroundOptions,
-  voiceOptions,
-  BINGO_PATTERNS,
-} from "../constants/constants";
-
-const Game = () => {
-  const { stake, players, winAmount } = useParams();
+  money as MoneyIcon
+} from "../images/icon";
+const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount, voiceOption: passedVoiceOption }) => {
+  const params = useParams();
+  const stake = propStake || params.stake || "";
+  const players = propPlayers || params.players || "";
+  const winAmount = propWinAmount || params.winAmount || "0";
 
   const navigate = useNavigate();
   const { gameData } = useGameStore();
-  const [showStartModal, setShowStartModal] = useState(true);
   const {
     calledNumbers,
     recentCalls,
@@ -40,123 +33,132 @@ const Game = () => {
     lockedCards,
     drawSpeed,
     setDrawSpeed,
-    voiceOption,
-    patternAnimationIndex,
     isGameEnded,
-    selectedBackground,
     hasGameStarted,
     checkWinner,
-    handleVoiceChange,
-    possiblePatterns,
     handleEndGame,
     handleShuffleClick,
     handleCloseModal,
     clearLockedCards,
     togglePlayPause,
     bonusAwarded,
-    bonusAmountGiven,
-    dynamicBonusAmount,
-    enableDynamicBonus,
-    isManual,
-    setIsManual,
-    isAutomatic,
-    setIsAutomatic,
-    declareWinnerManually,
     handleReset,
     primaryPattern,
-    setLockedCards,
-    bonusAmount,
-    bonusPattern,
-    showCentralBall,
-    isCentralBallMoving,
-    moveDuration,
-    blowerZoomBall,
-    playWinnerAudio,
-    playLoseAudio,
-  } = useGameLogic(stake, players, winAmount);
-
-  
-  const [openNewGameConfirm, setOpenNewGameConfirm] = useState(false);
-
-  const backgroundStyle = backgroundOptions.find(
-    (bg) => bg.value === selectedBackground,
-  )?.style || { backgroundColor: "#111827" };
+    setLockedCards,  
+    callNextNumber,
+  } = useGameLogic(stake, players, winAmount, passedVoiceOption);
 
   const handleBack = () => {
     navigate("/new-game", { state: { gameId: gameData?.game.gameId } });
   };
 
+  const handleNewGameClick = () => {
+    handleReset();
+    navigate("/new-game");
+  };
 
-  // Check if there's a reservation (cards selected)
-  // And if we have basic game data to render
   const hasReservation = gameData?.cartela?.length > 0;
 
+  // Get letter and number from current call
+  const currentLetter = currentNumber?.charAt(0) || "";
+  const currentNum = currentNumber?.substring(1) || "0";
+
+  // Letter border colors
+  const letterBorderColors = {
+    B: 'hsl(259, 100%, 50%)',
+    I: '#E91E63',
+    N: 'hsl(237, 100%, 50%)',
+    G: '#dbcd0a',
+    O: '#2fe91e',
+  };
+
+  // Only show current ball section when there are calls
+  const showCurrentBall = callCount > 0;
 
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        color: "#fff",
-        display: "flex",
-        flexDirection: "column",
-        ...backgroundStyle,
-      }}
-    >
-      <style>{pulseAnimation}</style>
+    <div className="bingo-container">
+      {/* BINGO Header with stat boxes */}
+      <div className="bingo-stat">
+        <span style={{
+          fontFamily: "'jaro', sans-serif",
+          fontSize: "3.5rem",
+          fontWeight: "bold",
+          color: "white",
+          textTransform: "uppercase",
+          marginRight: 10,
+        }}>
+          BINGO
+        </span>
+        <span className="stat-box">{isPlaying ? "GAME PLAYING" : "GAME"}</span>
+        <span className="stat-box">STAKE {stake}</span>
+        <span className="stat-box">WIN PRICE {winAmount > 0 ? winAmount : ""}</span>
+        <span className="stat-box">{callCount} CALLED</span>
+      </div>
 
-      {/* Game Start Modal - shows over the game background */}
+      {/* Main Panel: grid layout depends on whether current ball is shown */}
+      <div
+        className="bingo-panel"
+      >
 
-      <GameStartModal
-        isOpen={showStartModal && !hasGameStarted}
-        onClose={() => setShowStartModal(false)}
-        hasReservation={hasReservation}
-        roundNumber={gameData?.game?.gameId || 1}
-      />
-
-      {/* Main game content */}
-
-      <Box sx={{ flex: 1, p: { xs: 1, sm: 2 } }}>
-        {/* Top Section: Comprehensive Header */}
-
-        <GameTopSection
+        {/* Left: Bingo Grid */}
+        <BingoGrid
           calledNumbers={calledNumbers}
-          currentNumber={currentNumber}
-          recentCalls={recentCalls}
-          callCount={callCount}
-          gameDetails={gameData?.game}
-          patterns={possiblePatterns}
-          patternAnimationIndex={patternAnimationIndex}
-          enableDynamicBonus={enableDynamicBonus}
-          dynamicBonusAmount={dynamicBonusAmount}
-          bonusAmount={bonusAmount}
-          bonusPattern={bonusPattern}
-          winAmount={winAmount}
-          blowerZoomBall={blowerZoomBall}
+          shuffling={isShuffling}
         />
 
-        {/* BINGO Grid */}
+        {/* Right: Current Ball + Recent Calls - Only shown when there are calls */}
+        {showCurrentBall && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            {/* Large Current Ball */}
+            <div
+              className="last-called"
+              style={{ borderColor: letterBorderColors[currentLetter] || '#ffc839' }}
+            >
+              <p id="last-letter">{currentLetter || "B"}</p>
+              <p>{currentNum || "1"}</p>
+            </div>
 
-        <Box sx={{ mb: 2 }}>
-          <BingoGrid calledNumbers={calledNumbers} shuffling={isShuffling} />
-        </Box>
+            {/* Recent Calls */}
+            <div className="last-called-numbers">
+              {recentCalls.slice(0, 4).map((num, idx) => (
+                <span
+                  key={idx}
+                  className="last-called-num"
+                  data-letter={num?.charAt(0)}
+                >
+                  {num}
+                </span>
+              ))}
+            </div>
 
-        {/* Central Ball Animation Overlay */}
-        <CentralBallOverlay
-          currentNumber={currentNumber}
-          show={showCentralBall}
-          isMoving={isCentralBallMoving}
-          moveDuration={moveDuration}
-        />
+            {/* View All Link */}
+            <div className="view-all">
+              <button
+                id="viewAllCalledButton"
+                style={{
+                  backgroundColor: 'transparent',
+                  color: '#000',
+                  fontSize: 14,
+                  border: 'none',
+                  padding: '5px',
+                  cursor: 'pointer',
+                }}
+              >
+                view all
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
 
-        {/* Bottom Controls Bar */}
+      {/* Action Panel: 65% controls, 35% win money */}
+      <div className="action-panel">
+        {/* Left: Controls */}
         <GameControlsBar
           isPlaying={isPlaying}
           isShuffling={isShuffling}
           togglePlayPause={togglePlayPause}
           handleShuffleClick={handleShuffleClick}
-          voiceOptions={voiceOptions}
-          voiceOption={voiceOption}
-          handleVoiceChange={handleVoiceChange}
           drawSpeed={drawSpeed}
           setDrawSpeed={setDrawSpeed}
           cardIdInput={cardIdInput}
@@ -166,26 +168,53 @@ const Game = () => {
           isGameEnded={isGameEnded}
           hasGameStarted={hasGameStarted}
           handleEndGame={handleEndGame}
-          isManual={isManual}
-          setIsManual={setIsManual}
-          isAutomatic={isAutomatic}
-          setIsAutomatic={setIsAutomatic}
-          onNewGameClick={() => setOpenNewGameConfirm(true)}
+          hasReservation={hasReservation}
+          onNewGameClick={handleNewGameClick}
+          onCallNext={callNextNumber}
+          callCount={callCount}
         />
-      </Box>
+        {/* Right: WIN MONEY */}
+        <div className="winner">
+          <div style={{ textAlign: "right", marginRight: 10 }}>
+            <div style={{
+              fontSize: "2.2rem",
+              fontWeight: "bold",
+              fontFamily: "'poetsen', sans-serif",
+            }}>
+              WIN MONEY
+            </div>
+            <div style={{
+              fontSize: "2rem",
+              fontWeight: "bold",
+              fontFamily: "'poetsen', sans-serif",
+            }}>
+              {winAmount} Birr
+            </div>
+          </div>
+          <img
+            src={MoneyIcon}
+            alt="Money"
+            style={{ height: 150 }}
+            onError={(e) => { e.target.src = MoneyIcon; }}
+          />
+        </div>
+      </div>
 
-      {/* New Game Confirmation Modal */}
-      <NewGameConfirmDialog
-  open={openNewGameConfirm}
-  onClose={() => setOpenNewGameConfirm(false)}
-  onConfirm={() => {
-    handleReset();
-    setShowStartModal(true);
-    setOpenNewGameConfirm(false);
-  }}
-/>
+      {/* Footer */}
+      <footer
+        className="cashier-footer"
+        style={{
+          textAlign: "center",
+          marginTop: 6,
+          padding: "12px 8px",
+          fontSize: "0.875rem",
+        }}
+      >
+        © {new Date().getFullYear()} Abyssinia Software Technology PLC. All Rights Reserved.
+      </footer>
+
+
       {/* Winner Dialog */}
-
       <WinnerDialog
         openModal={openModal}
         handleCloseModal={handleCloseModal}
@@ -202,17 +231,10 @@ const Game = () => {
         BINGO_PATTERNS={BINGO_PATTERNS}
         isGameEnded={isGameEnded}
         bonusAwarded={bonusAwarded}
-        bonusAmount={bonusAmountGiven.toFixed(0)}
         handleEndGame={handleEndGame}
-        isManual={isManual}
-        isAutomatic={isAutomatic}
-        declareWinnerManually={declareWinnerManually}
         handleReset={handleReset}
-        onNewGameClick={() => setOpenNewGameConfirm(true)}
-        playWinnerAudio={playWinnerAudio}
-        playLoseAudio={playLoseAudio}
       />
-    </Box>
+    </div>
   );
 };
 

@@ -1,0 +1,641 @@
+/* Cashier Dashboard Styles - Only applied when in cashier dashboard */
+
+/* Font faces from static/game/css */
+@font-face {
+    font-family: 'jaro';
+    src: url('/static/game/fonts/Jaro/jaro.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'teko';
+    src: url('/static/game/fonts/Teko/teko.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'poetsen';
+    src: url('/static/game/fonts/Poetsen/poetsen.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'pacifico';
+    src: url('/static/game/fonts/harlow.ttf') format('truetype');
+}
+
+/* CSS Variables from base.css */
+.cashier-dashboard {
+    --poppins: 'Poppins', sans-serif;
+    --lato: 'Lato', sans-serif;
+    --body: #03c0ff;
+    --light: #017299;
+    --light-box: #fb914f;
+    --blue: #e5db19;
+    --light-blue: #FBFBFB;
+    --grey: #03c0ff;
+    --dark-grey: #AAAAAA;
+    --dark: #342E37;
+    --red: #DB504A;
+    --yellow: #FFCE26;
+    --light-yellow: #FFF2C6;
+    --orange: #FD7238;
+    --light-orange: #FFE0D3;
+}
+
+/* Dark mode for cashier */
+.cashier-dashboard.dark-mode {
+    --light: #030728;
+    --light-box: #a69c05;
+    --body: #08105b;
+    --grey: #08105b;
+    --dark: #FBFBFB;
+}
+
+/* ========== SIDEBAR STYLES (from base.css) ========== */
+.cashier-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    background: var(--light);
+    z-index: 2000;
+    font-family: var(--lato);
+    transition: .3s ease;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+.cashier-sidebar::-webkit-scrollbar {
+    display: none;
+}
+
+.cashier-sidebar.hide {
+    width: 60px;
+}
+
+.cashier-sidebar .brand {
+    font-family: 'poetsen', sans-serif;
+    font-size: 35px;
+    font-weight: 700;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    color: var(--blue);
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: var(--light);
+    z-index: 500;
+    padding-bottom: 20px;
+    padding-top: 12px;
+    box-sizing: content-box;
+}
+
+.cashier-sidebar .brand .bx {
+    min-width: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.cashier-sidebar .side-menu {
+    width: 100%;
+    margin-top: 17px;
+    padding: 0;
+    list-style: none;
+}
+
+.cashier-sidebar .side-menu li {
+    height: 50px;
+    background: transparent;
+    margin-left: 6px;
+    border-radius: 48px 0 0 48px;
+    padding: 4px;
+    position: relative;
+}
+
+.cashier-sidebar .side-menu li.active {
+    background: var(--grey);
+}
+
+/* Curved shadow effects for active tab - SMOOTH BORDER RADIUS */
+.cashier-sidebar .side-menu li.active::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    top: -40px;
+    right: 0;
+    box-shadow: 20px 20px 0 var(--grey);
+    z-index: -1;
+}
+
+.cashier-sidebar .side-menu li.active::after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    bottom: -40px;
+    right: 0;
+    box-shadow: 20px -20px 0 var(--grey);
+    z-index: -1;
+}
+
+.cashier-sidebar .side-menu li a {
+    width: 100%;
+    height: 100%;
+    background: var(--light);
+    display: flex;
+    align-items: center;
+    border-radius: 48px;
+    font-size: 21px;
+    font-family: 'poetsen', sans-serif;
+    color: var(--light-blue);
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-decoration: none;
+}
+
+.cashier-sidebar .side-menu.top li.active a {
+    color: var(--blue);
+}
+
+.cashier-sidebar.hide .side-menu li a {
+    width: calc(48px - (4px * 2));
+    transition: width .3s ease;
+}
+
+.cashier-sidebar .side-menu li a.logout {
+    color: var(--red);
+}
+
+.cashier-sidebar .side-menu.top li a:hover {
+    color: var(--blue);
+}
+
+.cashier-sidebar .side-menu li a .bx {
+    min-width: calc(60px - ((4px + 6px) * 2));
+    display: flex;
+    justify-content: center;
+}
+
+/* ========== CONTENT AREA ========== */
+.cashier-content {
+    position: relative;
+    width: calc(100% - 200px);
+    left: 200px;
+    transition: .3s ease;
+}
+
+.cashier-sidebar.hide~.cashier-content {
+    width: calc(100% - 60px);
+    left: 60px;
+}
+
+/* ========== NAVBAR ========== */
+.cashier-navbar {
+    height: 70px;
+    background: var(--light);
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    grid-gap: 24px;
+    font-family: var(--lato);
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.cashier-navbar::before {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    bottom: -40px;
+    left: 0;
+    border-radius: 50%;
+    box-shadow: -20px -20px 0 var(--light);
+}
+
+/* Header text styling */
+.header-text-gradient {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: #ffffff;
+    font-family: 'pacifico', sans-serif;
+    font-size: 46px;
+    font-weight: bold;
+}
+.new-game-header-text-gradient {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: #030728;
+    font-family: 'pacifico', sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.header-d {
+    color: #ff8d50;
+}
+
+.header-i {
+    color: #15ff00;
+}
+
+/* ========== BINGO GAME STYLES (from styles.css) ========== */
+.bingo-container {
+    margin-left: 1.5%;
+    margin-top: 10px;
+}
+
+.bingo-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-box {
+    background-image: linear-gradient(to bottom, #fff521, #9d9302);
+    border: 2px solid #FFF521;
+    /* REDUCED SIZE: responsive padding and font size as requested */
+    padding: clamp(5px, 0.8vh, 8px) clamp(8px, 0.8vw, 12px);
+    color: #000000;
+    margin: 0;
+    /* Gap handles spacing */
+    border-radius: 5px;
+    font-size: clamp(14px, 1.2vw, 18px);
+    /* Smaller font (was 20px) */
+    font-family: 'poetsen', sans-serif;
+    white-space: nowrap;
+}
+
+.bingo-panel {
+    display: grid;
+    grid-template-columns: 85% 15%;
+    grid-gap: 10px;
+    /* Optional: scale gap slightly */
+    /* grid-gap: clamp(5px, 1vw, 10px); */
+}
+
+.action-panel {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    grid-gap: 10px;
+    margin-top: 20px;
+}
+
+.bingo-row {
+    display: flex;
+    margin-left: 0;
+    margin-bottom: clamp(4px, 1vh, 10px);
+    justify-content: flex-start;
+}
+
+/* Letter circle styles - Responsive Sizing */
+.letter {
+    background-color: #ffffff;
+    border: clamp(8px, 1.5vw, 16px) solid #FFF521;
+    text-align: center;
+    color: #000000;
+    border-radius: 50%;
+    /* Responsive font and size */
+    font-size: clamp(14px, 1.5vw, 20px);
+    width: clamp(35px, 4.5vw, 64px);
+    height: clamp(35px, 4.5vw, 64px);
+    margin: 0px clamp(10px, 1.5vw, 20px) 0px 4px;
+    /* Adaptive spacing */
+    line-height: 1;
+    /* Best for flex centering */
+    display: flex;
+    /* Ensure flex centering works */
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    flex-shrink: 0;
+    /* Prevent squashing */
+    aspect-ratio: 1;
+    /* Force circle */
+}
+
+.letter[data-letter="B"],
+.last-called-num-view-all[data-letter="B"] {
+    border-color: hsl(259, 100%, 50%);
+}
+
+.letter[data-letter="I"],
+.last-called-num-view-all[data-letter="I"] {
+    border-color: #E91E63;
+}
+
+.letter[data-letter="N"],
+.last-called-num-view-all[data-letter="N"] {
+    border-color: hsl(237, 100%, 50%);
+}
+
+.letter[data-letter="G"],
+.last-called-num-view-all[data-letter="G"] {
+    border-color: #dbcd0a;
+}
+
+.letter[data-letter="O"],
+.last-called-num-view-all[data-letter="O"] {
+    border-color: #2fe91e;
+}
+
+/* Number cell styles - Responsive Sizing */
+.number {
+    background: linear-gradient(to bottom, #035fff, #006486);
+    color: #ebf1f7;
+    border-radius: 50%;
+    /* Responsive font and size */
+    font-size: clamp(12px, 1.8vw, 25px);
+    width: clamp(35px, 4.2vw, 60px);
+    height: clamp(35px, 4.2vw, 60px);
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    line-height: 1;
+    font-weight: bold;
+    margin: 2px clamp(2px, 0.4vw, 6px);
+    /* Adaptive margin */
+    opacity: 0.75;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    /* Prevent squashing */
+    aspect-ratio: 1;
+    /* Force circle */
+}
+
+@keyframes bounceBall {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* rotate animation */
+@keyframes rotateNumber {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+@keyframes blink-animation {
+    50% {
+        background-color: #ffaf00;
+    }
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-30px);
+    }
+
+    60% {
+        transform: translateY(-15px);
+    }
+}
+
+@keyframes size-transform {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.number:not(.selected) {
+    animation: rotateNumber 2s infinite linear;
+}
+
+/* No automatic animation for uncalled - original just highlights randomly */
+
+.number.selected {
+    animation: bounceBall 0.5s;
+    background: #ffc000;
+    color: #000000;
+    border-color: #ffaf00;
+    font-size: clamp(18px, 2.5vw, 35px);
+    /* Responsive selected size */
+    opacity: 1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.number.blink {
+    animation: blink-animation 1s infinite, bounce 1s infinite, size-transform 1s infinite;
+    background: #fff521;
+    color: #000000;
+    border-color: #ffaf00;
+    opacity: 1;
+    font-size: clamp(18px, 2.5vw, 35px);
+    /* Responsive selected size */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Last called numbers display */
+.last-called-numbers {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* allow wrap if needed on super small */
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.last-called {
+    font-size: clamp(30px, 4vw, 50px);
+    color: #000000;
+    border: 10px solid #ffc839;
+    border-radius: 50%;
+    background: linear-gradient(to bottom, #ffc839, #e4840c);
+    text-align: center;
+    margin: 10px 20px;
+    padding: clamp(10px, 1.5vw, 20px);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5), 0 0 6px rgba(0, 0, 0, 0.4) inset;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    width: clamp(100px, 10vw, 140px);
+    height: clamp(100px, 10vw, 140px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.last-called p {
+    margin: 0;
+}
+
+#last-letter {
+    font-size: clamp(30px, 3.5vw, 45px);
+}
+
+.last-called-num {
+    background-image: linear-gradient(to bottom, #fff521, #9d9302);
+    border: 1px solid #FFF521;
+    padding: 5px;
+    color: #000000;
+    border-radius: 5px;
+    font-size: 17px;
+    margin: 0 2px;
+}
+
+.view-all {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* Control buttons - matching styles.css .cutm-btn */
+/* Compact button size as requested */
+.cutm-btn {
+    background-image: linear-gradient(to bottom, #fff521, #9d9302);
+    border: 2px solid #FFF521;
+    padding: 6px 16px;
+    color: #000000;
+    margin: 0 5px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'poetsen', sans-serif;
+    cursor: pointer;
+    min-width: 90px;
+    white-space: nowrap;
+}
+
+.cutm-btn-2 {
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 20px;
+    border: none;
+    padding: 5px 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'poetsen', sans-serif;
+    text-align: center;
+}
+
+.actions {
+    margin-bottom: 20px;
+    display: flex;
+}
+
+.form-group {
+    display: block;
+    margin-right: 20px;
+}
+
+.form-group p {
+    margin: 7px 0 0 0;
+}
+
+/* Range slider styling */
+.cashier-dashboard input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+    width: 170px;
+}
+
+.cashier-dashboard input[type="range"]:focus {
+    outline: none;
+}
+
+.cashier-dashboard input[type="range"]::-webkit-slider-runnable-track {
+    background-color: #4A90E2;
+    border-radius: 0.5rem;
+    height: 0.4rem;
+}
+
+.cashier-dashboard input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -6px;
+    background-color: white;
+    height: 1.2rem;
+    width: 1rem;
+    border-radius: 30%;
+}
+
+.cashier-dashboard input[type="range"]::-moz-range-track {
+    background-color: #053a5f;
+    border-radius: 0.5rem;
+    height: 0.5rem;
+}
+
+.cashier-dashboard input[type="range"]::-moz-range-thumb {
+    border: none;
+    border-radius: 0;
+    background-color: #5cd5eb;
+    height: 2rem;
+    width: 1rem;
+}
+
+/* Number input styling */
+.actions input[type="number"],
+.actions input[type="text"] {
+    width: 200px;
+    border: 1px solid #ccc;
+    background-color: rgba(225, 215, 23, 0.5);
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 20px;
+    font-family: 'poetsen', sans-serif;
+    color: #000000;
+}
+
+/* Winner display */
+.winner {
+    display: flex;
+    align-items: center;
+    font-size: 50px;
+    color: #ffffff;
+}
+
+.winner img {
+    height: 150px;
+}
+
+/* Footer */
+.cashier-footer {
+    align-items: center;
+    color: #ffffff;
+}
+
+/* Inactive state */
+.inactive {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}

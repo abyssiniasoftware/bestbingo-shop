@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { Box } from "@mui/material";
 import LoginForm from "../components/auth/LoginForm";
 import useUserStore from "../stores/userStore";
-import config from "../constants/config";
 import { jwtDecode } from "jwt-decode";
 import api from "../utils/api";
 
@@ -77,7 +76,7 @@ const Login = () => {
           navigate("/admin", { replace: true });
           break;
         case "cashier":
-          navigate("/game", { replace: true });
+          navigate("/dashboard", { replace: true });
           break;
         case "agent":
           navigate("/agent", { replace: true });
@@ -98,7 +97,7 @@ const Login = () => {
 
   return (
     <Box sx={{ width: "100%", height: "100vh", overflowX: "hidden" }}>
-      <LoginForm handleLogin={handleLogin} config={config} />
+      <LoginForm handleLogin={handleLogin} />
     </Box>
   );
 };

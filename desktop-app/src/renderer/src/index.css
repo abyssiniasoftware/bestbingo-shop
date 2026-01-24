@@ -1,4 +1,4 @@
-/* src/index.css */
+/* src/index.css - Global styles */
 @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap");
 
 @import "tailwindcss";
@@ -24,24 +24,31 @@
 }
 
 body {
-  background-image: 
+  background-image:
     /* Subtle radial gradient to darken edges */
     radial-gradient(circle at center, rgba(30, 34, 41, 0.5), rgba(30, 34, 41, 0.8)),
-    /* Lion logo watermark */ url("images/logo.png");
+    /* Lion logo watermark */
+    url("/images/logo.png");
   background-size:
-    auto, 300px; /* Gradient covers the whole area, logo is 300px wide */
-  background-position: center, center; /* Center both the gradient and logo */
-  background-repeat: no-repeat, no-repeat; /* Don't repeat the logo */
-  background-attachment: fixed; /* Keep the background fixed when scrolling */
+    auto, 300px;
+  /* Gradient covers the whole area, logo is 300px wide */
+  background-position: center, center;
+  /* Center both the gradient and logo */
+  background-repeat: no-repeat, no-repeat;
+  /* Don't repeat the logo */
+  background-attachment: fixed;
+  /* Keep the background fixed when scrolling */
 }
 
 .drawText {
   font-family: "goodtimes", sans-serif;
 }
+
 @keyframes marquee {
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }

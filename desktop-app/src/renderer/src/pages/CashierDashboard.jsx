@@ -1,50 +1,103 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Box, Typography, Button, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Divider } from "@mui/material";
+import SettingsIcon from '@mui/icons-material/Settings';
+import PersonIcon from '@mui/icons-material/Person';
+
+// Import cashier-specific styles
+import "../styles/cashier.css";
+
 import {
-  FaSignOutAlt, FaGamepad, FaIdCard, FaChartBar, FaEye, FaEyeSlash,
-  FaFileAlt, FaClipboardList, FaGift, FaWallet, FaCalendarWeek, FaHistory
-} from "react-icons/fa";
+  dashboard as dashboardIcon,
+  play as playIcon,
+  history as historyIcon,
+  view as viewIcon,
+  logo as logoIcon,
+  logout as logoutIcon,
+  menu as menuIcon,
+  day as dayIcon,
+  night as nightIcon,
+  full as FullscreenIcon
+} from "../images/icon";
 
 import ViewCartela from "./ViewCartela";
 import Reports from "./Reports";
 import HouseReportsCashier from "./HouseReportsCashier";
 import HouseBonusListCashier from "./HouseBonusListCashier";
 import HouseStatsCashier from "./HouseStatsCashier";
-import useWallet from "../hooks/useWallet";
+import Game from "./Game";
+import { voiceOptions } from "../constants/constants";
 import useUserStore from "../stores/userStore";
+import Settings from "./Settings";
 
 const CashierDashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "reports");
-  const { wallet, isLoading: walletLoading } = useWallet();
-  const { clearUser } = useUserStore();
-  const [showBalance, setShowBalance] = useState(
-    () => JSON.parse(localStorage.getItem("showBalance")) ?? false,
-  );
+  const [activeTab, setActiveTab] = useState(() => location.state?.activeTab || "game");
+  const [prevIncomingTab, setPrevIncomingTab] = useState(location.state?.activeTab);
 
+  const incomingTab = location.state?.activeTab;
+  if (incomingTab !== prevIncomingTab) {
+    setPrevIncomingTab(incomingTab);
+    if (incomingTab) {
+      setActiveTab(incomingTab);
+    }
+  }
+
+  const { user, clearUser } = useUserStore();
+
+  // Sidebar minimized by default
+  const [isSidebarMinimized, setIsSidebarMinimized] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [voiceOption, setVoiceOption] = useState("l");
+
+  // Fullscreen handling
   useEffect(() => {
-    localStorage.setItem("showBalance", JSON.stringify(showBalance));
-  }, [showBalance]);
+    const handleFullscreenChange = () => { };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-    localStorage.removeItem("houseId");
-    localStorage.removeItem("tokenExpiration");
+    localStorage.clear();
     clearUser();
     navigate("/login");
   };
 
-  const handleNavigate = (tab) => {
-    setActiveTab(tab);
+  const toggleSidebar = () => setIsSidebarMinimized(!isSidebarMinimized);
+
+  const handleVoiceChange = (event) => {
+    setVoiceOption(event.target.value);
   };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(console.error);
+    } else {
+      document.exitFullscreen().catch(console.error);
+    }
+  };
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
+  // Check if we're on the game tab (Play Bingo)
+  const isGameTab = activeTab === "game";
 
   const renderTabContent = () => {
     switch (activeTab) {
+      case "game": {
+        const gameParams = location.state?.gameParams || {};
+        return (
+          <Game
+            stake={gameParams.stake}
+            players={gameParams.players}
+            winAmount={gameParams.winAmount}
+            voiceOption={voiceOption}
+          />
+        );
+      }
       case "reports":
         return <Reports />;
       case "detail-report":
@@ -55,148 +108,215 @@ const CashierDashboard = () => {
         return <HouseStatsCashier />;
       case "bingo-cards":
         return <ViewCartela />;
+      case "settings":
+        return <Settings />;
       default:
         return <Reports />;
     }
   };
 
   const sidebarItems = [
-    { id: "reports", label: "Daily Report", icon: <FaFileAlt /> },
-    { id: "detail-report", label: "Detail Report", icon: <FaClipboardList /> },
-    { id: "bonus-report", label: "Get Bonus", icon: <FaGift /> },
-    { id: "stats", label: "Stats", icon: <FaChartBar /> },
-    { id: "bingo-cards", label: "View Cards", icon: <FaIdCard /> },
+    { id: "reports", label: "Dashboard", icon: dashboardIcon },
+    { id: "game", label: "Play Bingo", icon: playIcon },
+    { id: "detail-report", label: "Win History", icon: historyIcon },
+    { id: "bingo-cards", label: "View Cartela", icon: viewIcon },
+    { id: "settings", label: "Settings", muiIcon: <SettingsIcon /> },
   ];
 
+  // Get username for display
+  const username = user?.username || user?.name || "User";
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "#f6f6f6" }}>
-      {/* Full-width Header */}
-      <Box
-        sx={{
-          height: 64,
-          background: "white",
-          borderBottom: "1px solid #e0e0e0",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          px: 3,
-          flexShrink: 0,
-          zIndex: 1100, // Ensure header is on top
-        }}
-      >
-        <Box
-          sx={{ display: "flex", alignItems: "center", gap: 1.5, cursor: "pointer" }}
-          onClick={() => navigate("/game")}
-        >
-          <Typography variant="h6" sx={{ color: "#2980b9", fontWeight: "bold", fontSize: "1.1rem" }}>
-            Play Bingo
-          </Typography>
-          <img src="images/bingo.png" alt="Bingo" style={{ height: 24 }} />
-        </Box>
+    <div className={`cashier-dashboard ${isDarkMode ? 'dark-mode' : ''}`} style={{
+      display: "flex",
+      minHeight: "100vh",
+      backgroundColor: "var(--body)",
+      fontFamily: "'poetsen', sans-serif",
+    }}>
+      {/* Sidebar */}
+      <aside className={`cashier-sidebar ${isSidebarMinimized ? 'hide' : ''}`}>
+        {/* Brand */}
+        <div className="brand">
+          <span className="bx">
+            <img src={logoIcon} alt="Logo" style={{ width: 32, height: 32 }} />
+          </span>
+          {!isSidebarMinimized && <span>Dallol</span>}
+        </div>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography sx={{ fontWeight: "bold", color: "#333", fontSize: "0.95rem" }}>
-              ቀሪ ሂሳብ: {walletLoading || !wallet
-                ? "..."
-                : showBalance
-                  ? `${wallet?.package ?? wallet?.packageBalance ?? wallet?.balance ?? 0}`
-                  : "****"}
-            </Typography>
-            <IconButton
-              size="small"
-              onClick={() => setShowBalance(!showBalance)}
-              sx={{ color: "#333" }}
+        {/* Side Menu */}
+        <ul className="side-menu top">
+          {sidebarItems.map((item) => (
+            <li
+              key={item.id}
+              className={activeTab === item.id ? 'active' : ''}
+              onClick={() => setActiveTab(item.id)}
             >
-              {showBalance ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
-            </IconButton>
-          </Box>
-        </Box>
-      </Box>
+              <a href="#">
+                <span className="bx">
+                  {item.muiIcon ? (
+                    React.cloneElement(item.muiIcon, {
+                      style: {
+                        color: activeTab === item.id ? 'var(--blue)' : 'rgba(255,255,255,0.8)',
+                        fontSize: 22
+                      }
+                    })
+                  ) : (
+                    <img
+                      src={item.icon}
+                      alt={item.label}
+                      style={{
+                        width: 22,
+                        height: 22,
+                        filter: activeTab === item.id
+                          ? 'brightness(0) saturate(100%) invert(90%) sepia(50%) saturate(500%) hue-rotate(5deg) brightness(100%)'
+                          : 'brightness(0) invert(1) opacity(0.8)'
+                      }}
+                    />
+                  )}
+                </span>
+                {!isSidebarMinimized && <span style={{ marginLeft: 8 }}>{item.label}</span>}
+              </a>
+            </li>
+          ))}
 
-      {/* Body Area: Sidebar + Content */}
-      <Box sx={{ display: "flex", flexGrow: 1, overflow: "hidden" }}>
-        {/* Sidebar */}
-        <Box
-          sx={{
-            width: 200,
-            background: "#1d2b36",
-            color: "white",
-            display: "flex",
-            flexDirection: "column",
-            flexShrink: 0,
-            height: "100%",
-            overflowY: "auto",
-          }}
-        >
-          <Box sx={{ p: 3, display: "flex", alignItems: "center", gap: 2 }}>
-            {/* Logo placeholder if needed */}
-          </Box>
-
-          <List sx={{ flexGrow: 1, px: 1, mt: 2 }}>
-            {sidebarItems.map((item) => (
-              <ListItem key={item.id} disablePadding>
-                <ListItemButton
-                  onClick={() => handleNavigate(item.id)}
-                  selected={activeTab === item.id}
-                  sx={{
-                    py: 1.5,
-                    borderRadius: "0px",
-                    "&.Mui-selected": {
-                      background: "rgba(255, 255, 255, 0.05)",
-                      "&:hover": {
-                        background: "rgba(255, 255, 255, 0.1)",
-                      },
-                    },
-                    "&:hover": {
-                      background: "rgba(255, 255, 255, 0.05)",
-                    },
+          {/* Logout */}
+          <li onClick={handleLogout}>
+            <a href="#" className="logout">
+              <span className="bx">
+                <img
+                  src={logoutIcon}
+                  alt="Logout"
+                  style={{
+                    width: 22,
+                    height: 22,
+                    filter: 'invert(35%) sepia(80%) saturate(1000%) hue-rotate(330deg) brightness(90%)'
                   }}
-                >
-                  <ListItemIcon sx={{ color: "inherit", minWidth: 32, fontSize: 16 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.label}
-                    primaryTypographyProps={{
-                      fontSize: "0.85rem",
-                      fontWeight: activeTab === item.id ? 600 : 400
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+                />
+              </span>
+              {!isSidebarMinimized && <span style={{ marginLeft: 8 }}>Logout</span>}
+            </a>
+          </li>
+        </ul>
+      </aside>
 
-          <Divider sx={{ background: "rgba(255,255,255,0.1)", my: 1 }} />
+      {/* Content Area */}
+      <main style={{
+        position: 'relative',
+        width: isSidebarMinimized ? 'calc(100% - 60px)' : 'calc(100% - 200px)',
+        marginLeft: isSidebarMinimized ? 60 : 200,
+        transition: '0.3s ease',
+        minHeight: '100vh',
+      }}>
+        {/* Navbar */}
+        <nav className="cashier-navbar">
+          {/* Left: Menu button */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={menuIcon}
+              alt="Menu"
+              onClick={toggleSidebar}
+              style={{
+                width: 24,
+                height: 24,
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease',
+              }}
+            />
+          </div>
 
-          <List sx={{ px: 1, pb: 2 }}>
-            <ListItem disablePadding>
-              <ListItemButton
-                onClick={handleLogout}
-                sx={{
-                  borderRadius: "8px",
-                  color: "#e74c3c",
-                  "&:hover": {
-                    background: "rgba(231, 76, 60, 0.1)",
-                  },
+          {/* Center: Dallol Bingo! Logo */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: 1,
+          }}>
+            <span className="header-text-gradient">
+              <span className="header-d">Dallol</span>
+              {' '}
+              Bin
+              <span className="header-i">g</span>
+              o!
+            </span>
+          </div>
+
+          {/* Right: Conditional - Voice selector on game tab, Profile on others */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            {isGameTab ? (
+              /* Voice Selector - Only on Play Bingo tab */
+              <select
+                value={voiceOption}
+                onChange={handleVoiceChange}
+                style={{
+                  color: 'black',
+                  background: '#fff',
+                  borderRadius: 5,
+                  height: 32,
+                  width: 70,
+                  fontSize: 15,
+                  fontFamily: "'poetsen', sans-serif",
+                  padding: '5px',
+                  border: '1px solid #ccc',
                 }}
               >
-                <ListItemIcon sx={{ color: "inherit", minWidth: 40, fontSize: 18 }}>
-                  <FaSignOutAlt />
-                </ListItemIcon>
-                <ListItemText primary="Logout" primaryTypographyProps={{ fontSize: "0.95rem" }} />
-              </ListItemButton>
-            </ListItem>
-          </List>
-        </Box>
+                {voiceOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              /* Profile icon + Username - On non-game tabs */
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                color: '#ffce26',
+                fontFamily: "'poetsen', sans-serif",
+                fontSize: 16,
+              }}>
+                <PersonIcon style={{ color: '#ffce26', fontSize: 24 }} />
+                <span>{username}</span>
+              </div>
+            )}
 
-        {/* content Area */}
-        <Box sx={{ flexGrow: 1, p: 3, overflowY: "auto" }}>
+            {/* Theme Toggle */}
+            <img
+              src={isDarkMode ? nightIcon : dayIcon}
+              alt="Theme"
+              onClick={toggleTheme}
+              style={{
+                width: 32,
+                height: 32,
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease',
+              }}
+            />
+
+            {/* Fullscreen Toggle */}
+            <img
+              src={FullscreenIcon}
+              alt="Fullscreen"
+              onClick={toggleFullscreen}
+              style={{
+                width: 32,
+                height: 32,
+                cursor: 'pointer',
+                transition: 'transform 0.3s ease',
+              }}
+            />
+          </div>
+        </nav>
+
+        {/* Main Content */}
+        <div style={{
+          padding: activeTab === "game" ? 0 : 16,
+          minHeight: 'calc(100vh - 80px)',
+        }}>
           {renderTabContent()}
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </main>
+    </div>
   );
 };
 

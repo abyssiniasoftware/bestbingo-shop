@@ -25,7 +25,8 @@ const PRECOMPUTED_PATTERNS = Object.keys(BINGO_PATTERNS).reduce(
   {},
 );
 
-const useGameLogic = () => {
+const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
+
   // State declarations
   const validPatterns = Object.keys(BINGO_PATTERNS).concat(
     Object.keys(META_PATTERNS),
@@ -66,8 +67,16 @@ const useGameLogic = () => {
   );
   const [patternAnchorEl, setPatternAnchorEl] = useState(null);
   const [voiceOption, setVoiceOption] = useState(
-    () => localStorage.getItem("selectedVoice") || "a",
+    () => passedVoiceOption || localStorage.getItem("selectedVoice") || "a",
   );
+
+  // Sync with passedVoiceOption
+  useEffect(() => {
+    if (passedVoiceOption && passedVoiceOption !== voiceOption) {
+      setVoiceOption(passedVoiceOption);
+    }
+  }, [passedVoiceOption]);
+
   const [showCentralBall, setShowCentralBall] = useState(false);
   const [isCentralBallMoving, setIsCentralBallMoving] = useState(false);
   const [blowerZoomBall, setBlowerZoomBall] = useState(null);
@@ -110,14 +119,7 @@ const useGameLogic = () => {
     return stored === "true";
   });
   // Manual mode for win checking - when true, user must manually declare winners
-  const [isManual, setIsManual] = useState(() => {
-    const stored = localStorage.getItem("isManualMode");
-    return stored === "true";
-  });
-  const [isAutomatic, setIsAutomatic] = useState(() => {
-    const stored = localStorage.getItem("isAutomaticMode");
-    return stored === "true" || stored === null; // Default to true if not set
-  });
+ 
   // Hooks and refs
   const { userId } = useUserStore();
   const { gameData, resetGame } = useGameStore();
@@ -256,7 +258,7 @@ const useGameLogic = () => {
         useGameStore.getState().setGameData({ ...useGameStore.getState().gameData, game: details });
       } catch (error) {
         // toast.error(error.message);
-        navigate("/game");
+        navigate("/dashboard");
       }
     };
     fetchGameDetails();
@@ -297,8 +299,6 @@ const useGameLogic = () => {
     localStorage.setItem("hasGameStarted", JSON.stringify(hasGameStarted));
     localStorage.setItem("bonusAmount", bonusAmount.toString());
     localStorage.setItem("bonusPattern", bonusPattern);
-    localStorage.setItem("isManualMode", isManual.toString());
-    localStorage.setItem("isAutomaticMode", isAutomatic.toString());
     localStorage.setItem("calledNumbers", JSON.stringify(calledNumbers));
     localStorage.setItem("recentCalls", JSON.stringify(recentCalls));
     localStorage.setItem("currentNumber", currentNumber);
@@ -314,7 +314,6 @@ const useGameLogic = () => {
     hasGameStarted,
     bonusAmount,
     bonusPattern,
-    isManual,
     calledNumbers,
     recentCalls,
     currentNumber,
@@ -327,7 +326,7 @@ const useGameLogic = () => {
     const fetchAllCardNumbers = async () => {
       if (!gameData || !gameData.cartela || !userId) {
         setIsLoading(false);
-        navigate("/game");
+        navigate("/dashboard");
         return;
       }
       const token = localStorage.getItem("token");
@@ -650,7 +649,7 @@ const useGameLogic = () => {
 
     if (!gameDetails.cartela.includes(cardIdInput)) {
       playNotRegisteredAudio();
-      toast.error(`Card ${cardIdInput} is not part of this game.`);
+      toast.error(`ካርቴላ ቁጥር ${cardIdInput}፣ ይህ ካርቴላ አልተመዘገበም `);
       return;
     }
 
@@ -789,12 +788,6 @@ const useGameLogic = () => {
       );
       setPatternTypes(Array.from(patterns));
 
-      if (isManual) {
-        // In manual mode, we just open the modal and let the cashier decide
-        setOpenModal(true);
-        return;
-      }
-
       if (isWinner || isBadBingo) {
         setOpenModal(true);
         (async () => {
@@ -890,7 +883,7 @@ const useGameLogic = () => {
 
                 if (bonusAmount > 0) {
                   try {
-                    const bonusResponse = await apiService.awardBonus(
+                    await apiService.awardBonus(
                       userId,
                       gameDetails.gameId,
                       gameDetails.houseId,
@@ -973,40 +966,7 @@ const useGameLogic = () => {
     playBlockedAudio,
     playLoseAudio,
     playWinnerAudio,
-    isManual,
   ]);
-
-  const declareWinnerManually = useCallback(async () => {
-    const token = localStorage.getItem("token");
-    if (!token || !userId) {
-      toast.error("User ID or token missing");
-      return;
-    }
-    if (!gameDetails || !gameDetails.houseId || !gameDetails.gameId) {
-      toast.error("Game details not loaded");
-      return;
-    }
-
-    try {
-      await apiService.declareWinner(
-        gameDetails.houseId,
-        gameDetails.gameId,
-        cardIdInput,
-        token,
-      );
-      setGameDetails((prev) => ({
-        ...prev,
-        winnerCardId: cardIdInput,
-        finished: true,
-      }));
-      setIsGameEnded(true);
-      setIsPlaying(false);
-      refreshWallet();
-      toast.success("Winner declared manually!");
-    } catch (error) {
-      toast.error(`Failed to declare winner: ${error.message}`);
-    }
-  }, [cardIdInput, gameDetails, userId]);
 
   // Handle end game
   const handleEndGame = () => {
@@ -1112,7 +1072,7 @@ const useGameLogic = () => {
     // toast.info('Game reset');
   };
 
-  // Handle shuffle click
+  // Handle shuffle click - runs indefinitely until manually stopped
   const handleShuffleClick = () => {
     if (isReady || isPlaying) return;
 
@@ -1135,19 +1095,7 @@ const useGameLogic = () => {
         ).sort(() => Math.random() - 0.5);
       }, 50);
       shuffleIntervalRef.current = interval;
-
-      shuffleTimeoutRef.current = setTimeout(() => {
-        setIsShuffling(false);
-        clearInterval(shuffleIntervalRef.current);
-
-        if (currentAudioRef.current) {
-          currentAudioRef.current.pause();
-          currentAudioRef.current.currentTime = 0;
-          currentAudioRef.current = null;
-        }
-        // toast.info('Shuffling paused');
-      }, 3500);
-
+      // NO auto-stop timeout - shuffle runs indefinitely until manually stopped
       // toast.info('Shuffling started');
     }
   };
@@ -1198,7 +1146,7 @@ const useGameLogic = () => {
         source: "primary",
       });
     } else if (BINGO_PATTERNS[primaryPattern]) {
-      BINGO_PATTERNS[primaryPattern].forEach((patternCells, index) => {
+      BINGO_PATTERNS[primaryPattern].forEach((patternCells) => {
         const grid = Array(25).fill(false);
         patternCells.forEach((cell) => {
           const gridIndex = cellToGridIndex(cell);
@@ -1220,7 +1168,7 @@ const useGameLogic = () => {
           source: "bonus",
         });
       } else if (BINGO_PATTERNS[bonusPattern]) {
-        BINGO_PATTERNS[bonusPattern].forEach((patternCells, index) => {
+        BINGO_PATTERNS[bonusPattern].forEach((patternCells) => {
           const grid = Array(25).fill(false);
           patternCells.forEach((cell) => {
             const gridIndex = cellToGridIndex(cell);
@@ -1323,7 +1271,6 @@ const useGameLogic = () => {
     playBlockedAudio,
     playShuffleSound,
     checkWinner,
-    declareWinnerManually,
     handleEndGame,
     clearLockedCards,
     togglePlayPause,
@@ -1346,20 +1293,13 @@ const useGameLogic = () => {
     setBonusAmount: debouncedSetBonusAmount,
     bonusPattern,
     setBonusPattern: debouncedSetBonusPattern,
-    isManual,
-    setIsManual: (val) => {
-      setIsManual(val);
-      setIsAutomatic(!val);
-    },
-    isAutomatic,
-    setIsAutomatic: (val) => {
-      setIsAutomatic(val);
-      setIsManual(!val);
-    },
+   
     showCentralBall,
     isCentralBallMoving,
     moveDuration: Math.max(400, Math.floor(600 * (drawSpeed / 3000))),
     blowerZoomBall,
+    // Manual call function for GameControlsBar
+    callNextNumber: drawNumber,
   };
 };
 

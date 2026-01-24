@@ -11,7 +11,8 @@ import {
 import Confetti from "react-confetti";
 import { bonus } from "../../voice/utilVoice";
 import { formatPatternName } from "../../utils/gameUtils";
-
+import CloseIcon from "@mui/icons-material/Close";
+import BlockIcon from "@mui/icons-material/Block";
 const blinkFadeInAnimation = `
   @keyframes blinkFadeIn {
     0% { opacity: 0; transform: scale(0.8); }
@@ -34,12 +35,6 @@ const WinnerDialog = ({
   bingoState,
   patternTypes,
   bonusAwarded,
-  bonusAmount,
-  isManual,
-  declareWinnerManually,
-  onNewGameClick,
-  playWinnerAudio,
-  playLoseAudio,
   lockedCards,
   setLockedCards,
   calledNumbers,
@@ -222,52 +217,66 @@ const WinnerDialog = ({
       }}
     >
       <style>{blinkFadeInAnimation}</style>
+{isWinner && openModal && (
+  <Confetti
+    width={window.innerWidth}
+    height={200}
+    numberOfPieces={120}
+    gravity={0.15}
+    recycle={false}
+  />
+)}
 
-      {/* Header Bar */}
-      <Box sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        p: 1.5,
-        borderBottom: "1px solid #e5e7eb",
-        bgcolor: "#f9fafb"
-      }}>
-        <Typography sx={{ fontWeight: "bold", color: "#374151" }}>Bingo</Typography>
-        <Button
-          onClick={handleKickPlayer}
-          disabled={lockedCards.includes(cardIdInput)}
-          sx={{
-            bgcolor: "#dc2626",
-            color: "#fff",
-            "&:hover": { bgcolor: "#b91c1c" },
-            fontSize: "1rem",
-            fontWeight: "bold",
-            px: 4,
-            py: 0.5,
-            borderRadius: "4px",
-            textTransform: "none",
-            border: "2px solid #000",
-            "&.Mui-disabled": { bgcolor: "#9ca3af", color: "#f3f4f6" },
-          }}
-        >
-          ይታሰር
-        </Button>
-      </Box>
+      {/* TOP STATUS BAR */}
+<Box
+  sx={{
+    bgcolor: isWinner ? "#16a34a" : "#fff",
+    color: isWinner?"#fff":"#dc2626",
+    py: 1.2,
+    px: 2,
+    textAlign: "center",
+    position: "relative",
+    borderBottom: "4px solid #fff",
+  }}
+>
+  {/* CARD NUMBER */}
+  <Typography
+    sx={{
+      fontSize: "1.8rem",
+      fontWeight: "bold",
+      lineHeight: 1.2,
+    }}
+  >
+    Card No: {cardIdInput}
+  </Typography>
 
-      {/* Blue Card No Bar */}
-      <Box
-        sx={{
-          bgcolor: "#0047ab",
-          color: "#fff",
-          py: 1,
-          textAlign: "center",
-          fontSize: "2rem",
-          fontWeight: "bold",
-          borderBottom: "4px solid #fff"
-        }}
-      >
-        Card No: {cardIdInput}
-      </Box>
+  {/* STATUS */}
+  <Typography
+    sx={{
+      fontSize: "1.1rem",
+      fontWeight: "bold",
+      mt: 0.3,
+      letterSpacing: "0.5px",
+      animation: isWinner ? "blinkFadeIn 0.8s ease-in-out" : "none",
+    }}
+  >
+    {isWinner ? "🎉 WINNER!" : "❌ NO BINGO"}
+  </Typography>
+
+  {/* PATTERN NAMES */}
+  {isWinner && winningPatterns.length > 0 && (
+    <Typography
+      sx={{
+        fontSize: "0.95rem",
+        mt: 0.3,
+        opacity: 0.95,
+      }}
+    >
+      {winningPatterns.join(" • ")}
+    </Typography>
+  )}
+</Box>
+
 
       <DialogContent sx={{ p: 2, bgcolor: "#f3f4f6" }}>
         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
@@ -317,112 +326,87 @@ const WinnerDialog = ({
           </Box>
 
           {/* Bottom Buttons */}
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, justifyContent: "center", width: "100%" }}>
-            {isManual ? (
-              <>
-                <Button
-                  onClick={async () => {
-                    if (playWinnerAudio) playWinnerAudio();
-                    await declareWinnerManually();
-                    handleCloseModal();
-                  }}
-                  sx={{
-                    bgcolor: "#1e7e4e",
-                    color: "#fff",
-                    border: "2px solid #000",
-                    fontWeight: "bold",
-                    borderRadius: "4px",
-                    textTransform: "none",
-                    px: 3,
-                    "&:hover": { bgcolor: "#166534" }
-                  }}
-                >
-                  አሸንፏል
-                </Button>
-                <Button
-                  onClick={() => {
-                    if (playLoseAudio) playLoseAudio();
-                    handleCloseModal();
-                  }}
-                  sx={{
-                    bgcolor: "#d94242",
-                    color: "#fff",
-                    border: "2px solid #000",
-                    fontWeight: "bold",
-                    borderRadius: "4px",
-                    textTransform: "none",
-                    px: 3,
-                    "&:hover": { bgcolor: "#991b1b" }
-                  }}
-                >
-                  አላሸነፈም
-                </Button>
-                <Button
-                  onClick={handleCloseModal}
-                  sx={{
-                    bgcolor: "#f2c144",
-                    color: "#000",
-                    border: "2px solid #000",
-                    fontWeight: "bold",
-                    borderRadius: "4px",
-                    textTransform: "none",
-                    px: 3,
-                    "&:hover": { bgcolor: "#eab308" }
-                  }}
-                >
-                  ተጨማሪ ቢንጎ
-                </Button>
-                <Button
-                  onClick={onNewGameClick}
-                  sx={{
-                    bgcolor: "#3f2b96",
-                    color: "#fff",
-                    border: "2px solid #000",
-                    fontWeight: "bold",
-                    borderRadius: "4px",
-                    textTransform: "none",
-                    px: 3,
-                    "&:hover": { bgcolor: "#2e1065" }
-                  }}
-                >
-                  አዲስ ጨዋታ
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button
-                  onClick={handleCloseModal}
-                  sx={{
-                    bgcolor: "#f2c144",
-                    color: "#000",
-                    border: "2px solid #000",
-                    fontWeight: "bold",
-                    borderRadius: "4px",
-                    textTransform: "none",
-                    px: 3,
-                    "&:hover": { bgcolor: "#eab308" }
-                  }}
-                >
-                  ተጨማሪ ቢንጎ
-                </Button>
-                <Button
-                  onClick={onNewGameClick}
-                  sx={{
-                    bgcolor: "#3f2b96",
-                    color: "#fff",
-                    border: "2px solid #000",
-                    fontWeight: "bold",
-                    borderRadius: "4px",
-                    textTransform: "none",
-                    px: 3,
-                    "&:hover": { bgcolor: "#2e1065" }
-                  }}
-                >
-                  አዲስ ጨዋታ
-                </Button>
-              </>
-            )}
-          </Box>
+          {/* Bottom Action Buttons */}
+<Box
+  sx={{
+    display: "flex",
+    gap: 2,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    mt: 1,
+  }}
+>
+  {/* CLOSE BUTTON */}
+  <Button
+    onClick={handleCloseModal}
+    startIcon={<CloseIcon />}
+    sx={{
+      minWidth: 140,
+      px: 3,
+      py: 1,
+      fontSize: "1rem",
+      fontWeight: "bold",
+      textTransform: "none",
+      borderRadius: "999px",
+      color: "#1f2937",
+      background: "linear-gradient(180deg, #fde68a, #facc15)",
+      border: "2px solid #000",
+      boxShadow: "0 4px 0 #000",
+      transition: "all 0.15s ease",
+      "&:hover": {
+        background: "linear-gradient(180deg, #facc15, #eab308)",
+        transform: "translateY(-1px)",
+        boxShadow: "0 6px 0 #000",
+      },
+      "&:active": {
+        transform: "translateY(2px)",
+        boxShadow: "0 2px 0 #000",
+      },
+    }}
+  >
+    Close
+  </Button>
+
+  {/* BLOCK BUTTON */}
+  <Button
+    onClick={handleKickPlayer}
+    disabled={lockedCards.includes(cardIdInput)}
+    startIcon={<BlockIcon />}
+    sx={{
+      minWidth: 160,
+      px: 4,
+      py: 1,
+      fontSize: "1rem",
+      fontWeight: "bold",
+      textTransform: "none",
+      borderRadius: "999px",
+      color: "#fff",
+      background: "linear-gradient(180deg, #ef4444, #dc2626)",
+      border: "2px solid #000",
+      boxShadow: "0 4px 0 #000",
+      transition: "all 0.15s ease",
+      "&:hover": {
+        background: "linear-gradient(180deg, #dc2626, #b91c1c)",
+        transform: "translateY(-1px)",
+        boxShadow: "0 6px 0 #000",
+      },
+      "&:active": {
+        transform: "translateY(2px)",
+        boxShadow: "0 2px 0 #000",
+      },
+      "&.Mui-disabled": {
+        background: "#9ca3af",
+        color: "#f3f4f6",
+        borderColor: "#6b7280",
+        boxShadow: "none",
+      },
+    }}
+  >
+    Block
+  </Button>
+</Box>
+
         </Box>
       </DialogContent>
     </Dialog>

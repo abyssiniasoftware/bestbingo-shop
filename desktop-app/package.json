@@ -1,7 +1,7 @@
 {
-  "name": "best-bingo",
+  "name": "dallol-bingo",
   "version": "1.0.0",
-  "description": "Best Bingo Electron application",
+  "description": "Dallol Bingo Electron application",
   "main": "./out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",
@@ -14,7 +14,7 @@
   },
   "build": {
     "appId": "com.bingo.app",
-    "productName": "Best Bingo",
+    "productName": "Dallol Bingo",
     "directories": {
       "output": "dist"
     },
@@ -43,7 +43,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Best Bingo"
+      "shortcutName": "Dallol Bingo"
     },
     "publish": null
   },

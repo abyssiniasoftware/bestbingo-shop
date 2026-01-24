@@ -1,252 +1,147 @@
-import React from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Slider,
-  Checkbox,
-  FormControlLabel,
-} from "@mui/material";
+import React, { useState } from "react";
 
+// Control buttons matching styles.css .cutm-btn (yellow gradient)
 const GameControlsBar = ({
   isPlaying,
   isShuffling,
   togglePlayPause,
   handleShuffleClick,
-  voiceOptions,
-  voiceOption,
-  handleVoiceChange,
   drawSpeed,
   setDrawSpeed,
   cardIdInput,
   setCardIdInput,
   checkWinner,
   hasGameStarted,
-  isManual,
-  setIsManual,
-  isAutomatic,
-  setIsAutomatic,
+  handleEndGame,
+  hasReservation,
+  isGameEnded,
   onNewGameClick,
-  handleBack,
+  onCallNext,
+  callCount = 0,
 }) => {
+  const [autoplayEverStarted, setAutoplayEverStarted] = useState(false);
+
+  const handleAutoPlayToggle = () => {
+    if (!isPlaying) {
+      setAutoplayEverStarted(true);
+    }
+    togglePlayPause();
+  };
+
   const handleKeyPress = (e) => {
-    if (e.key === "Enter" && cardIdInput && !isPlaying) {
+    if (e.key === "Enter" && cardIdInput) {
       checkWinner();
     }
   };
 
+  // Convert drawSpeed (ms) to seconds for display
+  const speedInSeconds = Math.round(drawSpeed / 1000);
+
+  // Determine which controls to show based on game state
+  // Screenshot 0: No reservation => START NEW GAME + STOP (shuffle)
+  // Screenshot 1: Has reservation, 0 calls (after reservation, before start) => Full controls
+  // Screenshot 2: Has reservation, calls made => Full controls with CALL NEXT disabled if autoplay started
+  const showFullControls = hasReservation && !isGameEnded;
+
   return (
-    <Box
-      className="game-controls-bar"
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: { xs: 1, sm: 2 },
-        padding: { xs: "8px 12px", sm: "10px 15px" },
-        background: "#1a1a1a",
-        borderRadius: "8px",
-        flexWrap: "wrap",
-      }}
-    >
-      {/* Left group: Main action buttons */}
-      <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <Button
-          onClick={togglePlayPause}
-          sx={{
-            background: isPlaying
-              ? "linear-gradient(135deg, #dc2626 0%, #991b1b 100%)"
-              : "linear-gradient(135deg, #16a34a 0%, #15803d 100%)",
-            color: "white",
-            fontWeight: "bold",
-            padding: { xs: "6px 12px", sm: "8px 16px" },
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-            borderRadius: "4px",
-            "&:hover": { transform: "translateY(-1px)" },
-          }}
-        >
-          {isPlaying ? "Stop" : "Bingo"}
-        </Button>
+    <div className="controls-section">
+      {/* Actions Row */}
+      <div className="actions">
+        {showFullControls ? (
+          <>
+            <button
+              className="cutm-btn"
+              id="start-auto-play"
+              onClick={handleAutoPlayToggle}
+            >
+              {isPlaying ? "STOP AUTO PLAY" : "START AUTO PLAY"}
+            </button>
+            <button
+              className={`cutm-btn ${(autoplayEverStarted || isPlaying) ? 'inactive' : ''}`}
+              id="call-next"
+              onClick={onCallNext}
+              disabled={autoplayEverStarted || isPlaying}
+            >
+              CALL NEXT
+            </button>
+            <button
+              className="cutm-btn"
+              id="finsh"
+              onClick={handleEndGame}
+            >
+              FINSH
+            </button>
+            <button
+              className={`cutm-btn ${(isPlaying || callCount > 0) ? 'inactive' : ''}`}
+              id="shuffle"
+              onClick={handleShuffleClick}
+              disabled={isPlaying || callCount > 0}
+            >
+              {isShuffling ? "STOP" : "SHUFFLE"}
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              className="cutm-btn"
+              id="start-new-game"
+              onClick={onNewGameClick}
+            >
+              START NEW GAME
+            </button>
+            <button
+              className="cutm-btn"
+              id="shuffle"
+              onClick={handleShuffleClick}
+            >
+              {isShuffling ? "STOP" : "SHUFFLE"}
+            </button>
+          </>
+        )}
+      </div>
 
-        <Button
-          onClick={onNewGameClick}
-          sx={{
-            background: "linear-gradient(135deg, #790918 0%, #790928 100%)",
-            color: "white",
-            fontWeight: "bold",
-            padding: { xs: "6px 12px", sm: "8px 16px" },
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-            borderRadius: "4px",
-            "&:hover": { transform: "translateY(-1px)" },
-          }}
-        >
-          New Game
-        </Button>
-
-        <Button
-          onClick={handleBack}
-          // disabled={hasGameStarted && !isGameEnded}
-          sx={{
-            background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
-            color: "white",
-            fontWeight: "bold",
-            padding: { xs: "6px 12px", sm: "8px 16px" },
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-            borderRadius: "4px",
-            "&:disabled": { background: "#4b5563", color: "#9ca3af" },
-            "&:hover": { transform: "translateY(-1px)" },
-          }}
-        >
-          Back
-        </Button>
-
-        <Button
-          onClick={handleShuffleClick}
-          disabled={isPlaying || hasGameStarted}
-          sx={{
-            background: isShuffling
-              ? "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"
-              : "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
-            color: "white",
-            fontWeight: "bold",
-            padding: { xs: "6px 12px", sm: "8px 16px" },
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-            borderRadius: "4px",
-            "&:disabled": { background: "#4b5563", color: "#9ca3af" },
-            "&:hover": { transform: "translateY(-1px)" },
-          }}
-        >
-          Bowzew
-        </Button>
-      </Box>
-
-      {/* Center group: Voice, Speed, Manual/Auto */}
-      <Box
-        sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap" }}
-      >
-        {/* Voice selector */}
-        <select
-          value={
-            voiceOptions.find((option) => option.value === voiceOption)
-              ?.label || ""
-          }
-          onChange={handleVoiceChange}
-          className="voice-select"
-          style={{
-            padding: "8px 12px",
-            background: "#374151",
-            color: "white",
-            border: "1px solid #4b5563",
-            borderRadius: "4px",
-            fontSize: "0.875rem",
-          }}
-        >
-          {voiceOptions.map((option) => (
-            <option key={option.value} value={option.label}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-
-        {/* Speed slider */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <span style={{ color: "#9ca3af", fontSize: "0.75rem" }}>Speed:</span>
-          <Box sx={{ width: { xs: 60, sm: 80 } }}>
-            <Slider
-              value={drawSpeed}
-              onChange={(e, newValue) => setDrawSpeed(newValue)}
-              min={2000}
-              max={7500}
-              step={500}
-              sx={{
-                color: "#60a5fa",
-                "& .MuiSlider-thumb": {
-                  width: 12,
-                  height: 12,
-                },
-              }}
-            />
-          </Box>
-          <span style={{ color: "white", fontSize: "0.75rem" }}>
-            {(drawSpeed / 1000).toFixed(0)}
-          </span>
-        </Box>
-
-        {/* Manual/Automatic checkboxes */}
-        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isManual || false}
-                onChange={(e) => setIsManual && setIsManual(e.target.checked)}
-                sx={{ color: "#9ca3af", "&.Mui-checked": { color: "#60a5fa" } }}
-                size="small"
-              />
-            }
-            label={
-              <span style={{ color: "#9ca3af", fontSize: "0.75rem" }}>
-                Manual
-              </span>
-            }
+      {/* Form Group Row */}
+      <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+        {/* Speed Slider */}
+        <div className="form-group">
+          <input
+            type="range"
+            value={drawSpeed}
+            onChange={(e) => setDrawSpeed(parseInt(e.target.value))}
+            min={2000}
+            max={7500}
+            step={500}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={isAutomatic}
-                onChange={(e) => setIsAutomatic(e.target.checked)}
-                sx={{ color: "#9ca3af", "&.Mui-checked": { color: "#60a5fa" } }}
-                size="small"
-              />
-            }
-            label={
-              <span style={{ color: "#9ca3af", fontSize: "0.75rem" }}>
-                Automatic
-              </span>
-            }
+          <p style={{ color: "white", fontSize: 14, fontFamily: "'poetsen', sans-serif" }}>
+            Auto call {speedInSeconds} secounds
+          </p>
+        </div>
+
+        {/* Card Input */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <input
+            type="text"
+            placeholder="Enter cartela"
+            value={cardIdInput}
+            onChange={(e) => setCardIdInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            style={{
+              width: 200,
+              border: '1px solid #ccc',
+              backgroundColor: 'rgba(225, 215, 23, 0.5)',
+              borderRadius: 5,
+              padding: '8px 10px',
+              fontSize: 18,
+              fontFamily: "'poetsen', sans-serif",
+              color: '#000000',
+            }}
           />
-        </Box>
-      </Box>
-
-      {/* Right group: Card input and Check */}
-      <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-        <TextField
-          placeholder="Enter Card Number"
-          value={cardIdInput}
-          onChange={(e) => setCardIdInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          variant="outlined"
-          size="small"
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              background: "#374151",
-              color: "white",
-              fontSize: "0.875rem",
-              "& fieldset": { borderColor: "#4b5563" },
-              "&:hover fieldset": { borderColor: "#60a5fa" },
-            },
-            "& input::placeholder": { color: "#9ca3af" },
-            width: { xs: 100, sm: 140 },
-          }}
-        />
-
-        <Button
-          onClick={checkWinner}
-          disabled={!cardIdInput || isPlaying}
-          sx={{
-            background: "linear-gradient(135deg, #16a34a 0%, #15803d 100%)",
-            color: "white",
-            fontWeight: "bold",
-            padding: { xs: "6px 12px", sm: "8px 16px" },
-            fontSize: { xs: "0.75rem", sm: "0.875rem" },
-            borderRadius: "4px",
-            "&:disabled": { background: "#4b5563", color: "#9ca3af" },
-            "&:hover": { transform: "translateY(-1px)" },
-          }}
-        >
-          Check
-        </Button>
-      </Box>
-    </Box>
+          <button className="cutm-btn" id="check-btn" onClick={checkWinner}>
+            CHECK
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

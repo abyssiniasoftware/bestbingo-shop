@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
+import api from "../utils/api";
 import debounce from "lodash.debounce";
+import config from "../constants/config";
 import {
   Box,
   Table,
@@ -18,7 +20,6 @@ import {
   TablePagination,
 } from "@mui/material";
 import RechargeModal from "../components/ui/RechargeModal";
-import api from "../utils/api";
 
 const HouseList = () => {
   const [houses, setHouses] = useState([]);
@@ -35,12 +36,14 @@ const HouseList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  // New states for verification
+
+  // New states for verification (offline mode)
   const [verificationCode, setVerificationCode] = useState("");
   const [generatedCode, setGeneratedCode] = useState("");
   const [verificationMessage, setVerificationMessage] = useState("");
   const [isVerified, setIsVerified] = useState(false);
 
+  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
 
@@ -50,20 +53,14 @@ const HouseList = () => {
       const response = await api.get(`/api/house/`, {
         params: { page, limit: rowsPerPage, search },
       });
-      console.log('API Response:', response);
-      console.log('API Response Data:', response.data);
       if (response.status === 200) {
-        setHouses(response.data.houses || []);
-        // Check if houses is missing
-        if (!response.data.houses) console.error('response.data.houses is UNDEFINED!');
-
+        setHouses(response.data.houses);
         setTotalPages(response.data.totalPages);
         setCurrentPage(response.data.page);
       } else {
         setErrorMessage("Failed to fetch house list.");
       }
     } catch (error) {
-      console.error("Error fetching houses:", error);
       setErrorMessage("Failed to fetch house list.");
     } finally {
       setLoading(false);
@@ -78,7 +75,7 @@ const HouseList = () => {
         setCurrentPage(1); // Reset to first page on new search
         fetchHouses(1, value);
       }, 500),
-    [  rowsPerPage]
+    [token, rowsPerPage],
   );
 
   useEffect(() => {
@@ -88,11 +85,16 @@ const HouseList = () => {
     };
   }, [currentPage, rowsPerPage]);
 
-  // Generate verification code when recharge modal opens
+  const handleSearch = (e) => {
+    const value = e.target.value.toLowerCase();
+    debouncedSearch(value);
+  };
+
+  // Generate verification code when recharge modal opens in offline mode
   useEffect(() => {
-    if (rechargeModalOpen) {
-      const randomThreeDigit = Math.floor(1000 + Math.random() * 9000); // Generates a 3-digit number
-      const code = `${randomThreeDigit}`;
+    if (rechargeModalOpen && config.gameMode === "offline") {
+      const randomFourDigit = Math.floor(1000 + Math.random() * 9000);
+      const code = `${randomFourDigit}`;
       setGeneratedCode(code);
       setVerificationMessage(`Please enter the verification code: ${code}`);
       setVerificationCode("");
@@ -100,32 +102,21 @@ const HouseList = () => {
     }
   }, [rechargeModalOpen]);
 
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    debouncedSearch(value);
-  };
+  const handleVerificationChange = (value) => {
+    setVerificationCode(value);
+    if (config.gameMode !== "offline") return;
 
-  const handleRechargeClick = (houseId) => {
-    setSelectedHouseId(houseId);
-    setRechargeAmount("");
-    setSuperAdminCommission("");
-    setRechargeMessage("");
-    setRechargeError(false);
-    setVerificationMessage("");
-    setVerificationCode("");
-    setRechargeModalOpen(true);
-  };
-
-  const handleVerificationChange = (e) => {
-    setVerificationCode(e.target.value);
     const code = Number(generatedCode);
     const amount = Number(rechargeAmount);
     const commission = Number(superAdminCommission);
-    const entered = Number(e.target.value);
+    const entered = Number(value);
+
+    // Using the same logic as provided in the user's offline snippet
     const validOffsets = [123, 321, 234];
     const isValid = validOffsets.some(
       (offset) => entered === code + amount + commission + offset
     );
+
     if (isValid) {
       setIsVerified(true);
       setRechargeMessage("");
@@ -137,9 +128,22 @@ const HouseList = () => {
     }
   };
 
+  const handleRechargeClick = (houseId) => {
+    setSelectedHouseId(houseId);
+    setRechargeAmount("");
+    setSuperAdminCommission("");
+    setRechargeMessage("");
+    setRechargeError(false);
+    // Reset verification states
+    setVerificationCode("");
+    setGeneratedCode("");
+    setVerificationMessage("");
+    setIsVerified(false);
+    setRechargeModalOpen(true);
+  };
+
   const handleRechargeSubmit = async () => {
-    // Validate verification code
-    if (!isVerified) {
+    if (config.gameMode === "offline" && !isVerified) {
       setRechargeMessage("Verification incorrect. Please try again.");
       setRechargeError(true);
       return;
@@ -150,14 +154,11 @@ const HouseList = () => {
     setRechargeError(false);
 
     try {
-      const response = await api.post(
-        `/api/house/recharge`,
-        {
-          houseId: selectedHouseId,
-          amount: Number(rechargeAmount),
-          superAdminCommission: Number(superAdminCommission) / 100,
-        },
-      );
+      const response = await api.post(`/api/house/recharge`, {
+        houseId: selectedHouseId,
+        amount: Number(rechargeAmount),
+        superAdminCommission: Number(superAdminCommission) / 100,
+      });
 
       if (response.status === 200 || response.status === 201) {
         setRechargeMessage("Recharge submitted successfully!");
@@ -178,7 +179,6 @@ const HouseList = () => {
         setRechargeError(true);
       }
     } catch (error) {
-      console.error("Recharge error:", error);
       setRechargeMessage("An error occurred during recharge.");
       setRechargeError(true);
     } finally {
@@ -196,7 +196,7 @@ const HouseList = () => {
   };
 
   const filteredHouses = useMemo(() => {
-    return houses || []; // Client-side filtering removed as search is handled by backend
+    return houses; // Client-side filtering removed as search is handled by backend
   }, [houses]);
 
   const columns = [
@@ -234,6 +234,7 @@ const HouseList = () => {
       sticky: true,
     },
   ];
+  const selectedHouseName = houses.find((h) => h._id === selectedHouseId)?.name;
 
   return (
     <Box
@@ -375,7 +376,7 @@ const HouseList = () => {
                           >
                             {col.label}
                           </TableCell>
-                        )
+                        ),
                     )}
                   </TableRow>
                 </TableHead>
@@ -425,7 +426,9 @@ const HouseList = () => {
                               ) : col.id === "branch" ? (
                                 house.houseAdminId?.branch || "N/A"
                               ) : col.id === "wallet" ? (
-                                house.houseAdminId?.package || 0
+                                Number(house.houseAdminId?.package).toFixed(
+                                  0,
+                                ) || 0
                               ) : col.id === "status" ? (
                                 house.houseAdminId?.isBanned ? (
                                   "Banned"
@@ -459,7 +462,7 @@ const HouseList = () => {
                                 "N/A"
                               )}
                             </TableCell>
-                          )
+                          ),
                       )}
                     </TableRow>
                   ))}
@@ -502,22 +505,22 @@ const HouseList = () => {
         )}
 
         {/* Recharge Modal */}
-
         <RechargeModal
           open={rechargeModalOpen}
           onClose={() => setRechargeModalOpen(false)}
-          houseName={houses.find((h) => h._id === selectedHouseId)?.name}
-          rechargeMessage={rechargeMessage}
-          rechargeError={rechargeError}
-          verificationMessage={verificationMessage}
-          verificationCode={verificationCode}
-          onVerificationChange={handleVerificationChange}
-          rechargeAmount={rechargeAmount}
-          onRechargeAmountChange={(e) => setRechargeAmount(e.target.value)}
-          superAdminCommission={superAdminCommission}
-          onCommissionChange={(e) => setSuperAdminCommission(e.target.value)}
           onSubmit={handleRechargeSubmit}
           loading={rechargeLoading}
+          amount={rechargeAmount}
+          onAmountChange={setRechargeAmount}
+          commission={superAdminCommission}
+          onCommissionChange={setSuperAdminCommission}
+          message={rechargeMessage}
+          error={rechargeError}
+          houseName={selectedHouseName}
+          gameMode={config.gameMode}
+          verificationCode={verificationCode}
+          onVerificationChange={handleVerificationChange}
+          verificationMessage={verificationMessage}
           isVerified={isVerified}
         />
       </Box>
