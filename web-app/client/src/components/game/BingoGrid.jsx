@@ -1,58 +1,41 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-// Original shuffle logic from script_v2.js - runs until manually stopped
 const BingoGrid = ({ calledNumbers, shuffling }) => {
   const [highlightedNumbers, setHighlightedNumbers] = useState([]);
-  const shuffleIntervalRef = useRef(null);
 
-  // Shuffle animation - mirrors original script_v2.js behavior
-  // Runs indefinitely every 115ms until explicitly stopped
+  // Handle shuffling animation
   useEffect(() => {
-    if (shuffling) {
-      // Clear any existing interval first
-      if (shuffleIntervalRef.current) {
-        clearInterval(shuffleIntervalRef.current);
-      }
+    if (!shuffling) return;
 
-      // Start shuffle: randomly highlight 5 numbers every 115ms
-      shuffleIntervalRef.current = setInterval(() => {
-        const allNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
-        const uncalledNumbers = allNumbers.filter(
-          num => !calledNumbers.includes(num.toString())
-        );
+    const intervalId = setInterval(() => {
+      const allNumbers = Array.from({ length: 75 }, (_, i) => i + 1);
+      const uncalledNumbers = allNumbers.filter(
+        (num) => !calledNumbers.includes(num.toString())
+      );
 
-        if (uncalledNumbers.length > 0) {
-          // Randomly select up to 5 numbers to highlight
-          const randomCount = Math.min(5, uncalledNumbers.length);
-          const highlighted = [];
-          const usedIndices = new Set();
+      if (uncalledNumbers.length > 0) {
+        const randomCount = Math.min(5, uncalledNumbers.length);
+        const highlighted = [];
+        const usedIndices = new Set();
 
-          while (highlighted.length < randomCount) {
-            const randomIndex = Math.floor(Math.random() * uncalledNumbers.length);
-            if (!usedIndices.has(randomIndex)) {
-              usedIndices.add(randomIndex);
-              highlighted.push(uncalledNumbers[randomIndex]);
-            }
+        while (highlighted.length < randomCount) {
+          const randomIndex = Math.floor(Math.random() * uncalledNumbers.length);
+          if (!usedIndices.has(randomIndex)) {
+            usedIndices.add(randomIndex);
+            highlighted.push(uncalledNumbers[randomIndex]);
           }
-          setHighlightedNumbers(highlighted);
         }
-      }, 115); // Match original: 115ms interval
-    } else {
-      // Stop shuffle - clear interval and highlights
-      if (shuffleIntervalRef.current) {
-        clearInterval(shuffleIntervalRef.current);
-        shuffleIntervalRef.current = null;
+        setHighlightedNumbers(highlighted);
       }
-      setHighlightedNumbers([]);
-    }
+    }, 115);
 
-    // Cleanup on unmount
-    return () => {
-      if (shuffleIntervalRef.current) {
-        clearInterval(shuffleIntervalRef.current);
-      }
-    };
+    return () => clearInterval(intervalId);
   }, [shuffling, calledNumbers]);
+
+  // Clear highlights when shuffling stops
+  if (!shuffling && highlightedNumbers.length > 0) {
+    setHighlightedNumbers([]);
+  }
 
   const letters = ["B", "I", "N", "G", "O"];
 
@@ -66,7 +49,7 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
   };
 
   return (
-    <div className="bingo-grid">
+    <div>
       {letters.map((letter, rowIdx) => {
         const startNum = rowIdx * 15 + 1;
 

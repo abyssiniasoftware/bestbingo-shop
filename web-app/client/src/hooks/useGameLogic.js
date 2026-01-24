@@ -659,7 +659,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
 
     if (!gameDetails.cartela.includes(cardIdInput)) {
       playNotRegisteredAudio();
-      toast.error(`Card ${cardIdInput} is not part of this game.`);
+      toast.error(`ካርቴላ ቁጥር ${cardIdInput}፣ ይህ ካርቴላ አልተመዘገበም `);
       return;
     }
 
@@ -899,7 +899,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
 
                 if (bonusAmount > 0) {
                   try {
-                    const bonusResponse = await apiService.awardBonus(
+                    await apiService.awardBonus(
                       userId,
                       gameDetails.gameId,
                       gameDetails.houseId,
@@ -1195,7 +1195,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
         source: "primary",
       });
     } else if (BINGO_PATTERNS[primaryPattern]) {
-      BINGO_PATTERNS[primaryPattern].forEach((patternCells, index) => {
+      BINGO_PATTERNS[primaryPattern].forEach((patternCells) => {
         const grid = Array(25).fill(false);
         patternCells.forEach((cell) => {
           const gridIndex = cellToGridIndex(cell);
@@ -1217,7 +1217,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
           source: "bonus",
         });
       } else if (BINGO_PATTERNS[bonusPattern]) {
-        BINGO_PATTERNS[bonusPattern].forEach((patternCells, index) => {
+        BINGO_PATTERNS[bonusPattern].forEach((patternCells) => {
           const grid = Array(25).fill(false);
           patternCells.forEach((cell) => {
             const gridIndex = cellToGridIndex(cell);

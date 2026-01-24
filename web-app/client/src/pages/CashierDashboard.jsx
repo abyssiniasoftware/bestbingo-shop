@@ -17,7 +17,7 @@ import {
   day as dayIcon,
   night as nightIcon,
   full as FullscreenIcon
-} from "../images/icon.js";
+} from "../images/icon";
 
 import ViewCartela from "./ViewCartela";
 import Reports from "./Reports";
@@ -232,11 +232,11 @@ const CashierDashboard = () => {
             flex: 1,
           }}>
             <span className="header-text-gradient">
-              <span className="header-d">D</span>
-              allol{' '}
-              B
-              <span className="header-i">i</span>
-              ngo!
+              <span className="header-d">Dallol</span>
+              {' '}
+              Bin
+              <span className="header-i">g</span>
+              o!
             </span>
           </div>
 

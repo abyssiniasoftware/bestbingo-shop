@@ -1,13 +1,13 @@
-import { useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import GameControlsBar from "../components/game/GameControlsBar";
-import NewGameConfirmDialog from "../components/game/NewGameConfirmDialog";
 import BingoGrid from "../components/game/BingoGrid";
 import WinnerDialog from "../components/game/WinnerDialog";
 import useGameLogic from "../hooks/useGameLogic";
 import useGameStore from "../stores/gameStore";
 import { BINGO_PATTERNS } from "../constants/constants";
-
+import {
+  money as MoneyIcon
+} from "../images/icon";
 const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount, voiceOption: passedVoiceOption }) => {
   const params = useParams();
   const stake = propStake || params.stake || "";
@@ -53,18 +53,13 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
     callNextNumber,
   } = useGameLogic(stake, players, winAmount, passedVoiceOption);
 
-  const [openNewGameConfirm, setOpenNewGameConfirm] = useState(false);
-
   const handleBack = () => {
     navigate("/new-game", { state: { gameId: gameData?.game.gameId } });
   };
 
   const handleNewGameClick = () => {
-    if (hasGameStarted) {
-      setOpenNewGameConfirm(true);
-    } else {
-      navigate("/new-game");
-    }
+    handleReset();
+    navigate("/new-game");
   };
 
   const hasReservation = gameData?.cartela?.length > 0;
@@ -101,24 +96,20 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
         </span>
         <span className="stat-box">{isPlaying ? "GAME PLAYING" : "GAME"}</span>
         <span className="stat-box">STAKE {stake}</span>
-        <span className="stat-box">WIN PRICE {winAmount}</span>
+        <span className="stat-box">WIN PRICE {winAmount > 0 ? winAmount : ""}</span>
         <span className="stat-box">{callCount} CALLED</span>
       </div>
 
       {/* Main Panel: grid layout depends on whether current ball is shown */}
       <div
         className="bingo-panel"
-        style={{
-          gridTemplateColumns: showCurrentBall ? '85% 15%' : '100%'
-        }}
       >
+
         {/* Left: Bingo Grid */}
-        <div>
-          <BingoGrid
-            calledNumbers={calledNumbers}
-            shuffling={isShuffling}
-          />
-        </div>
+        <BingoGrid
+          calledNumbers={calledNumbers}
+          shuffling={isShuffling}
+        />
 
         {/* Right: Current Ball + Recent Calls - Only shown when there are calls */}
         {showCurrentBall && (
@@ -168,28 +159,25 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
       {/* Action Panel: 65% controls, 35% win money */}
       <div className="action-panel">
         {/* Left: Controls */}
-        <div>
-          <GameControlsBar
-            isPlaying={isPlaying}
-            isShuffling={isShuffling}
-            togglePlayPause={togglePlayPause}
-            handleShuffleClick={handleShuffleClick}
-            drawSpeed={drawSpeed}
-            setDrawSpeed={setDrawSpeed}
-            cardIdInput={cardIdInput}
-            setCardIdInput={setCardIdInput}
-            checkWinner={checkWinner}
-            handleBack={handleBack}
-            isGameEnded={isGameEnded}
-            hasGameStarted={hasGameStarted}
-            handleEndGame={handleEndGame}
-            hasReservation={hasReservation}
-            onNewGameClick={handleNewGameClick}
-            onCallNext={callNextNumber}
-            callCount={callCount}
-          />
-        </div>
-
+        <GameControlsBar
+          isPlaying={isPlaying}
+          isShuffling={isShuffling}
+          togglePlayPause={togglePlayPause}
+          handleShuffleClick={handleShuffleClick}
+          drawSpeed={drawSpeed}
+          setDrawSpeed={setDrawSpeed}
+          cardIdInput={cardIdInput}
+          setCardIdInput={setCardIdInput}
+          checkWinner={checkWinner}
+          handleBack={handleBack}
+          isGameEnded={isGameEnded}
+          hasGameStarted={hasGameStarted}
+          handleEndGame={handleEndGame}
+          hasReservation={hasReservation}
+          onNewGameClick={handleNewGameClick}
+          onCallNext={callNextNumber}
+          callCount={callCount}
+        />
         {/* Right: WIN MONEY */}
         <div className="winner">
           <div style={{ textAlign: "right", marginRight: 10 }}>
@@ -209,28 +197,27 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
             </div>
           </div>
           <img
-            src="/static/game/icon/money.png"
+            src={MoneyIcon}
             alt="Money"
             style={{ height: 150 }}
-            onError={(e) => { e.target.src = '/icon/money.png'; }}
+            onError={(e) => { e.target.src = MoneyIcon; }}
           />
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="cashier-footer" style={{ textAlign: "center", marginTop: 16, paddingBottom: 8 }}>
-        © 2024 Dallol Technologies. All rights reserved.
+      <footer
+        className="cashier-footer"
+        style={{
+          textAlign: "center",
+          marginTop: 6,
+          padding: "12px 8px",
+          fontSize: "0.875rem",
+        }}
+      >
+        © {new Date().getFullYear()} Abyssinia Software Technology PLC. All Rights Reserved.
       </footer>
 
-      {/* New Game Confirmation Modal */}
-      <NewGameConfirmDialog
-        open={openNewGameConfirm}
-        onClose={() => setOpenNewGameConfirm(false)}
-        onConfirm={() => {
-          handleReset();
-          setOpenNewGameConfirm(false);
-        }}
-      />
 
       {/* Winner Dialog */}
       <WinnerDialog
@@ -254,7 +241,7 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
         isManual={isManual}
         declareWinnerManually={declareWinnerManually}
         handleReset={handleReset}
-        onNewGameClick={() => setOpenNewGameConfirm(true)}
+        onNewGameClick={handleNewGameClick}
         playWinnerAudio={playWinnerAudio}
         playLoseAudio={playLoseAudio}
       />
