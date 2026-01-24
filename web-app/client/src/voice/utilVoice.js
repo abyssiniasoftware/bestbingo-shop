@@ -1,4 +1,5 @@
-import ready from "/utilVoice/ready.mp3";
+import ready from "/utilVoice/check.mp3";
+import ready2 from "/utilVoice/ready.mp3";
 import shuffle from "/utilVoice/shuffle.mp3";
 import shuffle2 from "/utilVoice/shuffle.wav";
 
@@ -33,6 +34,7 @@ import notRegistered from "/utilVoice/notreg.wav";
 
 export {
   ready,
+  ready2,
   shuffle,
   shuffle2,
   start,

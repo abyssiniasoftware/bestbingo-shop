@@ -228,6 +228,14 @@
     font-size: 46px;
     font-weight: bold;
 }
+.new-game-header-text-gradient {
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: #030728;
+    font-family: 'pacifico', sans-serif;
+    font-size: 32px;
+    font-weight: bold;
+}
 
 .header-d {
     color: #ff8d50;

@@ -19,7 +19,7 @@ const useNewGameLogic = ({
   const [useDropdown, setUseDropdown] = useState(
     () => JSON.parse(localStorage.getItem("useDropdown")) || false,
   );
-  const [cutAmount, setCutAmount] = useState(35);
+  const [cutAmount, setCutAmount] = useState(20);
   const [lastGameId, setLastGameId] = useState(0);
   const [previousCartela, setPreviousCartela] = useState(() => {
     const stored = localStorage.getItem("previousGameCartela");
@@ -58,6 +58,10 @@ const useNewGameLogic = ({
     const stored = localStorage.getItem("bonusPattern");
     return stored || "";
   });
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [showAllCards, setShowAllCards] = useState(false);
+  const [bonusChecked, setBonusChecked] = useState(true);
+  const [freeHitChecked, setFreeHitChecked] = useState(true);
 
   const { refreshWallet } = useWallet();
 
@@ -248,6 +252,8 @@ const useNewGameLogic = ({
         numberOfPlayers: cartela.length,
         cutAmountPercent: cutAmount,
         cartela,
+        bonus: bonusChecked,
+        freeHit: freeHitChecked,
       };
       if (gameId) {
         payload = { ...payload, gameId };
@@ -395,6 +401,14 @@ const useNewGameLogic = ({
     lastGameId,
     handleContinuePrevious,
     previousCartela,
+    isConfirmed,
+    setIsConfirmed,
+    showAllCards,
+    setShowAllCards,
+    bonusChecked,
+    setBonusChecked,
+    freeHitChecked,
+    setFreeHitChecked,
   };
 };
 
