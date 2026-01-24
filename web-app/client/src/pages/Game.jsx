@@ -42,14 +42,9 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
     clearLockedCards,
     togglePlayPause,
     bonusAwarded,
-    bonusAmountGiven,
-    isManual,
-    declareWinnerManually,
     handleReset,
     primaryPattern,
-    setLockedCards,
-    playWinnerAudio,
-    playLoseAudio,
+    setLockedCards,  
     callNextNumber,
   } = useGameLogic(stake, players, winAmount, passedVoiceOption);
 
@@ -236,14 +231,8 @@ const Game = ({ stake: propStake, players: propPlayers, winAmount: propWinAmount
         BINGO_PATTERNS={BINGO_PATTERNS}
         isGameEnded={isGameEnded}
         bonusAwarded={bonusAwarded}
-        bonusAmount={bonusAmountGiven.toFixed(0)}
         handleEndGame={handleEndGame}
-        isManual={isManual}
-        declareWinnerManually={declareWinnerManually}
         handleReset={handleReset}
-        onNewGameClick={handleNewGameClick}
-        playWinnerAudio={playWinnerAudio}
-        playLoseAudio={playLoseAudio}
       />
     </div>
   );

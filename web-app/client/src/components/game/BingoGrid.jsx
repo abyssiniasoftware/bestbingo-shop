@@ -38,6 +38,10 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
   }
 
   const letters = ["B", "I", "N", "G", "O"];
+const lastCalledNumber =
+  calledNumbers.length > 0
+    ? parseInt(calledNumbers[calledNumbers.length - 1], 10)
+    : null;
 
   // Letter border colors matching styles.css
   const letterBorderColors = {
@@ -69,13 +73,17 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
               const num = startNum + colIdx;
               const isCalled = calledNumbers.includes(num.toString());
               const isHighlighted = highlightedNumbers.includes(num) && !isCalled;
+              const isLastCalled = num === lastCalledNumber;
 
               // CSS classes: selected = yellow highlight (called or shuffle-highlighted)
               let className = "number";
-              if (isCalled) {
+              if (isCalled || isHighlighted) {
                 className += " selected";
-              } else if (isHighlighted) {
-                className += " selected"; // Same yellow highlight as original
+              }
+
+              // ⭐ BLINK only the LAST called number
+              if (isLastCalled) {
+                className += " blink";
               }
 
               return (
