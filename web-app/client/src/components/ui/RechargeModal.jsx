@@ -1,4 +1,4 @@
-// components/RechargeModal.jsx
+// components/ui/RechargeModal.jsx
 import React from "react";
 import {
   Dialog,
@@ -20,15 +20,21 @@ const RechargeModal = ({
   onSubmit,
   loading,
   amount,
+  onAmountChange,
   commission,
+  onCommissionChange,
   message,
   error,
   houseName,
-  onAmountChange,
-  onCommissionChange,
+  gameMode = "online",
+  verificationCode,
+  onVerificationChange,
+  verificationMessage,
+  isVerified,
 }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const isOffline = gameMode === "offline";
 
   return (
     <Dialog
@@ -84,6 +90,31 @@ const RechargeModal = ({
         >
           Recharge for: <strong>{houseName || "Unknown House"}</strong>
         </Typography>
+
+        {isOffline && verificationMessage && (
+          <Typography
+            variant="body2"
+            mb={{ xs: 1, sm: 1 }}
+            sx={{
+              color: "#ffffff",
+              fontSize: { xs: "0.75rem", sm: "0.875rem" },
+            }}
+          >
+            {verificationMessage}
+          </Typography>
+        )}
+
+        {isOffline && (
+          <TextField
+            fullWidth
+            label="Verification Code"
+            type="number"
+            value={verificationCode}
+            onChange={(e) => onVerificationChange(e.target.value)}
+            sx={textFieldSx}
+          />
+        )}
+
         <TextField
           fullWidth
           label="Amount"
@@ -95,7 +126,7 @@ const RechargeModal = ({
         />
         <TextField
           fullWidth
-          label="Commission"
+          label="Commission (%)"
           type="number"
           value={commission}
           onChange={(e) => onCommissionChange(e.target.value)}
@@ -110,7 +141,11 @@ const RechargeModal = ({
         <Button
           variant="contained"
           onClick={onSubmit}
-          disabled={loading || !amount}
+          disabled={
+            loading || 
+            !amount || 
+            (isOffline && (!verificationCode || !isVerified))
+          }
           sx={buttonSx}
         >
           {loading ? (
@@ -153,3 +188,4 @@ const buttonSx = {
 };
 
 export default RechargeModal;
+

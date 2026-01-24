@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import api from "../utils/api";
 import debounce from "lodash.debounce";
+import config from "../constants/config";
 import {
   Box,
   Table,
@@ -35,6 +36,12 @@ const HouseList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  // New states for verification (offline mode)
+  const [verificationCode, setVerificationCode] = useState("");
+  const [generatedCode, setGeneratedCode] = useState("");
+  const [verificationMessage, setVerificationMessage] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
 
   const token = localStorage.getItem("token");
   const theme = useTheme();
@@ -83,16 +90,65 @@ const HouseList = () => {
     debouncedSearch(value);
   };
 
+  // Generate verification code when recharge modal opens in offline mode
+  useEffect(() => {
+    if (rechargeModalOpen && config.gameMode === "offline") {
+      const randomFourDigit = Math.floor(1000 + Math.random() * 9000);
+      const code = `${randomFourDigit}`;
+      setGeneratedCode(code);
+      setVerificationMessage(`Please enter the verification code: ${code}`);
+      setVerificationCode("");
+      setIsVerified(false);
+    }
+  }, [rechargeModalOpen]);
+
+  const handleVerificationChange = (value) => {
+    setVerificationCode(value);
+    if (config.gameMode !== "offline") return;
+
+    const code = Number(generatedCode);
+    const amount = Number(rechargeAmount);
+    const commission = Number(superAdminCommission);
+    const entered = Number(value);
+
+    // Using the same logic as provided in the user's offline snippet
+    const validOffsets = [123, 321, 234];
+    const isValid = validOffsets.some(
+      (offset) => entered === code + amount + commission + offset
+    );
+
+    if (isValid) {
+      setIsVerified(true);
+      setRechargeMessage("");
+      setRechargeError(false);
+    } else {
+      setIsVerified(false);
+      setRechargeMessage("Verification incorrect. Please try again.");
+      setRechargeError(true);
+    }
+  };
+
   const handleRechargeClick = (houseId) => {
     setSelectedHouseId(houseId);
     setRechargeAmount("");
     setSuperAdminCommission("");
     setRechargeMessage("");
     setRechargeError(false);
+    // Reset verification states
+    setVerificationCode("");
+    setGeneratedCode("");
+    setVerificationMessage("");
+    setIsVerified(false);
     setRechargeModalOpen(true);
   };
 
   const handleRechargeSubmit = async () => {
+    if (config.gameMode === "offline" && !isVerified) {
+      setRechargeMessage("Verification incorrect. Please try again.");
+      setRechargeError(true);
+      return;
+    }
+
     setRechargeLoading(true);
     setRechargeMessage("");
     setRechargeError(false);
@@ -114,6 +170,10 @@ const HouseList = () => {
         setSuperAdminCommission("");
         setRechargeMessage("");
         setRechargeError(false);
+        setVerificationCode("");
+        setGeneratedCode("");
+        setVerificationMessage("");
+        setIsVerified(false);
       } else {
         setRechargeMessage("Recharge failed.");
         setRechargeError(true);
@@ -421,10 +481,10 @@ const HouseList = () => {
               sx={{
                 color: "#ffffff",
                 "& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows":
-                  {
-                    color: "#ffffff",
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                  },
+                {
+                  color: "#ffffff",
+                  fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                },
                 "& .MuiTablePagination-select": {
                   color: "#ffffff",
                 },
@@ -451,12 +511,17 @@ const HouseList = () => {
           onSubmit={handleRechargeSubmit}
           loading={rechargeLoading}
           amount={rechargeAmount}
+          onAmountChange={setRechargeAmount}
           commission={superAdminCommission}
+          onCommissionChange={setSuperAdminCommission}
           message={rechargeMessage}
           error={rechargeError}
           houseName={selectedHouseName}
-          onAmountChange={setRechargeAmount}
-          onCommissionChange={setSuperAdminCommission}
+          gameMode={config.gameMode}
+          verificationCode={verificationCode}
+          onVerificationChange={handleVerificationChange}
+          verificationMessage={verificationMessage}
+          isVerified={isVerified}
         />
       </Box>
     </Box>
