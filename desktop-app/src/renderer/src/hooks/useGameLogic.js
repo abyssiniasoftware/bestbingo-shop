@@ -80,7 +80,7 @@ const useGameLogic = () => {
   );
   const [primaryPattern, setPrimaryPattern] = useState(() => {
     const stored = localStorage.getItem("primaryPattern");
-    return stored && validPatterns.includes(stored) ? stored : "row";
+    return stored && validPatterns.includes(stored) ? stored : "anyLineOrCorner";
   });
   const [bonusAwarded, setBonusAwarded] = useState(false);
   const [bonusAmountGiven, setBonusAmountGiven] = useState(0);

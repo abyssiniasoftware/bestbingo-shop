@@ -19,6 +19,7 @@ import { BINGO_PATTERNS, META_PATTERNS } from "../utils/patterns";
 import { formatPatternName } from "../utils/gameUtils";
 import LowBalanceAlert from "../components/ui/LowBalanceAlert";
 import { bingo } from "../images/images";
+import { getDailyRoundNumber, incrementDailyRound } from "../utils/dailyRound";
 
 const blinkAnimation = `
   @keyframes blinker {
@@ -44,7 +45,7 @@ const NewGame = () => {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [primaryPattern, setPrimaryPattern] = useState(() => {
     const stored = localStorage.getItem("primaryPattern");
-    return stored || "oneLine";
+    return stored || "anyLineOrCorner"; // Default matches useGameLogic.js
   });
 
   const {
@@ -124,11 +125,8 @@ const NewGame = () => {
   const handleRemoveCard = (cardId) => {
     setCartela(cartela.filter((id) => id !== cardId));
   };
-
-const displayGameId =
-  gameId && gameId !== 0
-    ? lastGameId
-    : lastGameId + 1;
+  // Use daily round counter that resets each day
+  const displayRoundNumber = getDailyRoundNumber();
 
   return (
     <Box
@@ -286,7 +284,7 @@ const displayGameId =
             mb: 2,
           }}
         >
-          Round {displayGameId}
+          Round {displayRoundNumber}
         </Typography>
 
         {/* Main content - Two columns */}

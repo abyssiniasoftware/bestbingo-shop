@@ -87,7 +87,11 @@ const Login = () => {
       }
     } catch (err) {
       clearUser();
-      localStorage.clear();
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("role");
+      localStorage.removeItem("houseId");
+      localStorage.removeItem("tokenExpiration");
       const msg = err.message || "Unexpected error";
       toast.error(msg);
       setErrorMessage(msg);

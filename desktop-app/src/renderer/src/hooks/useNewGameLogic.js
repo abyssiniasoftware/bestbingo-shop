@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import apiService from "../api/apiService";
 import useWallet from "./useWallet";
+import { incrementDailyRound } from "../utils/dailyRound";
 
 const useNewGameLogic = ({
   cartela,
@@ -271,6 +272,12 @@ const useNewGameLogic = ({
 
       setGameData({ ...response, cartela });
       refreshWallet();
+
+      // Only increment daily round counter for NEW games (not updates)
+      if (!gameId) {
+        incrementDailyRound();
+      }
+
       navigate(`/game/${betAmount}/${cartela.length}/${winAmount}`);
     } catch (error) {
       toast.error(error.message);
@@ -383,8 +390,8 @@ const useNewGameLogic = ({
     setBonusAmount,
     bonusPattern,
     setBonusPattern,
-    gameId,
     lastGameId,
+    gameId,
     handleContinuePrevious,
     previousCartela,
   };
