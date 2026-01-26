@@ -16,6 +16,7 @@ import {
   voiceOptions,
   BINGO_PATTERNS,
 } from "../constants/constants";
+import { getDailyRoundNumber } from "../utils/dailyRound";
 
 const Game = () => {
   const { stake, players, winAmount } = useParams();
@@ -75,7 +76,7 @@ const Game = () => {
     playLoseAudio,
   } = useGameLogic(stake, players, winAmount);
 
-  
+
   const [openNewGameConfirm, setOpenNewGameConfirm] = useState(false);
 
   const backgroundStyle = backgroundOptions.find(
@@ -110,7 +111,7 @@ const Game = () => {
         isOpen={showStartModal && !hasGameStarted}
         onClose={() => setShowStartModal(false)}
         hasReservation={hasReservation}
-        roundNumber={gameData?.game?.gameId }
+        roundNumber={getDailyRoundNumber()}
       />
 
       {/* Main game content */}
