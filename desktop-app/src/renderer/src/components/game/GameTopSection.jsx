@@ -5,6 +5,7 @@ import RecentBallsStrip from "./RecentBallsStrip";
 import PatternGrid from "./PatternGrid";
 import BonusDisplay from "./BonusDisplay";
 import config from "../../constants/config";
+import { num, derash } from "../../images/images";
 
 const GameTopSection = ({
   calledNumbers,
@@ -169,7 +170,7 @@ const GameTopSection = ({
                 fontSize: "1.4rem",
                 padding: "6px 0",
                 textShadow: "0px 2px 4px rgba(0,0,0,0.6)",
-                backgroundImage: "url(images/num.png)",
+                backgroundImage: `url(${num})`,
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
@@ -217,7 +218,7 @@ const GameTopSection = ({
         >
           <Box
             component="img"
-            src="images/derash.png"
+            src={derash}
             alt="Derash"
             sx={{ maxWidth: "100%", height: "auto" }}
           />

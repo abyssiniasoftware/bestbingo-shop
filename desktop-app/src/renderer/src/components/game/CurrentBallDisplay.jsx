@@ -1,17 +1,10 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import { balls } from "../../images/balls";
 
 // Get ball image path from public folder
-const getBallImage = (num) => `balls/${num}.png`;
+const getBallImage = (num) => balls[num];
 
-// Get BINGO letter for number
-const getBingoLetter = (num) => {
-  if (num <= 15) return "B";
-  if (num <= 30) return "I";
-  if (num <= 45) return "N";
-  if (num <= 60) return "G";
-  return "O";
-};
 
 const CurrentBallDisplay = ({ currentNumber, size = "large" }) => {
   const numValue = parseInt(currentNumber) || 0;

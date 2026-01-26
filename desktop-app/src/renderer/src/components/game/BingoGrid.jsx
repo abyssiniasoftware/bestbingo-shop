@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { Box, Grid, Typography, styled } from "@mui/material";
+import { called, num } from "../../images/images";
 
 
 // Define animations
@@ -105,8 +106,8 @@ const StyledNumberCell = styled(Box, {
   backgroundImage: isShuffling
     ? "linear-gradient(45deg, #FFD700, #FF8C00, #FF4500, #FFD700)"
     : called
-      ? "url(images/called.png)"
-      : "url(images/num.png)",
+      ?  `url(${called})`
+      : `url(${num})`,
 
   backgroundSize: isShuffling ? "300% 300%" : "100% 100%", // Larger size for gradient movement
   backgroundRepeat: "no-repeat",

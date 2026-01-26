@@ -18,6 +18,7 @@ import AddCartelaModal from "../components/ui/AddCartelaModal";
 import { BINGO_PATTERNS, META_PATTERNS } from "../utils/patterns";
 import { formatPatternName } from "../utils/gameUtils";
 import LowBalanceAlert from "../components/ui/LowBalanceAlert";
+import { bingo } from "../images/images";
 
 const blinkAnimation = `
   @keyframes blinker {
@@ -152,7 +153,7 @@ const displayGameId =
       >
         <Box sx={{ height: { xs: "30px", sm: "40px" }, display: "flex", alignItems: "center" }}>
           <img
-            src="/images/bingo.png"
+            src={bingo}
             alt="BINGO"
             style={{
               height: "100%",

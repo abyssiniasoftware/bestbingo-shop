@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
+import { bingo } from "../../images/images";
 
 const LoginForm = ({ handleLogin, config }) => {
   const [username, setUsername] = useState("");
@@ -65,7 +66,7 @@ const LoginForm = ({ handleLogin, config }) => {
 
         {/* 2. MAIN CONTENT AREA */}
         <Container
-          maxWidth="xl" // Changed to xl for wider spread
+          maxWidth="xl"
           sx={{
             flexGrow: 1,
             display: "flex",
@@ -81,19 +82,41 @@ const LoginForm = ({ handleLogin, config }) => {
             justifyContent="center"
           >
             {/* LEFT SIDE: Marketing Text & Image */}
-            <Grid
-              item
-              xs={12}
-              md={6}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-              }}
-            >
-              <Box sx={{ maxWidth: 500, mx: "auto" }}>
+           <Grid
+  item
+  xs={12}
+  md={6}
+  sx={{
+    position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    overflow: "hidden",
+  }}
+>
+  {/* BACKGROUND LOGO (WATERMARK) */}
+<Box
+  sx={{
+    position: "absolute",
+    inset: 0,
+    backgroundImage: `url(${config.logo})`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center 60%",
+
+    backgroundSize: "75%",
+    opacity: 0.9, // 👈 correct watermark strength
+    zIndex: 0,
+    pointerEvents: "none",
+  }}
+/>
+
+  {/* ORIGINAL CONTENT (UNCHANGED) */}
+  
+
+              <Box sx={{ maxWidth: 500, mx: "auto" , position: "relative",
+    zIndex: 1,}}>
                 {/* Bingo Name Text - Adjusted for better contrast */}
                 <Typography
                   variant="h3"
@@ -111,43 +134,7 @@ const LoginForm = ({ handleLogin, config }) => {
                 >
                   {config.bingoName}
                 </Typography>
-
-                {/* BINGO Text - Darker shadow for better contrast */}
-                {/* <Typography
-                  variant="h1"
-                  sx={{
-                    color: themeColors.darkBlue,
-                    fontWeight: 900,
-                    fontSize: { xs: "3rem", md: "4.5rem" },
-                    textTransform: "uppercase",
-                    letterSpacing: "0.15em",
-                    textShadow: `3px 3px 0 ${themeColors.gold}, 6px 6px 0 rgba(0,0,0,0.2)`,
-                    mb: 3,
-                    lineHeight: 1,
-                  }}
-                >
-                  BINGO
-                </Typography> */}
- <Box
-  sx={{
-    height: { xs: "30px", sm: "40px" },
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    mb: 3,
-  }}
->
-  <img
-    src="/images/bingo.png"
-    alt="BINGO"
-    style={{
-      height: "100%",
-      width: "auto",
-      objectFit: "contain",
-      display: "block",
-    }}
-  />
-</Box>
+ 
 
 
                 {/* Subtitle - Changed from white to dark blue for contrast */}
@@ -427,21 +414,6 @@ const LoginForm = ({ handleLogin, config }) => {
                   >
                     {loading ? "LOGGING IN..." : "LOGIN"}
                   </Button>
-
-                  {/* Footer note */}
-                  {/* <Typography
-                    variant="caption"
-                    sx={{
-                      display: "block",
-                      textAlign: "center",
-                      mt: 3,
-                      color: "#6b7280",
-                      fontSize: "0.75rem",
-                      opacity: 0.8,
-                    }}
-                  >
-                    Secure login powered by Abyssinia Software
-                  </Typography> */}
                 </form>
               </Paper>
             </Grid>

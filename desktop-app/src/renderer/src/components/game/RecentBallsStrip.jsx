@@ -1,7 +1,8 @@
 import React from "react";
 import { Box } from "@mui/material";
+import { balls } from "../../images/balls";
 
-const getBallImage = (num) => `balls/${num}.png`;
+const getBallImage = (num) => balls[num];
 
 const RecentBallsStrip = ({ recentCalls = [] }) => {
   const displayBalls = recentCalls.slice(0, 5);

@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
+import { called } from "../../images/images";
 
 const numbers = [
   6,
@@ -82,7 +83,7 @@ const PatternGrid = ({ progressGrid }) => {
                 sx={{
                   color: "#7c2d12",
                   fontSize: "1.8rem",
-                  backgroundImage: "url(images/called.png)",
+                  backgroundImage: `url(${called})`,
                   backgroundSize: "100% 100%",
                   backgroundRepeat: "no-repeat",
                   backgroundPosition: "center",

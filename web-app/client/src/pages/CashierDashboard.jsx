@@ -13,6 +13,7 @@ import HouseBonusListCashier from "./HouseBonusListCashier";
 import HouseStatsCashier from "./HouseStatsCashier";
 import useWallet from "../hooks/useWallet";
 import useUserStore from "../stores/userStore";
+import { bingo } from "../images/images";
 
 const CashierDashboard = () => {
   const location = useLocation();
@@ -91,7 +92,7 @@ const CashierDashboard = () => {
           <Typography variant="h6" sx={{ color: "#2980b9", fontWeight: "bold", fontSize: "1.1rem" }}>
             Play Bingo
           </Typography>
-          <img src="/images/bingo.png" alt="Bingo" style={{ height: 24 }} />
+          <img src={ bingo } alt="Bingo" style={{ height: 24 }} />
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>

@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import LockIcon from "@mui/icons-material/Lock";
+import { bingo } from "../../images/images";
 
 const LoginForm = ({ handleLogin, config }) => {
   const [username, setUsername] = useState("");
@@ -65,7 +66,7 @@ const LoginForm = ({ handleLogin, config }) => {
 
         {/* 2. MAIN CONTENT AREA */}
         <Container
-          maxWidth="xl" // Changed to xl for wider spread
+          maxWidth="xl"
           sx={{
             flexGrow: 1,
             display: "flex",
@@ -111,23 +112,6 @@ const LoginForm = ({ handleLogin, config }) => {
                 >
                   {config.bingoName}
                 </Typography>
-
-                {/* BINGO Text - Darker shadow for better contrast */}
-                {/* <Typography
-                  variant="h1"
-                  sx={{
-                    color: themeColors.darkBlue,
-                    fontWeight: 900,
-                    fontSize: { xs: "3rem", md: "4.5rem" },
-                    textTransform: "uppercase",
-                    letterSpacing: "0.15em",
-                    textShadow: `3px 3px 0 ${themeColors.gold}, 6px 6px 0 rgba(0,0,0,0.2)`,
-                    mb: 3,
-                    lineHeight: 1,
-                  }}
-                >
-                  BINGO
-                </Typography> */}
  <Box
   sx={{
     height: { xs: "30px", sm: "40px" },
@@ -138,7 +122,7 @@ const LoginForm = ({ handleLogin, config }) => {
   }}
 >
   <img
-    src="images/bingo.png"
+    src={bingo}
     alt="BINGO"
     style={{
       height: "100%",

@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const errorHandler = require("./middleware/error");
-const routes = require("./routes"); // Imports from routes/index.js
+const routes = require("./routes");
 const corsOptions = require("./config/corsOptions");
 
 const app = express();

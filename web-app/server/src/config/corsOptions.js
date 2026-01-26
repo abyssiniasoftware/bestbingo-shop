@@ -3,7 +3,7 @@ const corsOptions = {
     "http://localhost:5173",
     "http://localhost:5174",
   ],
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "x-auth-token"],
 };
 
