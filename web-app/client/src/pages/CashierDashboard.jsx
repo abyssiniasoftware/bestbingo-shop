@@ -49,7 +49,7 @@ const CashierDashboard = () => {
   // Sidebar minimized by default
   const [isSidebarMinimized, setIsSidebarMinimized] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [voiceOption, setVoiceOption] = useState("l");
+  const [voiceOption, setVoiceOption] = useState("a2");
 
   // Fullscreen handling
   useEffect(() => {

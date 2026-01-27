@@ -89,7 +89,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
   );
   const [primaryPattern, setPrimaryPattern] = useState(() => {
     const stored = localStorage.getItem("primaryPattern");
-    return stored && validPatterns.includes(stored) ? stored : "row";
+    return stored && validPatterns.includes(stored) ? stored : "oneLine";
   });
   const [bonusAwarded, setBonusAwarded] = useState(false);
   const [bonusAmountGiven, setBonusAmountGiven] = useState(0);
@@ -119,7 +119,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
     return stored === "true";
   });
   // Manual mode for win checking - when true, user must manually declare winners
- 
+
   // Hooks and refs
   const { userId } = useUserStore();
   const { gameData, resetGame } = useGameStore();
@@ -1036,8 +1036,6 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
 
   // Handle reset
   const handleReset = () => {
-    localStorage.removeItem("bonusAmount");
-    localStorage.removeItem("bonusPattern");
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
       currentAudioRef.current.currentTime = 0;
@@ -1055,7 +1053,6 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
     setHasGameStarted(false);
     setOpenModal(false);
     setBonusAwarded(false);
-    setPrimaryPattern("row");
     clearInterval(shuffleIntervalRef.current);
     clearTimeout(shuffleTimeoutRef.current);
     clearLockedCards();
@@ -1293,7 +1290,7 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
     setBonusAmount: debouncedSetBonusAmount,
     bonusPattern,
     setBonusPattern: debouncedSetBonusPattern,
-   
+
     showCentralBall,
     isCentralBallMoving,
     moveDuration: Math.max(400, Math.floor(600 * (drawSpeed / 3000))),

@@ -60,8 +60,14 @@ const useNewGameLogic = ({
   });
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [showAllCards, setShowAllCards] = useState(false);
-  const [bonusChecked, setBonusChecked] = useState(true);
-  const [freeHitChecked, setFreeHitChecked] = useState(true);
+  const [bonusChecked, setBonusChecked] = useState(() => {
+    const stored = localStorage.getItem("bonusChecked");
+    return stored !== null ? JSON.parse(stored) : true;
+  });
+  const [freeHitChecked, setFreeHitChecked] = useState(() => {
+    const stored = localStorage.getItem("freeHitChecked");
+    return stored !== null ? JSON.parse(stored) : true;
+  });
 
   const { refreshWallet } = useWallet();
 
@@ -166,6 +172,8 @@ const useNewGameLogic = ({
     localStorage.setItem("selectedBackground", selectedBackground);
     localStorage.setItem("bonusAmount", bonusAmount.toString());
     localStorage.setItem("bonusPattern", bonusPattern);
+    localStorage.setItem("bonusChecked", JSON.stringify(bonusChecked));
+    localStorage.setItem("freeHitChecked", JSON.stringify(freeHitChecked));
   }, [
     betAmount,
     useDropdown,
@@ -177,6 +185,8 @@ const useNewGameLogic = ({
     selectedBackground,
     bonusAmount,
     bonusPattern,
+    bonusChecked,
+    freeHitChecked,
   ]);
 
   // Calculate winAmount, houseProfit, and update store

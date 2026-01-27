@@ -1,4 +1,3 @@
-import config from "./config";
 export const backgroundOptions = [
   { value: "default", label: "Default", style: { backgroundColor: "#111827" } },
 
@@ -108,51 +107,31 @@ export const backgroundButtonColors = {
   "desert-sands": "bg-yellow-700",
   cyberpunk: "bg-pink-600",
 };
-// green, blue, default,
 
+// export {voiceOptions} from "./voiceOptions"
 export const voiceOptions = [
-  // ai voice
-  { value: "l", label: "ሮቦት" },
-
+  
   // amharic females
-  { value: "a", label: "አማርኛ 1" },
-  { value: "f", label: "አማርኛ 6" },
-  { value: "i", label: "አማርኛ 9" },
-  { value: "s", label: "አማርኛ 16" },
-  { value: "y", label: "አማርኛ 17" },
-  { value: "z", label: "አማርኛ 18" },
-
+  { value: "a2", label: "F-am" , gender: "female", language: "amharic"},
+  
   // amharic voices
-  { value: "b", label: "አማርኛ 2" },
-  { value: "c", label: "አማርኛ 3" },
-  { value: "d", label: "አማርኛ 4" },
-  { value: "e", label: "አማርኛ 5" },
-  { value: "g", label: "አማርኛ 7" },
-  { value: "h", label: "አማርኛ 8" },
-  { value: "j", label: "አማርኛ 10" },
-  { value: "k", label: "አማርኛ 11" },
-  { value: "m", label: "አማርኛ 12" },
-  { value: "n", label: "አማርኛ 13" },
-  { value: "q", label: "አማርኛ 14" },
-  { value: "r", label: "አማርኛ 15" },
-
+  { value: "a1", label: "M-am" , gender: "male", language: "amharic"},
+  { value: "a3", label: "M-am-2" , gender: "male", language: "amharic"},
+  
   // oromiffa voices
-  { value: "o", label: "ኦሮምኛ 1" },
-  { value: "p", label: "ኦሮምኛ 2" },
-
+  { value: "p", label: "F-or" , gender: "female", language: "oromiffa"},
+  
   // tigrigna voices
-  { value: "t", label: "ትግረኛ 1" },
-  { value: "u", label: "ትግረኛ 2" },
-
-  // tigrigna male
-  { value: "v", label: "ትግረኛ 3" },
-
+  { value: "t", label: "F-ti" , gender: "female", language: "tigrigna"},
+  
   // wolayta voice
-  { value: "w", label: "ወላይታ" },
-
+  { value: "w", label: "M-wo" , gender: "male", language: "wolayta"},
+  
   // sidama voice
-  { value: "x", label: "ሲዳማ" },
+  { value: "x", label: "F-si" , gender: "female", language: "sidama"},
+  // ai voice
+  { value: "a4", label: "F-en", gender: "female", language: "english" },
 ];
-
 //constants for the game
 export { META_PATTERNS, BINGO_PATTERNS } from "../utils/patterns";
+// export {voiceOptions} from "./voiceOptions"

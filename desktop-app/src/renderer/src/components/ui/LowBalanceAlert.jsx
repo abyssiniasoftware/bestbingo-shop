@@ -42,7 +42,7 @@ const LowBalanceAlert = ({ onStatusChange }) => {
                     fontSize: "1.1rem",
                 }}
             >
-                Your balance is low ({balance} ብር), please call to admin! {config.phoneNumber}
+                Your balance is low ({balance} ብር), please call to admin! 
             </Typography>
         </Box>
     );
