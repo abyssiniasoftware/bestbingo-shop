@@ -150,8 +150,21 @@ const CashierDashboard = () => {
               key={item.id}
               className={activeTab === item.id ? 'active' : ''}
               onClick={() => setActiveTab(item.id)}
+              style={{ cursor: 'pointer' }}
             >
-              <a href="#">
+              <div style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                borderRadius: '48px',
+                fontSize: '21px',
+                fontFamily: "'poetsen', sans-serif",
+                color: activeTab === item.id ? 'var(--blue)' : 'var(--light-blue)',
+                whiteSpace: 'nowrap',
+                overflowX: 'hidden',
+                textDecoration: 'none',
+              }}>
                 <span className="bx">
                   {item.muiIcon ? (
                     React.cloneElement(item.muiIcon, {
@@ -175,13 +188,25 @@ const CashierDashboard = () => {
                   )}
                 </span>
                 {!isSidebarMinimized && <span style={{ marginLeft: 8 }}>{item.label}</span>}
-              </a>
+              </div>
             </li>
           ))}
 
           {/* Logout */}
-          <li onClick={handleLogout}>
-            <a href="#" className="logout">
+          <li onClick={handleLogout} style={{ cursor: 'pointer' }}>
+            <div className="logout" style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              borderRadius: '48px',
+              fontSize: '21px',
+              fontFamily: "'poetsen', sans-serif",
+              color: 'var(--red)',
+              whiteSpace: 'nowrap',
+              overflowX: 'hidden',
+              textDecoration: 'none',
+            }}>
               <span className="bx">
                 <img
                   src={logoutIcon}
@@ -194,7 +219,7 @@ const CashierDashboard = () => {
                 />
               </span>
               {!isSidebarMinimized && <span style={{ marginLeft: 8 }}>Logout</span>}
-            </a>
+            </div>
           </li>
         </ul>
       </aside>

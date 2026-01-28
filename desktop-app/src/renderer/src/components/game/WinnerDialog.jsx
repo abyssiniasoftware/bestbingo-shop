@@ -23,7 +23,7 @@ const blinkFadeInAnimation = `
 
 // Map pattern types to display names
 const getPatternName = (patternType) => {
-  if (patternType === "fullCard") return "ሙሉ ካርድ";
+  if (patternType === "fullCard") return "Full Card";
   return formatPatternName(patternType);
 };
 
@@ -71,7 +71,7 @@ const WinnerDialog = ({
   const winningPatterns = [];
   if (isWinner) {
     if (patternTypes.includes("fullCard")) {
-      winningPatterns.push("ሙሉ ካርድ");
+      winningPatterns.push("Full Card");
     }
     patternTypes.forEach((patternType) => {
       if (patternType !== "fullCard" && BINGO_PATTERNS[patternType]) {
@@ -217,65 +217,65 @@ const WinnerDialog = ({
       }}
     >
       <style>{blinkFadeInAnimation}</style>
-{isWinner && openModal && (
-  <Confetti
-    width={window.innerWidth}
-    height={200}
-    numberOfPieces={120}
-    gravity={0.15}
-    recycle={false}
-  />
-)}
+      {isWinner && openModal && (
+        <Confetti
+          width={window.innerWidth}
+          height={200}
+          numberOfPieces={120}
+          gravity={0.15}
+          recycle={false}
+        />
+      )}
 
       {/* TOP STATUS BAR */}
-<Box
-  sx={{
-    bgcolor: isWinner ? "#16a34a" : "#fff",
-    color: isWinner?"#fff":"#dc2626",
-    py: 1.2,
-    px: 2,
-    textAlign: "center",
-    position: "relative",
-    borderBottom: "4px solid #fff",
-  }}
->
-  {/* CARD NUMBER */}
-  <Typography
-    sx={{
-      fontSize: "1.8rem",
-      fontWeight: "bold",
-      lineHeight: 1.2,
-    }}
-  >
-    Card No: {cardIdInput}
-  </Typography>
+      <Box
+        sx={{
+          bgcolor: isWinner ? "#16a34a" : "#fff",
+          color: isWinner ? "#fff" : "#dc2626",
+          py: 1.2,
+          px: 2,
+          textAlign: "center",
+          position: "relative",
+          borderBottom: "4px solid #fff",
+        }}
+      >
+        {/* CARD NUMBER */}
+        <Typography
+          sx={{
+            fontSize: "1.8rem",
+            fontWeight: "bold",
+            lineHeight: 1.2,
+          }}
+        >
+          Card No: {cardIdInput}
+        </Typography>
 
-  {/* STATUS */}
-  <Typography
-    sx={{
-      fontSize: "1.1rem",
-      fontWeight: "bold",
-      mt: 0.3,
-      letterSpacing: "0.5px",
-      animation: isWinner ? "blinkFadeIn 0.8s ease-in-out" : "none",
-    }}
-  >
-    {isWinner ? "🎉 WINNER!" : "❌ NO BINGO"}
-  </Typography>
+        {/* STATUS */}
+        <Typography
+          sx={{
+            fontSize: "1.1rem",
+            fontWeight: "bold",
+            mt: 0.3,
+            letterSpacing: "0.5px",
+            animation: isWinner ? "blinkFadeIn 0.8s ease-in-out" : "none",
+          }}
+        >
+          {isWinner ? "🎉 WINNER!" : "❌ NO BINGO"}
+        </Typography>
 
-  {/* PATTERN NAMES */}
-  {isWinner && winningPatterns.length > 0 && (
-    <Typography
-      sx={{
-        fontSize: "0.95rem",
-        mt: 0.3,
-        opacity: 0.95,
-      }}
-    >
-      {winningPatterns.join(" • ")}
-    </Typography>
-  )}
-</Box>
+        {/* PATTERN NAMES */}
+        {isWinner && winningPatterns.length > 0 && (
+          <Typography
+            sx={{
+              fontSize: "0.95rem",
+              mt: 0.3,
+              opacity: 0.95,
+            }}
+          >
+            {winningPatterns.join(" • ")}
+          </Typography>
+        )}
+      </Box>
 
 
       <DialogContent sx={{ p: 2, bgcolor: "#f3f4f6" }}>
@@ -327,85 +327,85 @@ const WinnerDialog = ({
 
           {/* Bottom Buttons */}
           {/* Bottom Action Buttons */}
-<Box
-  sx={{
-    display: "flex",
-    gap: 2,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    mt: 1,
-  }}
->
-  {/* CLOSE BUTTON */}
-  <Button
-    onClick={handleCloseModal}
-    startIcon={<CloseIcon />}
-    sx={{
-      minWidth: 140,
-      px: 3,
-      py: 1,
-      fontSize: "1rem",
-      fontWeight: "bold",
-      textTransform: "none",
-      borderRadius: "999px",
-      color: "#1f2937",
-      background: "linear-gradient(180deg, #fde68a, #facc15)",
-      border: "2px solid #000",
-      boxShadow: "0 4px 0 #000",
-      transition: "all 0.15s ease",
-      "&:hover": {
-        background: "linear-gradient(180deg, #facc15, #eab308)",
-        transform: "translateY(-1px)",
-        boxShadow: "0 6px 0 #000",
-      },
-      "&:active": {
-        transform: "translateY(2px)",
-        boxShadow: "0 2px 0 #000",
-      },
-    }}
-  >
-    Close
-  </Button>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+              mt: 1,
+            }}
+          >
+            {/* CLOSE BUTTON */}
+            <Button
+              onClick={handleCloseModal}
+              startIcon={<CloseIcon />}
+              sx={{
+                minWidth: 140,
+                px: 3,
+                py: 1,
+                fontSize: "1rem",
+                fontWeight: "bold",
+                textTransform: "none",
+                borderRadius: "999px",
+                color: "#1f2937",
+                background: "linear-gradient(180deg, #fde68a, #facc15)",
+                border: "2px solid #000",
+                boxShadow: "0 4px 0 #000",
+                transition: "all 0.15s ease",
+                "&:hover": {
+                  background: "linear-gradient(180deg, #facc15, #eab308)",
+                  transform: "translateY(-1px)",
+                  boxShadow: "0 6px 0 #000",
+                },
+                "&:active": {
+                  transform: "translateY(2px)",
+                  boxShadow: "0 2px 0 #000",
+                },
+              }}
+            >
+              Close
+            </Button>
 
-  {/* BLOCK BUTTON */}
-  <Button
-    onClick={handleKickPlayer}
-    disabled={lockedCards.includes(cardIdInput)}
-    startIcon={<BlockIcon />}
-    sx={{
-      minWidth: 160,
-      px: 4,
-      py: 1,
-      fontSize: "1rem",
-      fontWeight: "bold",
-      textTransform: "none",
-      borderRadius: "999px",
-      color: "#fff",
-      background: "linear-gradient(180deg, #ef4444, #dc2626)",
-      border: "2px solid #000",
-      boxShadow: "0 4px 0 #000",
-      transition: "all 0.15s ease",
-      "&:hover": {
-        background: "linear-gradient(180deg, #dc2626, #b91c1c)",
-        transform: "translateY(-1px)",
-        boxShadow: "0 6px 0 #000",
-      },
-      "&:active": {
-        transform: "translateY(2px)",
-        boxShadow: "0 2px 0 #000",
-      },
-      "&.Mui-disabled": {
-        background: "#9ca3af",
-        color: "#f3f4f6",
-        borderColor: "#6b7280",
-        boxShadow: "none",
-      },
-    }}
-  >
-    Block
-  </Button>
-</Box>
+            {/* BLOCK BUTTON */}
+            <Button
+              onClick={handleKickPlayer}
+              disabled={lockedCards.includes(cardIdInput)}
+              startIcon={<BlockIcon />}
+              sx={{
+                minWidth: 160,
+                px: 4,
+                py: 1,
+                fontSize: "1rem",
+                fontWeight: "bold",
+                textTransform: "none",
+                borderRadius: "999px",
+                color: "#fff",
+                background: "linear-gradient(180deg, #ef4444, #dc2626)",
+                border: "2px solid #000",
+                boxShadow: "0 4px 0 #000",
+                transition: "all 0.15s ease",
+                "&:hover": {
+                  background: "linear-gradient(180deg, #dc2626, #b91c1c)",
+                  transform: "translateY(-1px)",
+                  boxShadow: "0 6px 0 #000",
+                },
+                "&:active": {
+                  transform: "translateY(2px)",
+                  boxShadow: "0 2px 0 #000",
+                },
+                "&.Mui-disabled": {
+                  background: "#9ca3af",
+                  color: "#f3f4f6",
+                  borderColor: "#6b7280",
+                  boxShadow: "none",
+                },
+              }}
+            >
+              Block
+            </Button>
+          </Box>
 
         </Box>
       </DialogContent>

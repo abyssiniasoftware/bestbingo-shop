@@ -40,7 +40,7 @@ const Reports = () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          throw new Error("የማረጋገጫ ቶከን አልተገኘም። እባክዎ ይግቡ");
+          throw new Error("Authentication token not found. Please log in");
         }
 
         const response = await api.get(`/api/stats/daily`, {
@@ -51,7 +51,7 @@ const Reports = () => {
         setError(null);
       } catch (err) {
         const errorMessage =
-          err.response?.data?.message || "ዕለታዊ ሪፖርቶችን ማግኘት አልተቻለም";
+          err.response?.data?.message || "Failed to fetch daily reports";
         setError(errorMessage);
         toast.error(errorMessage);
       } finally {
@@ -226,7 +226,7 @@ const Reports = () => {
           disabled={currentPage === 1}
           className="px-3 py-1 bg-gray-100 rounded text-gray-700 hover:bg-gray-200 disabled:opacity-50"
         >
-          ቀዳሚ
+          Previous
         </button>
         {pages}
         <button
@@ -234,10 +234,10 @@ const Reports = () => {
           disabled={currentPage === totalPages}
           className="px-3 py-1 bg-gray-100 rounded text-gray-700 hover:bg-gray-200 disabled:opacity-50"
         >
-          ቀጣይ
+          Next
         </button>
         <div className="flex items-center gap-2">
-          <label className="text-gray-600">ረድፎች በገጽ:</label>
+          <label className="text-gray-600">Rows per page:</label>
           <select
             value={itemsPerPage}
             onChange={handleItemsPerPageChange}
@@ -257,10 +257,10 @@ const Reports = () => {
     <div className="flex flex-col items-center">
       <div className="flex flex-col sm:flex-row items-center justify-between w-full mb-6 gap-4">
         <h1 className="text-2xl font-bold flex items-center gap-2 text-gray-800">
-          <FaChartLine /> ዕለታዊ ሪፖርቶች
+          <FaChartLine /> Daily Reports
         </h1>
         <div className="flex items-center gap-2">
-          <span className="text-gray-600 font-medium">ቀን ይምረጡ:</span>
+          <span className="text-gray-600 font-medium">Select Date:</span>
           <input
             type="date"
             value={selectedDate}
@@ -278,7 +278,7 @@ const Reports = () => {
 
       {error && (
         <p className="text-red-500 bg-red-900/50 p-3 rounded w-full">
-          ስህተት: {error}
+          Error: {error}
         </p>
       )}
 
@@ -287,19 +287,19 @@ const Reports = () => {
           {/* Summary Metrics */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-600">ቀሪ ሒሳብ (ብር)</h2>
+              <h2 className="text-lg font-semibold text-gray-600">Package Balance (Birr)</h2>
               <p className="text-2xl text-green-600 font-bold">
                 {formatCurrency(stats.packageBalance)}
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-600">ዕለታዊ አጠቃላይ ትርፍ (ብር)</h2>
+              <h2 className="text-lg font-semibold text-gray-600">Daily Total Profit (Birr)</h2>
               <p className="text-2xl text-green-600 font-bold">
                 {formatCurrency(stats.totalDailyEarnings)}
               </p>
             </div>
             <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-600">አጠቃላይ የተጫወቱ ጨዋታዎች</h2>
+              <h2 className="text-lg font-semibold text-gray-600">Total Games Played</h2>
               <p className="text-2xl text-blue-600 font-bold">{stats.totalGamesPlayed}</p>
             </div>
           </div>
@@ -310,7 +310,7 @@ const Reports = () => {
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
-              <FaFilter /> {showFilters ? "ፊልተሮችን ደብቅ" : "ፊልተሮችን አሳይ"}
+              <FaFilter /> {showFilters ? "Hide Filters" : "Show Filters"}
             </button>
           </div>
 
@@ -318,23 +318,23 @@ const Reports = () => {
           {showFilters && (
             <div className="bg-white p-4 rounded-lg shadow border border-gray-200 mb-6 w-full">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">ፊልተሮች</h2>
+                <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
                 <button
                   onClick={resetFilters}
                   className="flex items-center gap-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
                 >
-                  <FaTimes /> ፊልተሮችን ዳግም አስጀምር
+                  <FaTimes /> Reset Filters
                 </button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1 text-gray-700">
-                    የተጫዋቾች ብዛት
+                    Number of Players
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      placeholder="ዝቅተኛ"
+                      placeholder="Min"
                       value={filters.numberOfPlayers.min}
                       onChange={(e) =>
                         handleFilterChange(e, "numberOfPlayers", "min")
@@ -343,7 +343,7 @@ const Reports = () => {
                     />
                     <input
                       type="number"
-                      placeholder="ከፍተኛ"
+                      placeholder="Max"
                       value={filters.numberOfPlayers.max}
                       onChange={(e) =>
                         handleFilterChange(e, "numberOfPlayers", "max")
@@ -354,12 +354,12 @@ const Reports = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    ውርርድ በተጫዋች (ብር)
+                    Bet per Player (Birr)
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      placeholder="ዝቅተኛ"
+                      placeholder="Min"
                       value={filters.betAmount.min}
                       onChange={(e) =>
                         handleFilterChange(e, "betAmount", "min")
@@ -368,7 +368,7 @@ const Reports = () => {
                     />
                     <input
                       type="number"
-                      placeholder="ከፍተኛ"
+                      placeholder="Max"
                       value={filters.betAmount.max}
                       onChange={(e) =>
                         handleFilterChange(e, "betAmount", "max")
@@ -379,12 +379,12 @@ const Reports = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    አጠቃላይ ውርርድ (ብር)
+                    Total Stake (Birr)
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      placeholder="ዝቅተኛ"
+                      placeholder="Min"
                       value={filters.totalStake.min}
                       onChange={(e) =>
                         handleFilterChange(e, "totalStake", "min")
@@ -393,7 +393,7 @@ const Reports = () => {
                     />
                     <input
                       type="number"
-                      placeholder="ከፍተኛ"
+                      placeholder="Max"
                       value={filters.totalStake.max}
                       onChange={(e) =>
                         handleFilterChange(e, "totalStake", "max")
@@ -404,12 +404,12 @@ const Reports = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    የቤት ኮሚሽን (%)
+                    House Commission (%)
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      placeholder="ዝቅተኛ"
+                      placeholder="Min"
                       value={filters.cutAmountPercent.min}
                       onChange={(e) =>
                         handleFilterChange(e, "cutAmountPercent", "min")
@@ -418,7 +418,7 @@ const Reports = () => {
                     />
                     <input
                       type="number"
-                      placeholder="ከፍተኛ"
+                      placeholder="Max"
                       value={filters.cutAmountPercent.max}
                       onChange={(e) =>
                         handleFilterChange(e, "cutAmountPercent", "max")
@@ -429,19 +429,19 @@ const Reports = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    የሽልማት መጠን (ብር)
+                    Prize Amount (Birr)
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      placeholder="ዝቅተኛ"
+                      placeholder="Min"
                       value={filters.prize.min}
                       onChange={(e) => handleFilterChange(e, "prize", "min")}
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400"
                     />
                     <input
                       type="number"
-                      placeholder="ከፍተኛ"
+                      placeholder="Max"
                       value={filters.prize.max}
                       onChange={(e) => handleFilterChange(e, "prize", "max")}
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400"
@@ -450,12 +450,12 @@ const Reports = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    የቤት ትርፍ (ብር)
+                    House Profit (Birr)
                   </label>
                   <div className="flex gap-2">
                     <input
                       type="number"
-                      placeholder="ዝቅተኛ"
+                      placeholder="Min"
                       value={filters.systemEarnings.min}
                       onChange={(e) =>
                         handleFilterChange(e, "systemEarnings", "min")
@@ -464,7 +464,7 @@ const Reports = () => {
                     />
                     <input
                       type="number"
-                      placeholder="ከፍተኛ"
+                      placeholder="Max"
                       value={filters.systemEarnings.max}
                       onChange={(e) =>
                         handleFilterChange(e, "systemEarnings", "max")
@@ -475,16 +475,16 @@ const Reports = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    የደረሰኝ ካርድ
+                    Winner Card
                   </label>
                   <select
                     value={filters.winnerNumber}
                     onChange={handleWinnerFilterChange}
                     className="w-full p-2 bg-gray-700 rounded text-white"
                   >
-                    <option value="">ሁሉም</option>
-                    <option value="hasWinner">ደረሰኝ አለ</option>
-                    <option value="noWinner">ደረሰኝ የለም</option>
+                    <option value="">All</option>
+                    <option value="hasWinner">Has Winner</option>
+                    <option value="noWinner">No Winner</option>
                   </select>
                 </div>
               </div>
@@ -493,10 +493,10 @@ const Reports = () => {
 
           {/* Game History Table */}
           <div className="bg-white rounded-lg shadow border border-gray-200 overflow-x-auto w-full">
-            <h2 className="text-lg font-semibold p-4 text-gray-800 border-b border-gray-100">የጨዋታ ታሪክ</h2>
+            <h2 className="text-lg font-semibold p-4 text-gray-800 border-b border-gray-100">Game History</h2>
             {filteredAndSortedGames.length === 0 ? (
               <p className="p-4 text-gray-500">
-                ምንም ጨዋታዎች ከአሁኑ ፊልተሮች ጋር አይመሳሰሉም።
+                No games match the current filters.
               </p>
             ) : (
               <>
@@ -504,15 +504,15 @@ const Reports = () => {
                   <thead>
                     <tr className="bg-gray-50 text-gray-700 border-b border-gray-100">
                       {[
-                        { label: "ዙር #", key: "gameId" },
-                        { label: "የጨዋታ ቀን እና ሰዓት", key: "date" },
-                        { label: "ውርርድ በተጫዋች (ብር)", key: "betAmount" },
-                        { label: "የተጫዋቾች ብዛት", key: "numberOfPlayers" },
-                        { label: "አጠቃላይ ውርርድ (ብር)", key: "totalStake" },
-                        { label: "የቤት ኮሚሽን (%)", key: "cutAmountPercent" },
-                        { label: "የሽልማት መጠን (ብር)", key: "prize" },
-                        { label: "የደረሰኝ ካርድ", key: "winnerNumber" },
-                        { label: "የቤት ትርፍ (ብር)", key: "systemEarnings" },
+                        { label: "Round #", key: "gameId" },
+                        { label: "Game Date & Time", key: "date" },
+                        { label: "Stake per Player (Birr)", key: "betAmount" },
+                        { label: "Number of Players", key: "numberOfPlayers" },
+                        { label: "Total Stake (Birr)", key: "totalStake" },
+                        { label: "House Commission (%)", key: "cutAmountPercent" },
+                        { label: "Prize Amount (Birr)", key: "prize" },
+                        { label: "Winner Card", key: "winnerNumber" },
+                        { label: "House Profit (Birr)", key: "systemEarnings" },
                       ].map(({ label, key }) => (
                         <th
                           key={key}
@@ -552,7 +552,7 @@ const Reports = () => {
                         </td>
                         <td className="p-3">{game.cutAmountPercent}%</td>
                         <td className="p-3">{formatCurrency(game.prize)}</td>
-                        <td className="p-3">{game.winnerNumber || "የለም"}</td>
+                        <td className="p-3">{game.winnerNumber || "None"}</td>
                         <td className="p-3">
                           {formatCurrency(game.systemEarnings)}
                         </td>

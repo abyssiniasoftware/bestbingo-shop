@@ -103,7 +103,7 @@ const GameTopSection = ({
                 mt: 0.5,
               }}
             >
-              ጥሪ <span style={{ color: "#ffd700" }}>{callCount}</span>/75
+              Call <span style={{ color: "#ffd700" }}>{callCount}</span>/75
             </Typography>
           </Box>
 
@@ -241,7 +241,7 @@ const GameTopSection = ({
               lineHeight: 1,
             }}
           >
-            ብር
+            Birr
           </Typography>
         </Box>
       </Box>

@@ -56,7 +56,7 @@ const ViewCartela = () => {
           });
           setLocalHouseId(userData.houseId || null);
         } catch (error) {
-          toast.error(error.message || "የተጠቃሚ መረጃ ማግኘት አልተቻለም");
+          toast.error(error.message || "Failed to fetch user details");
         }
       }
     };
@@ -72,15 +72,15 @@ const ViewCartela = () => {
 
   const handleMarkBonusInactive = async () => {
     if (!storeHouseId || !userId) {
-      toast.error("የቤት መታወቂያ ወይም የተጠቃሚ መታወቂያ ጠፍቷል");
+      toast.error("House ID or User ID is missing");
       return;
     }
     try {
       const token = localStorage.getItem("token");
       await apiService.markBonusInactive(storeHouseId, userId, token);
-      toast.success("ቦነስ እንደ እንቅስቃሴ ውጪ ምልክት ተደርጎበታል");
+      toast.success("Bonus has been marked as inactive");
     } catch (error) {
-      toast.error(error.message || "ቦነስን እንደ እንቅስቃሴ ውጪ ማድረግ አልተቻለም");
+      toast.error(error.message || "Failed to mark bonus as inactive");
     }
   };
 
@@ -89,7 +89,7 @@ const ViewCartela = () => {
     setIsBonusGloballyActive(newActiveState);
     localStorage.setItem("isBonusGloballyActive", newActiveState.toString());
     toast.success(
-      `የቦነስ ስርዓት በግሎባል ${newActiveState ? "አገልግሎት አስጀምረዋል" : "አገልግሎት አስቆመዋል"}.`,
+      `Global bonus system ${newActiveState ? "activated" : "deactivated"}.`,
     );
   };
 
@@ -98,14 +98,14 @@ const ViewCartela = () => {
     const newActiveState = !isBadBingoActive;
     setIsBadBingoActive(newActiveState);
     localStorage.setItem("isBadBingoActive", newActiveState.toString());
-    toast.success(`ባድ ቢንጎ ${newActiveState ? "አገልግሎት ጀመረ" : "አገልግሎት አቆመ"}.`);
+    toast.success(`Bad Bingo ${newActiveState ? "activated" : "deactivated"}.`);
   };
   const handleToggleBonusHidden = () => {
     const newActiveState = !isBonusHidden;
     setIsBonusHidden(newActiveState);
     localStorage.setItem("isBonusHidden", newActiveState.toString());
     toast.success(
-      `ዳይናሚክ ቦነስ ማሳየት ${newActiveState ? "አገልግሎት ጀመረ" : "አገልግሎት አቆመ"}.`,
+      `Dynamic bonus display ${newActiveState ? "activated" : "deactivated"}.`,
     );
   };
 
@@ -120,7 +120,7 @@ const ViewCartela = () => {
         );
         setCardIds(data.sort((a, b) => parseInt(a) - parseInt(b)));
       } catch (error) {
-        toast.error(error.message || "የካርድ መታወቂያዎችን ማግኘት አልተቻለም");
+        toast.error(error.message || "Failed to fetch card IDs");
       } finally {
         setIsLoading(false);
       }
@@ -144,7 +144,7 @@ const ViewCartela = () => {
       setBingoCardData(rawData);
       setUpdatedBingoCard(rawData);
     } catch (error) {
-      toast.error(error.message || "የቢንጎ ካርድ መረጃ ማግኘት አልተቻለም");
+      toast.error(error.message || "Failed to fetch bingo card data");
     } finally {
       setIsLoading(false);
     }
@@ -182,7 +182,7 @@ const ViewCartela = () => {
         setCardIds(data.sort((a, b) => parseInt(a) - parseInt(b)));
         localStorage.removeItem("cachedCardIds");
       } catch (error) {
-        toast.error(error.message || "የካርድ መታወቂያዎችን ማግኘት አልተቻለም");
+        toast.error(error.message || "Failed to fetch card IDs");
       }
     };
     fetchCardIds();
@@ -208,35 +208,35 @@ const ViewCartela = () => {
                   className="text-red-500 text-xl sm:text-2xl mb-2 font-bold"
                   aria-live="assertive"
                 >
-                  ምንም ካርቴላ አልተገኘም።
+                  No cards found.
                 </p>
-                <p className="mb-6 text-gray-600">እባክዎ አዲስ ካርቴላዎችን ያክሉ።</p>
+                <p className="mb-6 text-gray-600">Please add new cards.</p>
                 <div className="flex flex-wrap gap-3 justify-center">
                   <button
                     onClick={toggleAddModal}
                     className="bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 px-6 rounded-lg shadow transition transform hover:-translate-y-0.5"
                   >
-                    ካርቴላ ያክሉ
+                    Add Card
                   </button>
                   <button
                     onClick={toggleBulkUploadModal}
                     className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105"
                   >
-                    ብዛት ያስገቡ
+                    Bulk Upload
                   </button>
                   {role === "cashier" && enableDynamicBonus && (
                     <button
                       onClick={handleMarkBonusInactive}
                       className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105"
                     >
-                      ቦነስ እንደ እንቅስቃሴ ውጪ ምልክት አድርግ
+                      Mark Bonus Inactive
                     </button>
                   )}
                   {/* New Animated Toggle Button for Global Bonus Activation */}
                   {role === "cashier" && (
                     <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
                       <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        ግሎባል ቦነስ:
+                        Global Bonus:
                       </span>
                       <button
                         onClick={handleToggleGlobalBonus}
@@ -256,7 +256,7 @@ const ViewCartela = () => {
                   {role === "cashier" && (
                     <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
                       <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        ዳይናሚክ ቦነስ:
+                        Dynamic Bonus:
                       </span>
                       <button
                         onClick={handleToggleBonusHidden}
@@ -274,7 +274,7 @@ const ViewCartela = () => {
                   {role === "cashier" && (
                     <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
                       <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        ባድ ቢንጎ:
+                        Bad Bingo:
                       </span>
                       <button
                         onClick={handleToggleBadBingo}
@@ -298,27 +298,27 @@ const ViewCartela = () => {
                     onClick={toggleAddModal}
                     className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105"
                   >
-                    ካርቴላ ያክሉ
+                    Add Card
                   </button>
                   <button
                     onClick={toggleBulkUploadModal}
                     className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105"
                   >
-                    ብዛት ያስገቡ
+                    Bulk Upload
                   </button>
                   {role === "cashier" && enableDynamicBonus && (
                     <button
                       onClick={handleMarkBonusInactive}
                       className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105"
                     >
-                      ቦነስ እንደ እንቅስቃሴ ውጪ ምልክት አድርግ
+                      Mark Bonus Inactive
                     </button>
                   )}
                   {/* New Animated Toggle Button for Global Bonus Activation */}
                   {role === "cashier" && (
                     <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
                       <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        ግሎባል ቦነስ:
+                        Global Bonus:
                       </span>
                       <button
                         onClick={handleToggleGlobalBonus}
@@ -338,7 +338,7 @@ const ViewCartela = () => {
                   {role === "cashier" && (
                     <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
                       <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        ዳይናሚክ ቦነስ:
+                        Dynamic Bonus:
                       </span>
                       <button
                         onClick={handleToggleBonusHidden}
@@ -356,7 +356,7 @@ const ViewCartela = () => {
                   {role === "cashier" && (
                     <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2 px-3 rounded-lg">
                       <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        ባድ ቢንጎ:
+                        Bad Bingo:
                       </span>
                       <button
                         onClick={handleToggleBadBingo}
@@ -375,7 +375,7 @@ const ViewCartela = () => {
                 <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                   <h3 className="text-lg font-bold mb-4 text-gray-800 flex items-center gap-2">
                     <span className="w-2 h-6 bg-red-600 rounded-full"></span>
-                    የተገኙ ካርቴላዎች
+                    Available Cards
                   </h3>
                   <div className="grid grid-cols-[repeat(auto-fill,minmax(clamp(60px,18vw,90px),1fr))] gap-3 sm:gap-4">
                     {" "}
@@ -384,7 +384,7 @@ const ViewCartela = () => {
                         key={cardId}
                         onClick={() => toggleEditModal(cardId)}
                         className="w-full aspect-square rounded-xl font-bold text-[clamp(1.5rem,6vw,2.2rem)] bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 hover:border-red-300 hover:text-red-600 shadow-sm transition-all duration-300 transform hover:-translate-y-1"
-                        aria-label={`ካርቴላ ${cardId} ይመልከቱ`}
+                        aria-label={`View Card ${cardId}`}
                       >
                         {cardId}
                       </button>
@@ -396,7 +396,7 @@ const ViewCartela = () => {
           </div>
         ) : (
           <p className="text-center" aria-live="polite">
-            የተጠቃሚ መረጃ በመጫን ላይ...
+            Loading user data...
           </p>
         )}
         <EditCartelaModal
