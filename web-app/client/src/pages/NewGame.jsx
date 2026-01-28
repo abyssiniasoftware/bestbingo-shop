@@ -14,7 +14,7 @@ import AddCartelaModal from "../components/ui/AddCartelaModal";
 import { BINGO_PATTERNS, META_PATTERNS } from "../utils/patterns";
 import { formatPatternName } from "../utils/gameUtils";
 
-import LowBalanceAlert from "../components/ui/LowBalanceAlert";
+// import LowBalanceAlert from "../components/ui/LowBalanceAlert";
 import { ready } from "../voice/utilVoice";
 
 const blinkAnimation = `
@@ -226,7 +226,9 @@ const NewGame = () => {
 
       {/* Main Content Area */}
       <Box sx={{ margin: "20px auto", padding: "0 20px" }}>
-        <LowBalanceAlert onStatusChange={setIsBalanceLow} />
+        {/**
+         * <LowBalanceAlert onStatusChange={setIsBalanceLow} />
+         */}
 
         <Box sx={{
           backgroundColor: "#fff",

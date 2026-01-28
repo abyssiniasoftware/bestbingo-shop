@@ -184,27 +184,19 @@ const getGameById = async (userId, gameId) => {
 };
 
 const deleteGame = async (userId, gameId) => {
-  return new Promise((resolve, reject) => {
-    db.bingogames.remove({ userId, gameId }, {}, (err, num) => {
-      if (err) reject(err);
-      if (num === 0) {
-        logger.warn(`Game not found for deletion: ${gameId}`);
-        throw new Error('Game not found');
-      }
-      logger.info(`Game deleted: ${gameId}`);
-      resolve({ userId, gameId });
-    });
-  });
+  const num = await BingoGame.remove({ userId, gameId });
+  if (num === 0) {
+    logger.warn(`Game not found for deletion: ${gameId}`);
+    throw new Error('Game not found');
+  }
+  logger.info(`Game deleted: ${gameId}`);
+  return { userId, gameId };
 };
 
 const deleteAllGames = async () => {
-  return new Promise((resolve, reject) => {
-    db.bingogames.remove({}, { multi: true }, (err, num) => {
-      if (err) reject(err);
-      logger.info('Deleted all games');
-      resolve({ deletedCount: num });
-    });
-  });
+  const num = await BingoGame.remove({}, { multi: true });
+  logger.info('Deleted all games');
+  return { deletedCount: num };
 };
 
 module.exports = {

@@ -28,6 +28,22 @@ const Bonus = {
         resolve(docs);
       });
     });
+  },
+  async findOne(query) {
+    return new Promise((resolve, reject) => {
+      db.bonuses.findOne(query, (err, doc) => {
+        if (err) reject(err);
+        resolve(doc);
+      });
+    });
+  },
+  async updateOne(query, update) {
+    return new Promise((resolve, reject) => {
+      db.bonuses.update(query, { $set: update }, {}, (err, num) => {
+        if (err) reject(err);
+        resolve(num);
+      });
+    });
   }
 };
 

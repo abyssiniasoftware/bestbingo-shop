@@ -35,7 +35,7 @@ const House = {
     return new Promise((resolve, reject) => {
       db.houses.update(query, { $set: update }, {}, (err, numAffected) => {
         if (err) return reject(err);
-        resolve(numAffected); // returns number of updated docs (should be 1)
+        resolve(numAffected);
       });
     });
   }

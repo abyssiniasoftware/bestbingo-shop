@@ -7,37 +7,31 @@ const CryptoJS = require('crypto-js');
 const getUsers = async ({ page = 1, limit = 10, search = '' }) => {
   const query = search
     ? {
-        $or: [
-          { fullname: new RegExp(search, 'i') },
-          { username: new RegExp(search, 'i') },
-          { phone: new RegExp(search, 'i') },
-          { address: new RegExp(search, 'i') }
-        ]
-      }
+      $or: [
+        { fullname: new RegExp(search, 'i') },
+        { username: new RegExp(search, 'i') },
+        { phone: new RegExp(search, 'i') },
+        { address: new RegExp(search, 'i') }
+      ]
+    }
     : {};
 
-  return new Promise((resolve, reject) => {
-    db.users.find(query, (err, docs) => {
-      if (err) return reject(err);
-      const total = docs.length;
-      const users = docs
-        .slice((page - 1) * limit, page * limit)
-        .map(user => {
-          const { password, ...rest } = user;
-          rest.phone = CryptoJS.AES.decrypt(rest.phone, 'classicBingoSecret').toString(CryptoJS.enc.Utf8);
-          rest.address = CryptoJS.AES.decrypt(rest.address, 'classicBingoSecret').toString(CryptoJS.enc.Utf8);
-          return rest;
-        });
-
-      resolve({
-        users,
-        total,
-        page: parseInt(page),
-        limit: parseInt(limit),
-        totalPages: Math.ceil(total / limit)
-      });
+  const docs = await User.find(query);
+  const total = docs.length;
+  const users = docs
+    .slice((page - 1) * limit, page * limit)
+    .map(user => {
+      const { password, ...rest } = user;
+      return rest;
     });
-  });
+
+  return {
+    users,
+    total,
+    page: parseInt(page),
+    limit: parseInt(limit),
+    totalPages: Math.ceil(total / limit)
+  };
 };
 
 const getUserById = async (id) => {
@@ -87,17 +81,13 @@ const updateUserPassword = async (id, updates) => {
 };
 
 const deleteUser = async (id) => {
-  return new Promise((resolve, reject) => {
-    db.users.remove({ _id: id }, {}, (err, num) => {
-      if (err) reject(err);
-      if (num === 0) {
-        logger.warn(`User not found for deletion: ${id}`);
-        throw new Error('User not found');
-      }
-      logger.info(`User deleted: ${id}`);
-      resolve({ _id: id });
-    });
-  });
+  const num = await User.remove({ _id: id });
+  if (num === 0) {
+    logger.warn(`User not found for deletion: ${id}`);
+    throw new Error('User not found');
+  }
+  logger.info(`User deleted: ${id}`);
+  return { _id: id };
 };
 
 const banUser = async (id, bannedBy) => {
@@ -130,28 +120,22 @@ const getUsersByRole = async ({ role, page = 1, limit = 10, search = '' }) => {
     })
   };
 
-  return new Promise((resolve, reject) => {
-    db.users.find(query, (err, docs) => {
-      if (err) return reject(err);
-      const total = docs.length;
-      const users = docs
-        .slice((page - 1) * limit, page * limit)
-        .map(user => {
-          const { password, ...rest } = user;
-          rest.phone = CryptoJS.AES.decrypt(rest.phone, 'classicBingoSecret').toString(CryptoJS.enc.Utf8);
-          rest.address = CryptoJS.AES.decrypt(rest.address, 'classicBingoSecret').toString(CryptoJS.enc.Utf8);
-          return rest;
-        });
-
-      resolve({
-        users,
-        total,
-        page: parseInt(page),
-        limit: parseInt(limit),
-        totalPages: Math.ceil(total / limit)
-      });
+  const docs = await User.find(query);
+  const total = docs.length;
+  const users = docs
+    .slice((page - 1) * limit, page * limit)
+    .map(user => {
+      const { password, ...rest } = user;
+      return rest;
     });
-  });
+
+  return {
+    users,
+    total,
+    page: parseInt(page),
+    limit: parseInt(limit),
+    totalPages: Math.ceil(total / limit)
+  };
 };
 
 const getUsersByHouseAdmin = async (houseAdminId) => {
