@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../stores/userStore";
 import api from "../utils/api";
+import { isTokenValid } from "../services/authService";
 
 const useAuth = () => {
   const navigate = useNavigate();
@@ -10,29 +11,27 @@ const useAuth = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const storedExpiration = localStorage.getItem("tokenExpiration");
-    const currentTime = new Date().getTime();
 
-    if (token && storedExpiration && currentTime < storedExpiration) {
+    // Use centralized token validation
+    if (token && isTokenValid()) {
       api
         .get(`/api/me`)
-        .then((response) => response.json())
+        .then((response) => response.data) // Fixed: axios uses .data, not .json()
         .then((userData) => {
           setUser({
-            id: userData.id,
+            id: userData.id || userData._id,
             username: userData.username,
             role: userData.role,
-            bossId: userData.bossId,
+            houseId: userData.houseId,
+            package: userData.package,
           });
         })
         .catch(() => {
           clearUser();
-          localStorage.clear();
           navigate("/login");
         });
     } else {
       clearUser();
-      localStorage.clear();
       navigate("/login");
     }
   }, [navigate, setUser, clearUser]);
@@ -41,3 +40,4 @@ const useAuth = () => {
 };
 
 export default useAuth;
+

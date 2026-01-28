@@ -38,10 +38,7 @@ const Reports = () => {
     const fetchDailyStats = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("የማረጋገጫ ቶከን አልተገኘም። እባክዎ ይግቡ");
-        }
+       
 
         const response = await api.get(`/api/stats/daily`, {
           params: { date: selectedDate },

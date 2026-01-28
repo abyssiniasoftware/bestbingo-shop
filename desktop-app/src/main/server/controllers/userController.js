@@ -121,7 +121,7 @@ const createBulk = async (req, res, next) => {
 const bulkUploadCards = async (req, res, next) => {
   try {
     const { userId, cardsData } = req.body;
-
+    console.log("re.body returns",userId, cardsData);
     if (!userId) {
       logger.warn('Missing user ID for bulk card upload');
       return res.status(400).json({ message: 'User ID is required' });

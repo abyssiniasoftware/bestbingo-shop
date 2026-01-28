@@ -42,22 +42,19 @@ const ViewCartela = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const userData = await apiService.fetchUserDetails(userId, token);
-          setUser({
-            id: userData.id,
-            username: userData.username,
-            role: userData.role,
-            houseId: userData.houseId,
-            enableDynamicBonus: userData.enableDynamicBonus || false,
-            package: userData.package,
-          });
-          setLocalHouseId(userData.houseId || null);
-        } catch (error) {
-          toast.error(error.message || "የተጠቃሚ መረጃ ማግኘት አልተቻለም");
-        }
+      try {
+        const userData = await apiService.fetchUserDetails(userId);
+        setUser({
+          id: userData.id || userData._id,
+          username: userData.username,
+          role: userData.role,
+          houseId: userData.houseId,
+          enableDynamicBonus: userData.enableDynamicBonus || false,
+          package: userData.package,
+        });
+        setLocalHouseId(userData.houseId || null);
+      } catch (error) {
+        toast.error(error.message || "የተጠቃሚ መረጃ ማግኘት አልተቻለም");
       }
     };
     fetchUserData();
@@ -76,8 +73,7 @@ const ViewCartela = () => {
       return;
     }
     try {
-      const token = localStorage.getItem("token");
-      await apiService.markBonusInactive(storeHouseId, userId, token);
+      await apiService.markBonusInactive(storeHouseId, userId);
       toast.success("ቦነስ እንደ እንቅስቃሴ ውጪ ምልክት ተደርጎበታል");
     } catch (error) {
       toast.error(error.message || "ቦነስን እንደ እንቅስቃሴ ውጪ ማድረግ አልተቻለም");
@@ -115,9 +111,7 @@ const ViewCartela = () => {
       setIsLoading(true);
       try {
         const data = await apiService.fetchCardIds(
-          userId,
-          localStorage.getItem("token"),
-        );
+          userId);
         setCardIds(data.sort((a, b) => parseInt(a) - parseInt(b)));
       } catch (error) {
         toast.error(error.message || "የካርድ መታወቂያዎችን ማግኘት አልተቻለም");
@@ -134,9 +128,7 @@ const ViewCartela = () => {
     try {
       const data = await apiService.fetchCartelaData(
         cardId,
-        userId,
-        localStorage.getItem("token"),
-      );
+        userId);
       const rawData = {};
       Object.keys(data).forEach((row) => {
         Object.assign(rawData, data[row]);
@@ -176,9 +168,7 @@ const ViewCartela = () => {
       if (!userId) return;
       try {
         const data = await apiService.fetchCardIds(
-          userId,
-          localStorage.getItem("token"),
-        );
+          userId);
         setCardIds(data.sort((a, b) => parseInt(a) - parseInt(b)));
         localStorage.removeItem("cachedCardIds");
       } catch (error) {

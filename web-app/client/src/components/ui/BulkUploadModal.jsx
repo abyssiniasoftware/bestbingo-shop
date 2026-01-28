@@ -70,8 +70,7 @@ const BulkUploadModal = ({ isOpen, onClose, userId, onBulkUpload }) => {
         return formattedCard;
       });
 
-      const token = localStorage.getItem("token");
-      await apiService.bulkUploadCards(userId, formattedCards, token);
+      await apiService.bulkUploadCards(userId, formattedCards);
       toast.success("Bulk cards uploaded successfully!");
       setFile(null);
       onBulkUpload();

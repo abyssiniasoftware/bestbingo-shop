@@ -48,7 +48,6 @@ const UserList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400));
@@ -80,18 +79,14 @@ const UserList = () => {
         setCurrentPage(1);
         fetchUsers(1, value);
       }, 500),
-    [token, rowsPerPage],
+    [ rowsPerPage],
   );
 
   useEffect(() => {
-    if (!token) {
-      setErrorMsg("No authentication token found. Please log in.");
-      setLoading(false);
-      return;
-    }
+    
     fetchUsers(currentPage, searchTerm);
     return () => debouncedSearch.cancel();
-  }, [currentPage, rowsPerPage, token]);
+  }, [currentPage, rowsPerPage]);
 
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();

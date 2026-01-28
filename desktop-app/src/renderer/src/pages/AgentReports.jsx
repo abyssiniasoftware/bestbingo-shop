@@ -60,11 +60,6 @@ const AgentReports = () => {
     const fetchAgentStats = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("Authentication token not found. Please log in.");
-        }
-
         const response = await api.get(`/api/stats/agent`, {
           params: {
             month: filters.month || undefined,

@@ -2,19 +2,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiMenu, FiX, FiBook, FiBarChart2, FiLogOut } from "react-icons/fi";
+import useUserStore from "../../stores/userStore";
 
 const Sidebar = ({ setActiveTab }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { clearUser } = useUserStore();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-    localStorage.removeItem("houseId");
-    localStorage.removeItem("tokenExpiration");
+    clearUser();
     navigate("/login");
   };
 
@@ -32,9 +30,8 @@ const Sidebar = ({ setActiveTab }) => {
       </button>
 
       <aside
-        className={`transition-all duration-300 bg-gray-600 text-white shadow-lg p-4 ${
-          isOpen ? "w-45" : "w-0 overflow-hidden"
-        } min-h-screen`}
+        className={`transition-all duration-300 bg-gray-600 text-white shadow-lg p-4 ${isOpen ? "w-45" : "w-0 overflow-hidden"
+          } min-h-screen`}
       >
         <h2 className="text-xl font-bold mb-6 mt-8">ሜኑ</h2>
         <ul className="space-y-4">

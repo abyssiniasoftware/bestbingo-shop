@@ -9,37 +9,41 @@ const SummaryMetrics = ({ filters, stats }) => {
   const [loadingPayment, setLoadingPayment] = useState(true);
   const [paymentError, setPaymentError] = useState(null);
 
-  useEffect(() => {
-    const fetchPaymentData = async () => {
-      try {
-        setLoadingPayment(true);
-        const response = await api.get(`/api/payment`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.status === "success") {
-          setPaymentData({
-            kidusamount: parseFloat(data.kidusamount) || 0,
-            tekesteamount: parseFloat(data.tekesteamount) || 0,
-          });
-        } else {
-          throw new Error(
-            "Failed to fetch payment data: API status not success",
-          );
-        }
-        setPaymentError(null);
-      } catch (error) {
-        setPaymentError(error.message);
-        // Keep default or previously fetched values if error occurs
-        setPaymentData({ kidusamount: 0, tekesteamount: 0 });
-      } finally {
-        setLoadingPayment(false);
-      }
-    };
+ useEffect(() => {
+  const fetchPaymentData = async () => {
+    try {
+      setLoadingPayment(true);
 
-    fetchPaymentData();
-  }, []);
+      const response = await api.get("/api/payment");
+      const data = response.data; // ✅ Axios parsed JSON
+
+      // Optional: only if your API wraps responses
+      if (data.status !== "success") {
+        throw new Error("Failed to fetch payment data");
+      }
+
+      setPaymentData({
+        kidusamount: parseFloat(data.kidusamount) || 0,
+        tekesteamount: parseFloat(data.tekesteamount) || 0,
+      });
+
+      setPaymentError(null);
+    } catch (error) {
+      console.error("Payment fetch error:", error);
+
+      setPaymentError(
+        error.response?.data?.message || error.message || "Payment fetch failed"
+      );
+
+      setPaymentData({ kidusamount: 0, tekesteamount: 0 });
+    } finally {
+      setLoadingPayment(false);
+    }
+  };
+
+  fetchPaymentData();
+}, []);
+
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("en-ET", {

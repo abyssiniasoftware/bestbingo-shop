@@ -93,7 +93,7 @@ const rechargeUpdateValidation = [
 
 const bingoCardValidation = [
   check('cardId').notEmpty().withMessage('Card ID is required').trim(),
-  check('userId').notEmpty().withMessage('User ID is required'),
+  check('userId').notEmpty().withMessage('User ID is required from validator'),
   check('b1')
     .isInt({ min: 1, max: 15 })
     .withMessage('B1 must be between 1 and 15'),

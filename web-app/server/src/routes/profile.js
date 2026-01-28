@@ -14,7 +14,7 @@ router.get("/me", auth(), async (req, res) => {
     // Remove sensitive data before sending
     const userData = user.toObject();
     delete userData.password;
-    res.json(userData);
+    res.json({ ...userData, id: user._id });
   } catch (error) {
     logger.error('Error in /api/me:', error);
     res.status(500).json({ message: 'Internal Server Error' });

@@ -131,11 +131,11 @@ const GameTopSection = ({
             <Typography
               sx={{
                 color: "#fff",
-                fontSize: "1.6rem",
+                fontSize: "2.5rem",
                 fontWeight: "bold",
               }}
             >
-              Call us: {config.phoneNumber}
+              {config.phoneNumber}
             </Typography>
           </Box>
         </Box>

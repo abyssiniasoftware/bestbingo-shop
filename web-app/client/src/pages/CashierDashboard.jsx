@@ -31,11 +31,6 @@ const CashierDashboard = () => {
   }, [showBalance]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-    localStorage.removeItem("houseId");
-    localStorage.removeItem("tokenExpiration");
     clearUser();
     navigate("/login");
   };
@@ -92,7 +87,7 @@ const CashierDashboard = () => {
           <Typography variant="h6" sx={{ color: "#2980b9", fontWeight: "bold", fontSize: "1.1rem" }}>
             Play Bingo
           </Typography>
-          <img src={ bingo } alt="Bingo" style={{ height: 24 }} />
+          <img src={bingo} alt="Bingo" style={{ height: 24 }} />
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>

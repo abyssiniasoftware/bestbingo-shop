@@ -243,14 +243,8 @@ const useGameLogic = () => {
   // Fetch game details
   useEffect(() => {
     const fetchGameDetails = async () => {
-      const token = localStorage.getItem("token");
-      if (!token || !userId) {
-        // toast.error('Authentication token or user ID missing');
-        navigate("/login");
-        return;
-      }
       try {
-        const details = await apiService.fetchGameDetails(userId, token);
+        const details = await apiService.fetchGameDetails(userId);
         setGameDetails(details);
         // Also update the store so Game.jsx can access it via gameData
         useGameStore.getState().setGameData({ ...useGameStore.getState().gameData, game: details });
@@ -258,15 +252,15 @@ const useGameLogic = () => {
         // toast.error(error.message);
         navigate("/game");
       }
+      
     };
     fetchGameDetails();
   }, [userId, navigate]);
 
   useEffect(() => {
     const fetchCashierSettings = async () => {
-      const token = localStorage.getItem("token");
       try {
-        const response = await apiService.fetchUserDetails(userId, token);
+        const response = await apiService.fetchUserDetails(userId);
 
         setEnableDynamicBonus(response.enableDynamicBonus || false);
       } catch (error) { }
@@ -277,9 +271,8 @@ const useGameLogic = () => {
   useEffect(() => {
     const fetchDynamicBonus = async () => {
       if (!gameDetails?.houseId) return;
-      const token = localStorage.getItem("token");
       try {
-        const response = await apiService.fetchActiveDynamicBonus(token);
+        const response = await apiService.fetchActiveDynamicBonus();
         setDynamicBonus(Number(response.bonusAmount) || 0);
       } catch (error) { }
     };
@@ -330,20 +323,12 @@ const useGameLogic = () => {
         navigate("/game");
         return;
       }
-      const token = localStorage.getItem("token");
-      if (!token) {
-        // toast.error('Authentication token missing');
-        navigate("/login");
-        setIsLoading(false);
-        return;
-      }
       try {
         const cardNumbersMap = {};
         const fetchPromises = gameData.cartela.map(async (cardId) => {
           const numbers = await apiService.fetchCardNumbers(
             cardId,
             userId,
-            token,
           );
           cardNumbersMap[cardId] = numbers;
           cardDataCache.current[cardId] = { numbers };
@@ -355,6 +340,7 @@ const useGameLogic = () => {
       } finally {
         setIsLoading(false);
       }
+      
     };
     fetchAllCardNumbers();
   }, [gameData, userId, navigate]);
@@ -637,9 +623,8 @@ const useGameLogic = () => {
       return;
     }
 
-    const token = localStorage.getItem("token");
-    if (!token || !userId) {
-      toast.error("User ID or token missing");
+    if (!userId) {
+      toast.error("User ID missing");
       return;
     }
 
@@ -660,8 +645,8 @@ const useGameLogic = () => {
 
       if (!data || !numbers) {
         [data, numbers] = await Promise.all([
-          apiService.fetchCartelaData(cardIdInput, userId, token),
-          apiService.fetchCardNumbers(cardIdInput, userId, token),
+          apiService.fetchCartelaData(cardIdInput, userId),
+          apiService.fetchCardNumbers(cardIdInput, userId),
         ]);
         cardDataCache.current[cardIdInput] = { cartelaData: data, numbers };
       }
@@ -804,7 +789,6 @@ const useGameLogic = () => {
               gameDetails.houseId,
               gameDetails.gameId,
               cardIdInput,
-              token,
             );
             setGameDetails((prev) => ({
               ...prev,
@@ -847,7 +831,6 @@ const useGameLogic = () => {
                     gameDetails.gameId,
                     gameDetails.houseId,
                     dynamicBonus,
-                    token,
                   );
                   setBonusAwarded(true);
                   setBonusAmountGiven(bonusResponse.bonus.bonusAmount);
@@ -865,8 +848,7 @@ const useGameLogic = () => {
                   //   userId,
                   //   gameDetails.gameId,
                   //   gameDetails.houseId,
-                  //   bonusAmount,
-                  //   token
+                  //   bonusAmount
                   // );
                   setBonusAwarded(true);
                   setBonusAmountGiven(bonusAmount);
@@ -895,7 +877,6 @@ const useGameLogic = () => {
                       gameDetails.gameId,
                       gameDetails.houseId,
                       bonusAmount,
-                      token,
                     );
                     setBonusAwarded(true);
                     setBonusAmountGiven(bonusAmount);
@@ -977,9 +958,8 @@ const useGameLogic = () => {
   ]);
 
   const declareWinnerManually = useCallback(async () => {
-    const token = localStorage.getItem("token");
-    if (!token || !userId) {
-      toast.error("User ID or token missing");
+    if (!userId) {
+      toast.error("User ID missing");
       return;
     }
     if (!gameDetails || !gameDetails.houseId || !gameDetails.gameId) {
@@ -992,7 +972,6 @@ const useGameLogic = () => {
         gameDetails.houseId,
         gameDetails.gameId,
         cardIdInput,
-        token,
       );
       setGameDetails((prev) => ({
         ...prev,

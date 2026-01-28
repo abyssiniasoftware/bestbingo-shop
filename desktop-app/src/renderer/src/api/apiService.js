@@ -3,11 +3,6 @@ import api from "../utils/api";
 const apiService = {
   fetchSuperStats: async (month) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Authentication token not found. Please log in.");
-      }
-
       const response = await api.get(`/api/stats/super`, {
         params: month ? { month } : {},
       });
@@ -18,7 +13,7 @@ const apiService = {
       );
     }
   },
-  getCutAmountSetting: async (cashierId, token) => {
+  getCutAmountSetting: async (cashierId) => {
     try {
       const response = await api.get(`/api/cut-amount/${cashierId}`);
       return response.data;
@@ -29,7 +24,7 @@ const apiService = {
     }
   },
 
-  updateCutAmountSetting: async (cashierId, cutAmount, token) => {
+  updateCutAmountSetting: async (cashierId, cutAmount) => {
     try {
       const response = await api.patch(`/api/cut-amount/${cashierId}`, {
         cutAmount,
@@ -41,7 +36,7 @@ const apiService = {
       );
     }
   },
-  fetchWalletData: async (token) => {
+  fetchWalletData: async () => {
     try {
       const response = await api.get(`/api/me`);
       return response.data;
@@ -51,7 +46,7 @@ const apiService = {
       );
     }
   },
-  fetchCardIds: async (userId, token) => {
+  fetchCardIds: async (userId) => {
     try {
       const response = await api.get(`/api/bingo-card/${userId}/card-ids`);
       return response.data;
@@ -61,7 +56,7 @@ const apiService = {
       );
     }
   },
-  createGame: async (payload, token) => {
+  createGame: async (payload) => {
     try {
       const response = await api.post(`/api/game/create`, payload);
       return response.data;
@@ -71,7 +66,7 @@ const apiService = {
       );
     }
   },
-  fetchCardNumbers: async (cardId, userId, token) => {
+  fetchCardNumbers: async (cardId, userId) => {
     try {
       const response = await api.get(
         `/api/user/user-card-bycardId/${userId}/${cardId}`,
@@ -93,7 +88,7 @@ const apiService = {
       );
     }
   },
-  fetchCartelaData: async (cardId, userId, token) => {
+  fetchCartelaData: async (cardId, userId) => {
     try {
       const response = await api.get(`/api/bingo-card/${userId}/${cardId}`);
       if (response.status !== 200) throw new Error("Failed to fetch cartela");
@@ -114,7 +109,7 @@ const apiService = {
       );
     }
   },
-  fetchGameDetails: async (userId, token) => {
+  fetchGameDetails: async (userId) => {
     try {
       const response = await api.get(`/api/game/last/${userId}`);
       if (response.status !== 200)
@@ -130,7 +125,7 @@ const apiService = {
       );
     }
   },
-  declareWinner: async (houseId, gameId, winnerCardId, token) => {
+  declareWinner: async (houseId, gameId, winnerCardId) => {
     try {
       const response = await api.put(`/api/game/update-winner`, {
         houseId,
@@ -145,7 +140,7 @@ const apiService = {
       );
     }
   },
-  awardBonus: async (cashierId, gameId, houseId, bonusAmount, token) => {
+  awardBonus: async (cashierId, gameId, houseId, bonusAmount) => {
     try {
       const response = await api.post(`/api/game/award`, {
         cashierId,
@@ -159,7 +154,7 @@ const apiService = {
       throw new Error(error.response?.data?.message || "Failed to award bonus");
     }
   },
-  fetchActiveDynamicBonus: async (token) => {
+  fetchActiveDynamicBonus: async () => {
     try {
       const response = await api.get(`/api/game/active-dynamic`);
       return response.data;
@@ -169,7 +164,7 @@ const apiService = {
       );
     }
   },
-  markBonusInactive: async (houseId, cashierId, token) => {
+  markBonusInactive: async (houseId, cashierId) => {
     try {
       const response = await api.post(`/api/game/mark-inactive`, {
         houseId,
@@ -182,7 +177,7 @@ const apiService = {
       );
     }
   },
-  fetchUserDetails: async (userId, token) => {
+  fetchUserDetails: async () => {
     try {
       const response = await api.get(`/api/me`);
       return response.data;
@@ -193,30 +188,36 @@ const apiService = {
     }
   },
   // Update getCashiers to support search
-  getCashiers: async (token, { search = "" } = {}) => {
-    const params = new URLSearchParams({ search }).toString();
-    const response = await api.get(`/api/user/cashiers?${params}`);
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to fetch cashiers");
-    }
-    return response.json();
-  },
+  getCashiers: async ({ search = "" } = {}) => {
+  try {
+    const response = await api.get(`/api/user/cashiers`, {
+      params: { search },
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch cashiers"
+    );
+  }
+},
+
 
   // Existing updateDynamicBonus
-  updateDynamicBonus: async (userId, enableDynamicBonus, token) => {
+  updateDynamicBonus: async (userId, enableDynamicBonus) => {
+  try {
     const response = await api.patch(
       `/api/user/${userId}/dynamic-bonus`,
-
-      { enableDynamicBonus },
+      { enableDynamicBonus }
     );
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Failed to update dynamic bonus");
-    }
-    return response.json();
-  },
-  createBingoCard: async (cardData, token) => {
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response?.data?.message || "Failed to update dynamic bonus"
+    );
+  }
+},
+
+  createBingoCard: async (cardData) => {
     try {
       const response = await api.post(`/api/bingo-card/create`, cardData);
       return response.data;
@@ -226,7 +227,7 @@ const apiService = {
       );
     }
   },
-  bulkUploadCards: async (userId, cardsData, token) => {
+  bulkUploadCards: async (userId, cardsData) => {
     try {
       const response = await api.post(`/api/user/bulk-upload`, {
         userId,
@@ -239,7 +240,7 @@ const apiService = {
       );
     }
   },
-  deleteBingoCard: async (userId, cardId, token) => {
+  deleteBingoCard: async (userId, cardId) => {
     try {
       const response = await api.delete(`/api/bingo-card/${userId}/${cardId}`);
       return response.data;
@@ -249,7 +250,7 @@ const apiService = {
       );
     }
   },
-  updateBingoCard: async (userId, cardId, cardData, token) => {
+  updateBingoCard: async (userId, cardId, cardData) => {
     try {
       const response = await api.put(
         `/api/bingo-card/${userId}/${cardId}`,

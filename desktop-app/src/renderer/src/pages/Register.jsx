@@ -50,13 +50,6 @@ const RegisterUser = () => {
     setSuccess("");
     setMessage("");
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Missing auth token! Please login or check localStorage.");
-      setLoading(false);
-      return;
-    }
-
     try {
       const endpoint = formData.isAgent
         ? `/api/auth/register/agent`

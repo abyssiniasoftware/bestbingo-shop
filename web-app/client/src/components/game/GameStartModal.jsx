@@ -4,28 +4,26 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ready } from "../../voice/utilVoice";
 import LowBalanceAlert from "../ui/LowBalanceAlert";
 import { incrementDailyRound } from "../../utils/dailyRound";
+import useUserStore from "../../stores/userStore";
 
 const GameStartModal = ({
   isOpen,
   onClose,
   hasReservation,
   cartelaData,
-  roundNumber ,
+  roundNumber,
   onLogout,
   onRegister,
 }) => {
   const navigate = useNavigate();
   const { winAmount } = useParams();
   const [isBalanceLow, setIsBalanceLow] = React.useState(false);
+  const { clearUser } = useUserStore();
 
   if (!isOpen) return null;
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-    localStorage.removeItem("houseId");
-    localStorage.removeItem("tokenExpiration");
+    clearUser();
     if (onLogout) onLogout();
     navigate("/login");
   };
@@ -133,7 +131,7 @@ const GameStartModal = ({
           className="game-modal-body"
           sx={{ padding: "20px", textAlign: "center" }}
         >
-         
+
 
           {/* Message */}
           <Typography sx={{ mb: 2, color: "#333" }}>

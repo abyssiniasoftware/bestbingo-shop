@@ -50,13 +50,6 @@ const RegisterUser = () => {
     setSuccess("");
     setMessage("");
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Missing auth token! Please login or check localStorage.");
-      setLoading(false);
-      return;
-    }
-
     try {
       const endpoint = formData.isAgent
         ? `/api/auth/register/agent`
@@ -64,19 +57,19 @@ const RegisterUser = () => {
 
       const payload = formData.isAgent
         ? {
-          username: formData.username,
-          password: formData.password,
-          fullname: formData.username, // Use username as fullname for agent
-          address: formData.branch, // Use branch as address for agent
-          phone: formData.phone,
-          role: "agent", // Explicitly set role for agent
-        }
+            username: formData.username,
+            password: formData.password,
+            fullname: formData.username, // Use username as fullname for agent
+            address: formData.branch, // Use branch as address for agent
+            phone: formData.phone,
+            role: "agent", // Explicitly set role for agent
+          }
         : {
-          username: formData.username,
-          password: formData.password,
-          branch: formData.branch,
-          phone: formData.phone,
-        };
+            username: formData.username,
+            password: formData.password,
+            branch: formData.branch,
+            phone: formData.phone,
+          };
 
       const response = await api.post(endpoint, payload);
 
@@ -84,9 +77,9 @@ const RegisterUser = () => {
         const { message, users, house } = response.data;
         setSuccess(
           message ||
-          (formData.isAgent
-            ? "Agent registered successfully!"
-            : "Users and house registered successfully!"),
+            (formData.isAgent
+              ? "Agent registered successfully!"
+              : "Users and house registered successfully!"),
         );
 
         // Trigger card submission only for house registration (not for agents)

@@ -64,6 +64,14 @@ const User = {
         resolve(num);
       });
     });
+  },
+  async remove(query, options = {}) {
+    return new Promise((resolve, reject) => {
+      db.users.remove(query, options, (err, num) => {
+        if (err) reject(err);
+        resolve(num);
+      });
+    });
   }
 };
 

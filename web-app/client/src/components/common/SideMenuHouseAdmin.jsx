@@ -12,19 +12,17 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import { FaGift } from "react-icons/fa";
+import useUserStore from "../../stores/userStore";
 
 const SidebarHouse = ({ setActiveTab }) => {
   const [isOpen, setIsOpen] = useState(true);
   const navigate = useNavigate();
+  const { clearUser } = useUserStore();
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-    localStorage.removeItem("houseId");
-    localStorage.removeItem("tokenExpiration");
+    clearUser();
     navigate("/login");
   };
 
@@ -42,9 +40,8 @@ const SidebarHouse = ({ setActiveTab }) => {
       </button>
 
       <aside
-        className={`transition-all duration-300 bg-gray-600 text-white shadow-lg p-4 ${
-          isOpen ? "w-45" : "w-0 overflow-hidden"
-        } min-h-screen`}
+        className={`transition-all duration-300 bg-gray-600 text-white shadow-lg p-4 ${isOpen ? "w-45" : "w-0 overflow-hidden"
+          } min-h-screen`}
       >
         <h2 className="text-xl font-bold mb-6">House Admin</h2>
         <ul className="space-y-4">

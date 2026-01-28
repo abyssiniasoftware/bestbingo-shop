@@ -68,7 +68,6 @@ const RechargeHistoryAgent = () => {
   const [modalLoading, setModalLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [userRole, setUserRole] = useState("");
-  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -102,7 +101,7 @@ const RechargeHistoryAgent = () => {
     };
 
     fetchData();
-  }, [token]);
+  }, []);
 
   const handleRechargeSubmit = async () => {
     setModalLoading(true);

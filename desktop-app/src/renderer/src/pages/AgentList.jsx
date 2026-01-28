@@ -44,7 +44,6 @@ const AgentList = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -91,7 +90,7 @@ const AgentList = () => {
         setCurrentPage(1); // Reset to first page on new search
         fetchAgents(1, value);
       }, 500),
-    [token, rowsPerPage],
+    [rowsPerPage],
   );
 
   useEffect(() => {

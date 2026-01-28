@@ -56,10 +56,6 @@ const HouseReportsCashier = () => {
     const fetchHouseStats = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("Authentication token not found. Please log in.");
-        }
 
         const params = {};
         if (filters.dateRange.start && filters.dateRange.end) {

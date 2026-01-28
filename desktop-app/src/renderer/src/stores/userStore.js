@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { isTokenValid, clearAuthData } from "../services/authService";
 
 // Initialize state from localStorage
 const initialState = {
@@ -10,27 +11,62 @@ const initialState = {
     localStorage.getItem("enableDynamicBonus") === "true" || false,
   walletData: { package: 0 },
   error: null,
+  isAuthenticated: false,
 };
 
-const useUserStore = create((set) => ({
+const useUserStore = create((set, get) => ({
   ...initialState,
+  // Check if user is authenticated (token exists and valid)
+  checkAuth: () => {
+    const valid = isTokenValid();
+    set({ isAuthenticated: valid });
+    return valid;
+  },
+  // Initialize from localStorage on app start
+  initializeFromStorage: () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("userId");
+    const role = localStorage.getItem("role");
+    const houseId = localStorage.getItem("houseId");
+    const enableDynamicBonus = localStorage.getItem("enableDynamicBonus") === "true";
+
+    if (token && isTokenValid()) {
+      set({
+        userId,
+        role,
+        houseId,
+        enableDynamicBonus,
+        isAuthenticated: true,
+        user: { id: userId, role, houseId },
+      });
+      return true;
+    } else {
+      // Token invalid or missing, clear everything
+      get().clearUser();
+      return false;
+    }
+  },
   setUser: (userData) =>
     set(() => {
+      const userId = userData?.id || userData?._id || "";
+      const role = userData?.role || "";
+      const houseId = userData?.houseId || "";
+      const enableDynamicBonus = userData?.enableDynamicBonus || false;
+
       // Persist to localStorage
-      localStorage.setItem("userId", userData?.id || "");
-      localStorage.setItem("role", userData?.role || "");
-      localStorage.setItem("houseId", userData?.houseId || "");
-      localStorage.setItem(
-        "enableDynamicBonus",
-        String(userData?.enableDynamicBonus || false),
-      );
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("role", role);
+      localStorage.setItem("houseId", houseId);
+      localStorage.setItem("enableDynamicBonus", String(enableDynamicBonus));
+
       return {
         user: userData,
-        userId: userData?.id,
-        role: userData?.role,
-        houseId: userData?.houseId,
-        enableDynamicBonus: userData?.enableDynamicBonus || false,
+        userId: userId,
+        role: role,
+        houseId: houseId,
+        enableDynamicBonus: enableDynamicBonus,
         walletData: { package: userData?.package || 0 },
+        isAuthenticated: true,
       };
     }),
   setWalletData: (wallet) =>
@@ -44,13 +80,8 @@ const useUserStore = create((set) => ({
   setError: (error) => set({ error }),
   clearUser: () =>
     set(() => {
-      // Clear localStorage
-      localStorage.removeItem("userId");
-      localStorage.removeItem("role");
-      localStorage.removeItem("houseId");
-      localStorage.removeItem("token");
-      localStorage.removeItem("enableDynamicBonus");
-      localStorage.removeItem("tokenExpiration");
+      // Use centralized auth cleanup
+      clearAuthData();
       return {
         user: null,
         userId: null,
@@ -59,6 +90,7 @@ const useUserStore = create((set) => ({
         enableDynamicBonus: false,
         walletData: { package: 0 },
         error: null,
+        isAuthenticated: false,
       };
     }),
 }));

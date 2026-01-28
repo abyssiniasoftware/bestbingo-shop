@@ -8,7 +8,7 @@ import HouseStats from "./HouseStats";
 import HouseBonusList from "./HouseBonusList";
 
 const apiService = {
-  fetchUserData: async (token) => {
+  fetchUserData: async () => {
     try {
       const response = await api.get(`/api/me`);
       return response.data;
@@ -34,8 +34,7 @@ const HouseAdminDashboard = () => {
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        const data = await apiService.fetchUserData(token);
+        const data = await apiService.fetchUserData();
         setWalletData({ package: data.package, username: data.username });
         setError(null);
       } catch (err) {

@@ -7,7 +7,6 @@ const useCardIds = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
 
   const fetchCardIds = useCallback(async () => {
     // Check cache first
@@ -22,7 +21,7 @@ const useCardIds = () => {
     if (userId) {
       setIsLoading(true);
       try {
-        const data = await apiService.fetchCardIds(userId, token);
+        const data = await apiService.fetchCardIds(userId);
         const sortedData = data.sort((a, b) => parseInt(a) - parseInt(b));
         setCardIds(sortedData);
         localStorage.setItem(cacheKey, JSON.stringify(sortedData));
@@ -32,7 +31,7 @@ const useCardIds = () => {
         setIsLoading(false);
       }
     }
-  }, [userId, token]);
+  }, [userId]);
 
   const refreshCards = useCallback(async () => {
     // Clear cache and refetch
@@ -41,7 +40,7 @@ const useCardIds = () => {
     if (userId) {
       setIsLoading(true);
       try {
-        const data = await apiService.fetchCardIds(userId, token);
+        const data = await apiService.fetchCardIds(userId);
         const sortedData = data.sort((a, b) => parseInt(a) - parseInt(b));
         setCardIds(sortedData);
         localStorage.setItem(cacheKey, JSON.stringify(sortedData));
@@ -51,7 +50,7 @@ const useCardIds = () => {
         setIsLoading(false);
       }
     }
-  }, [userId, token]);
+  }, [userId]);
 
   useEffect(() => {
     fetchCardIds();

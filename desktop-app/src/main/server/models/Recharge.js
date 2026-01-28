@@ -19,6 +19,22 @@ const Recharge = {
         resolve(docs);
       });
     });
+  },
+  async findOne(query) {
+    return new Promise((resolve, reject) => {
+      db.recharges.findOne(query, (err, doc) => {
+        if (err) reject(err);
+        resolve(doc);
+      });
+    });
+  },
+  async updateOne(query, update) {
+    return new Promise((resolve, reject) => {
+      db.recharges.update(query, { $set: update }, {}, (err, num) => {
+        if (err) reject(err);
+        resolve(num);
+      });
+    });
   }
 };
 

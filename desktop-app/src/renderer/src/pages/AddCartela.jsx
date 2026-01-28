@@ -37,17 +37,17 @@ const AddCartela = () => {
   const { user, userId, setUser } = useUserStore();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      api
-        .get(`/api/me`)
-        .then((response) => response.json())
-        .then((userData) => {
-          setUser({ id: userData.id, username: userData.username });
-        })
-        .catch((error) => { });
-    }
+    api
+      .get("/api/me")
+      .then((response) => {
+        const userData = response.data;
+        setUser({ id: userData.id || userData._id, username: userData.username });
+      })
+      .catch((error) => {
+        console.error("Failed to fetch user:", error);
+      });
   }, [setUser]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,21 +56,29 @@ const AddCartela = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const token = localStorage.getItem("token");
 
-      const response = await api.post(`/api/bingo-card/create`, {
+    try {
+      const response = await api.post("/api/bingo-card/create", {
         ...cartelaData,
         userId,
       });
-      if (!response.ok) throw new Error("Failed to create cartela");
-      await response.json();
+
+      console.log("Created card:", response.data);
+
       toast.success("Bingo card created successfully!");
       setCartelaData(initialCartelaData);
+
     } catch (error) {
-      toast.error("Error creating bingo card.");
+      console.error(error);
+
+      // optional: get backend error message
+      const message =
+        error.response?.data?.message || "Error creating bingo card.";
+
+      toast.error(message);
     }
   };
+
 
   return (
     <div className="flex min-h-screen bg-gray-900">

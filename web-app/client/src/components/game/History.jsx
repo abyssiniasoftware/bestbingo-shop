@@ -8,22 +8,27 @@ const History = ({ userId }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchWinners = async () => {
-      if (!userId) return;
-      try {
-        const response = await api.get(`/api/game/${userId}/last-winners`);
-        if (!response.ok) throw new Error("Failed to fetch winners");
-        const data = await response.json();
-        setWinners(data);
-      } catch (err) {
-        setError("Error fetching winners");
-        toast.error("Failed to load winners");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchWinners();
-  }, [userId]);
+  const fetchWinners = async () => {
+    if (!userId) return;
+
+    try {
+      const response = await api.get(`/api/game/${userId}/last-winners`);
+
+      // Axios already parses JSON for you
+      const data = response.data;
+
+      setWinners(data);
+    } catch (err) {
+      setError("Error fetching winners");
+      toast.error("Failed to load winners");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchWinners();
+}, [userId]);
+
 
   if (loading) {
     return (

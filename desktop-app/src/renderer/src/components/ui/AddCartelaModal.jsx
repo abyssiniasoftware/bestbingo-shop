@@ -43,8 +43,7 @@ const AddCartelaModal = ({ isOpen, onClose, userId, onCartelaAdded }) => {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      await apiService.createBingoCard({ ...cartelaData, userId }, token);
+      await apiService.createBingoCard({ ...cartelaData, userId });
       toast.success("Bingo card created successfully!");
       setCartelaData(initialCartelaData);
       onCartelaAdded();
