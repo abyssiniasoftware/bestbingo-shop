@@ -1095,7 +1095,6 @@ const useGameLogic = () => {
     setHasGameStarted(false);
     setOpenModal(false);
     setBonusAwarded(false);
-    setPrimaryPattern("row");
     clearInterval(shuffleIntervalRef.current);
     clearTimeout(shuffleTimeoutRef.current);
     clearLockedCards();

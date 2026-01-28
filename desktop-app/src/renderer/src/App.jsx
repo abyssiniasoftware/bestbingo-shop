@@ -9,7 +9,6 @@ import AddCartela from "./pages/AddCartela";
 import ViewCartela from "./pages/ViewCartela";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-
 import CreateHouseForm from "./pages/RegisterHouse";
 import RechargeHistory from "./pages/RechargeHistory";
 import HouseList from "./pages/HouseList";

@@ -115,43 +115,43 @@ export const voiceOptions = [
   { value: "l", label: "ሮቦት" },
 
   // amharic females
-  { value: "a", label: "አማርኛ 1" },
-  { value: "f", label: "አማርኛ 6" },
-  { value: "i", label: "አማርኛ 9" },
-  { value: "s", label: "አማርኛ 16" },
-  { value: "y", label: "አማርኛ 17" },
-  { value: "z", label: "አማርኛ 18" },
+  { value: "a", label: "ሀና" },
+  { value: "f", label: "ሳራ" },
+  { value: "i", label: "ሜሮን" },
+  { value: "s", label: "ቤቲ" },
+  { value: "y", label: "ሜላት" },
+  { value: "z", label: "አለሚቱ" },
 
   // amharic voices
-  { value: "b", label: "አማርኛ 2" },
-  { value: "c", label: "አማርኛ 3" },
-  { value: "d", label: "አማርኛ 4" },
-  { value: "e", label: "አማርኛ 5" },
-  { value: "g", label: "አማርኛ 7" },
-  { value: "h", label: "አማርኛ 8" },
-  { value: "j", label: "አማርኛ 10" },
-  { value: "k", label: "አማርኛ 11" },
-  { value: "m", label: "አማርኛ 12" },
-  { value: "n", label: "አማርኛ 13" },
-  { value: "q", label: "አማርኛ 14" },
-  { value: "r", label: "አማርኛ 15" },
+  { value: "b", label: "ዳንኤል" },
+  { value: "c", label: "ሳሙኤል" },
+  { value: "d", label: "ዮናስ" },
+  { value: "e", label: "አብነት" },
+  { value: "g", label: "ኤርምያስ" },
+  { value: "h", label: "ብዙአየሁ" },
+  { value: "j", label: "ካሌብ" },
+  { value: "k", label: "ኤልያስ" },
+  { value: "m", label: "መስፍን" },
+  { value: "n", label: "አማኑኤል" },
+  { value: "q", label: "አቤል" },
+  { value: "r", label: "ናቲ" },
 
   // oromiffa voices
-  { value: "o", label: "ኦሮምኛ 1" },
-  { value: "p", label: "ኦሮምኛ 2" },
+  { value: "o", label: "ጫልቱ" },
+  { value: "p", label: "ሰብሪና" },
 
   // tigrigna voices
-  { value: "t", label: "ትግረኛ 1" },
-  { value: "u", label: "ትግረኛ 2" },
+  { value: "t", label: "ሰናይት" },
+  { value: "u", label: "ሩት" },
 
   // tigrigna male
-  { value: "v", label: "ትግረኛ 3" },
+  { value: "v", label: "ተወልደ" },
 
   // wolayta voice
-  { value: "w", label: "ወላይታ" },
+  { value: "w", label: "ዳዊት" },
 
   // sidama voice
-  { value: "x", label: "ሲዳማ" },
+  { value: "x", label: "ወይና" },
 ];
 
 //constants for the game

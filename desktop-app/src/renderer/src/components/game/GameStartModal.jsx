@@ -3,14 +3,16 @@ import { Box, Typography, Button } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { ready } from "../../voice/utilVoice";
 import LowBalanceAlert from "../ui/LowBalanceAlert";
+import { incrementDailyRound } from "../../utils/dailyRound";
 
 const GameStartModal = ({
   isOpen,
   onClose,
   hasReservation,
   cartelaData,
-  roundNumber,
+  roundNumber ,
   onLogout,
+  onRegister,
 }) => {
   const navigate = useNavigate();
   const { winAmount } = useParams();
@@ -26,10 +28,6 @@ const GameStartModal = ({
     localStorage.removeItem("tokenExpiration");
     if (onLogout) onLogout();
     navigate("/login");
-  };
-
-  const handleRegisterCard = () => {
-    navigate("/new-game");
   };
 
   const handleReport = () => {
@@ -99,7 +97,7 @@ const GameStartModal = ({
               Logout
             </Button>
             <Button
-              onClick={handleRegisterCard}
+              onClick={() => onRegister && onRegister()}
               sx={{
                 color: "white",
                 borderColor: "white",
@@ -223,6 +221,7 @@ const GameStartModal = ({
           <Button
             className="start-button"
             onClick={() => {
+              incrementDailyRound();
               const audio = new Audio(ready);
               audio.play();
               audio.onended = () => {

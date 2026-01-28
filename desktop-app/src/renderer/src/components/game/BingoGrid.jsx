@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { Box, Grid, Typography, styled } from "@mui/material";
-import { called, num } from "../../images/images";
+import { called as calledBg, num } from "../../images/images";
 
 
 // Define animations
@@ -88,7 +88,7 @@ const StyledBingoLetter = styled(Box, {
 
 const StyledNumberCell = styled(Box, {
   shouldForwardProp: (prop) => prop !== "called" && prop !== "isShuffling",
-})(({ theme, called, isShuffling }) => ({
+})(({ theme, isCalled, isShuffling }) => ({
   // Dimensions: Set width to fill the grid column, fixed height for the "bar" look
   width: "100%",
   height: "65px", // Increased height to match the tall rectangular look in screenshot
@@ -105,8 +105,8 @@ const StyledNumberCell = styled(Box, {
 
   backgroundImage: isShuffling
     ? "linear-gradient(45deg, #FFD700, #FF8C00, #FF4500, #FFD700)"
-    : called
-      ?  `url(${called})`
+    : isCalled
+      ?  `url(${calledBg})`
       : `url(${num})`,
 
   backgroundSize: isShuffling ? "300% 300%" : "100% 100%", // Larger size for gradient movement
@@ -122,7 +122,7 @@ const StyledNumberCell = styled(Box, {
   zIndex: isShuffling ? 10 : 1,
   animation: isShuffling
     ? "shuffleBackground 0.8s ease infinite, numberFlip 0.3s ease-in-out infinite"
-    : called
+    : isCalled
       ? "calledPulse 0.4s ease-in-out"
       : "none",
 
@@ -312,7 +312,7 @@ const BingoGrid = ({ calledNumbers, shuffling }) => {
                   <StyledNumberCell
                     id={`cell-number-${num}`}
                     key={num}
-                    called={isCalled}
+                    isCalled={isCalled}
                     isShuffling={isShuffled || isFastShuffled}
                   >
                     {displayNum}

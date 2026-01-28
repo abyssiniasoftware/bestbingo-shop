@@ -163,18 +163,18 @@ const NewGame = () => {
         </Box>
         <Box
           sx={{
-            mt: 2,
+            mt: 1,
             paddingLeft: "70px",
           }}
         >
           <Typography
             sx={{
               color: "#374151",
-              fontSize: "1.6rem",
+              fontSize: "3rem",
               fontWeight: "bold",
             }}
           >
-            Call us: {config.phoneNumber}
+             {config.phoneNumber}
           </Typography>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>

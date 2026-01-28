@@ -27,7 +27,7 @@ const GameControlsBar = ({
   isAutomatic,
   setIsAutomatic,
   onNewGameClick,
-  handleBack,
+  // handleBack,
 }) => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && cardIdInput && !isPlaying) {
@@ -83,7 +83,7 @@ const GameControlsBar = ({
           New Game
         </Button>
 
-        <Button
+        {/* <Button
           onClick={handleBack}
           // disabled={hasGameStarted && !isGameEnded}
           sx={{
@@ -98,7 +98,7 @@ const GameControlsBar = ({
           }}
         >
           Back
-        </Button>
+        </Button> */}
 
         <Button
           onClick={handleShuffleClick}

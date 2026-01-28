@@ -112,6 +112,7 @@ const Game = () => {
         onClose={() => setShowStartModal(false)}
         hasReservation={hasReservation}
         roundNumber={getDailyRoundNumber()}
+        onRegister={handleBack} 
       />
 
       {/* Main game content */}
@@ -163,7 +164,7 @@ const Game = () => {
           cardIdInput={cardIdInput}
           setCardIdInput={setCardIdInput}
           checkWinner={checkWinner}
-          handleBack={handleBack}
+          // handleBack={handleBack}
           isGameEnded={isGameEnded}
           hasGameStarted={hasGameStarted}
           handleEndGame={handleEndGame}
