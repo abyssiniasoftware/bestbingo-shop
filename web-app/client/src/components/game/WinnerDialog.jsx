@@ -191,7 +191,7 @@ const WinnerDialog = ({
   const handleKickPlayer = () => {
     if (!lockedCards.includes(cardIdInput)) {
       setLockedCards((prev) => {
-       if(playBlockedAudio) playBlockedAudio();
+        if(playBlockedAudio)playBlockedAudio();
         const updatedLockedCards = [...prev, cardIdInput];
         localStorage.setItem("lockedCards", JSON.stringify(updatedLockedCards));
         return updatedLockedCards;

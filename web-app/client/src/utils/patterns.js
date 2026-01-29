@@ -38388,7 +38388,7 @@ export const BINGO_PATTERNS = {
     ["b4", "i4", "n4", "g4", "o4"], // 4th column
     ["b5", "i5", "n5", "g5", "o5"], // 5th column
     ["b1", "i2", "n3", "g4", "o5"], // Diagonal (top-left to bottom-right)
-    ["b5", "i4", "n3", "g2", "o1"],
+    ["b5", "i4", "n3", "g2", "o1"], // Diagonal (top-right to bottom-left)
 
     // 2. FOUR OUTER CORNERS (classic "corners" win)
     ["b1", "b5", "o1", "o5"],

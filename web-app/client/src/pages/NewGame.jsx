@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {  useNavigate } from "react-router-dom";
-
 import {
   Box,
   Typography,
@@ -31,9 +30,7 @@ const blinkAnimation = `
 `;
 
 const NewGame = () => {
-
-    const navigate = useNavigate();
-
+      const navigate = useNavigate();
   const {
     cartela,
     setCartela,
@@ -155,7 +152,8 @@ const NewGame = () => {
           mb: 0,
           borderBottom: "1px solid #e5e7eb",
         }}
-      ><ButtonBase onClick={() => navigate("/game")}>
+      >
+        <ButtonBase onClick={() => navigate("/game")}>
         <Box sx={{ height: { xs: "30px", sm: "40px" }, display: "flex", alignItems: "center" }}>
           <img
             src={bingo}

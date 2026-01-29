@@ -7,6 +7,7 @@ const config = {
   bingoName: BINGO_NAME,
   phoneNumber: PHONE_NUMBER,
   logo: logo,
+  gameMode: "offline",// "offline" or "online"
 };
 
 export default config;

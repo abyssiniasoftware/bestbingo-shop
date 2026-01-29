@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import { isTokenValid, clearAuthData } from "../services/authService";
 
-// Initialize state from localStorage
+// Initialize state from sessionStorage
 const initialState = {
   user: null,
-  userId: localStorage.getItem("userId") || null,
-  role: localStorage.getItem("role") || null,
-  houseId: localStorage.getItem("houseId") || null,
+  userId: sessionStorage.getItem("userId") || null,
+  role: sessionStorage.getItem("role") || null,
+  houseId: sessionStorage.getItem("houseId") || null,
   enableDynamicBonus:
-    localStorage.getItem("enableDynamicBonus") === "true" || false,
+    sessionStorage.getItem("enableDynamicBonus") === "true" || false,
   walletData: { package: 0 },
   error: null,
   isAuthenticated: false,
@@ -22,13 +22,13 @@ const useUserStore = create((set, get) => ({
     set({ isAuthenticated: valid });
     return valid;
   },
-  // Initialize from localStorage on app start
+  // Initialize from sessionStorage on app start
   initializeFromStorage: () => {
-    const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("userId");
-    const role = localStorage.getItem("role");
-    const houseId = localStorage.getItem("houseId");
-    const enableDynamicBonus = localStorage.getItem("enableDynamicBonus") === "true";
+    const token = sessionStorage.getItem("token");
+    const userId = sessionStorage.getItem("userId");
+    const role = sessionStorage.getItem("role");
+    const houseId = sessionStorage.getItem("houseId");
+    const enableDynamicBonus = sessionStorage.getItem("enableDynamicBonus") === "true";
 
     if (token && isTokenValid()) {
       set({
@@ -53,11 +53,11 @@ const useUserStore = create((set, get) => ({
       const houseId = userData?.houseId || "";
       const enableDynamicBonus = userData?.enableDynamicBonus || false;
 
-      // Persist to localStorage
-      localStorage.setItem("userId", userId);
-      localStorage.setItem("role", role);
-      localStorage.setItem("houseId", houseId);
-      localStorage.setItem("enableDynamicBonus", String(enableDynamicBonus));
+      // Persist to sessionStorage
+      sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("role", role);
+      sessionStorage.setItem("houseId", houseId);
+      sessionStorage.setItem("enableDynamicBonus", String(enableDynamicBonus));
 
       return {
         user: userData,

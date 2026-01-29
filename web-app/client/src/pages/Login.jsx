@@ -53,11 +53,11 @@ const Login = () => {
       }
       const expirationTime = decoded.exp * 1000;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("userId", id);
-      localStorage.setItem("role", role);
-      localStorage.setItem("houseId", houseId || "");
-      localStorage.setItem("tokenExpiration", expirationTime);
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("userId", id);
+      sessionStorage.setItem("role", role);
+      sessionStorage.setItem("houseId", houseId || "");
+      sessionStorage.setItem("tokenExpiration", expirationTime);
       setUser({ id, username, role, houseId, package: pkg });
 
       // Validate session
@@ -87,11 +87,11 @@ const Login = () => {
       }
     } catch (err) {
       clearUser();
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("role");
-      localStorage.removeItem("houseId");
-      localStorage.removeItem("tokenExpiration");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("userId");
+      sessionStorage.removeItem("role");
+      sessionStorage.removeItem("houseId");
+      sessionStorage.removeItem("tokenExpiration");
       const msg = err.message || "Unexpected error";
       toast.error(msg);
       setErrorMessage(msg);

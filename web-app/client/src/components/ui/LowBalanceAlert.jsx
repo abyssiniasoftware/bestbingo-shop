@@ -42,7 +42,7 @@ const LowBalanceAlert = ({ onStatusChange }) => {
                     fontSize: "1.1rem",
                 }}
             >
-                የእርስዎ ቀሪ ሂሳብ ዝቅተኛ ስለሆነ ({balance} ብር) ፣ እባክዎን አስተዳዳሪውን ያነጋግሩ። {config.phoneNumber}
+               የእርስዎ ቀሪ ሂሳብ ዝቅተኛ ስለሆነ ({balance} ብር) ፣ እባክዎን አስተዳዳሪውን ያነጋግሩ። {config.phoneNumber}
             </Typography>
         </Box>
     );
