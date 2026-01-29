@@ -370,14 +370,14 @@ const RechargeHistory = React.memo(() => {
       hideOnSmall: true,
     },
     { id: "createdAt", label: "Created At", minWidth: 100, maxWidth: 120 },
-    {
+   config.gameMode=="online"&& {
       id: "actions",
       label: "Actions",
       minWidth: 80,
       maxWidth: 100,
       sticky: true,
-    },
-  ];
+    }
+  ].filter(Boolean);
 
   return (
     <Box
