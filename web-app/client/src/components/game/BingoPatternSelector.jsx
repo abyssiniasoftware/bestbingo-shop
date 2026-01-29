@@ -57,11 +57,10 @@ const BingoPatternSelector = () => {
                 return (
                   <div
                     key={cell}
-                    className={`w-10 h-10 flex items-center justify-center rounded ${
-                      getHighlightedCells().includes(cell)
+                    className={`w-10 h-10 flex items-center justify-center rounded ${getHighlightedCells().includes(cell)
                         ? "bg-green-600 text-white"
                         : "bg-gray-200 text-gray-700"
-                    }`}
+                      }`}
                   >
                     {cell.toUpperCase()}
                   </div>

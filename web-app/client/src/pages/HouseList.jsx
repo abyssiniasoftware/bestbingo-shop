@@ -43,7 +43,6 @@ const HouseList = () => {
   const [verificationMessage, setVerificationMessage] = useState("");
   const [isVerified, setIsVerified] = useState(false);
 
-  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
 
@@ -75,7 +74,7 @@ const HouseList = () => {
         setCurrentPage(1); // Reset to first page on new search
         fetchHouses(1, value);
       }, 500),
-    [token, rowsPerPage],
+    [ rowsPerPage],
   );
 
   useEffect(() => {

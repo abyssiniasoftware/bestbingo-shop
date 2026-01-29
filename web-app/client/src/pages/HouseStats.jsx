@@ -41,7 +41,6 @@ const HouseStats = () => {
   const fetchCaseData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const token = localStorage.getItem("token");
       const params = {};
       if (filters.dateRange.start && filters.dateRange.end) {
         params.startDate = filters.dateRange.start;
@@ -78,7 +77,6 @@ const HouseStats = () => {
   useEffect(() => {
     const pollNotifications = async () => {
       try {
-        const token = localStorage.getItem("token");
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
         const response = await api.get(`/api/cases/house-cases`, {

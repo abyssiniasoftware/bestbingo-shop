@@ -56,11 +56,6 @@ const HouseReports = () => {
     const fetchHouseStats = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("Authentication token not found. Please log in.");
-        }
-
         const params = {};
         if (filters.dateRange.start && filters.dateRange.end) {
           params.startDate = filters.dateRange.start.toISOString().slice(0, 10);
@@ -92,7 +87,6 @@ const HouseReports = () => {
   useEffect(() => {
     const pollNotifications = async () => {
       try {
-        const token = localStorage.getItem("token");
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
         const response = await api.get(`/api/stats/house`, {

@@ -45,7 +45,6 @@ const useGameStore = create((set) => ({
       modalOpen: false,
       finishedGame: false,
       cardIds: [],
-      cartela: [],
     }),
 }));
 

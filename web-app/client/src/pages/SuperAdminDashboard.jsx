@@ -23,7 +23,7 @@ import RechargeHistoryAgent from "./RechargeHistoryAgent";
 import api from "../utils/api";
 
 const apiService = {
-  fetchUserData: async (token) => {
+  fetchUserData: async () => {
     try {
       const response = await api.get(`/api/me`);
       return response.data;
@@ -50,8 +50,7 @@ const SuperAdminDashboard = () => {
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        const data = await apiService.fetchUserData(token);
+        const data = await apiService.fetchUserData();
         setWalletData({ package: data.package, username: data.username });
         setError(null);
       } catch (err) {

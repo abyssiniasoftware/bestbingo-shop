@@ -35,7 +35,6 @@ const AgentHouseList = () => {
   const [rechargeLoading, setRechargeLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -57,7 +56,7 @@ const AgentHouseList = () => {
     };
 
     fetchHouses();
-  }, [token]);
+  }, []);
 
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 

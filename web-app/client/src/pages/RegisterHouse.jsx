@@ -127,7 +127,6 @@ const CreateHouseForm = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
-  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
 
@@ -142,7 +141,7 @@ const CreateHouseForm = () => {
     };
 
     fetchUsers();
-  }, [token]);
+  }, []);
 
   const houseAdmins = useMemo(() => {
     return users.filter((user) => user.role === "house_admin");
@@ -179,7 +178,7 @@ const CreateHouseForm = () => {
         setLoading(false);
       }
     },
-    [token, formData],
+    [ formData],
   );
 
   return (

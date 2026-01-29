@@ -28,6 +28,7 @@ api.interceptors.response.use(
     // ⛔ DO NOT redirect during login
     if (status === 401 && !url.includes("/api/auth/login")) {
       localStorage.clear();
+      localStorage.clear();
       window.location.href = "/login";
     }
 

@@ -12,6 +12,7 @@ import {
 import api from "../utils/api";
 import handleBulkSubmission from "../services/cardsInsert";
 import useUserStore from "../stores/userStore";
+import config from "../constants/config";
 
 const MemoizedTextField = React.memo(TextField);
 
@@ -49,13 +50,6 @@ const RegisterUser = () => {
     setError("");
     setSuccess("");
     setMessage("");
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Missing auth token! Please login or check localStorage.");
-      setLoading(false);
-      return;
-    }
 
     try {
       const endpoint = formData.isAgent
@@ -267,6 +261,7 @@ const RegisterUser = () => {
               }}
               InputLabelProps={{ style: { color: "#cccccc" } }}
             />
+
             <MemoizedTextField
               fullWidth
               label="Phone"
@@ -291,7 +286,7 @@ const RegisterUser = () => {
               }}
               InputLabelProps={{ style: { color: "#cccccc" } }}
             />
-            {role === "super_admin" && (
+            {role === "super_admin" &&config.gameMode=="online"&& (
               <FormControlLabel
                 control={
                   <Checkbox

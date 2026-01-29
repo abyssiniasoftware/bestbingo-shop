@@ -41,21 +41,18 @@ const ViewCartela = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        try {
-          const userData = await apiService.fetchUserDetails(userId, token);
-          setUser({
-            id: userData.id,
-            username: userData.username,
-            role: userData.role,
-            houseId: userData.houseId,
-            enableDynamicBonus: userData.enableDynamicBonus || false,
-            package: userData.package,
-          });
-        } catch (error) {
-          toast.error(error.message || "Failed to fetch user details");
-        }
+      try {
+        const userData = await apiService.fetchUserDetails();
+        setUser({
+          id: userData.id,
+          username: userData.username,
+          role: userData.role,
+          houseId: userData.houseId,
+          enableDynamicBonus: userData.enableDynamicBonus || false,
+          package: userData.package,
+        });
+      } catch (error) {
+        toast.error(error.message || "Failed to fetch user details");
       }
     };
     fetchUserData();
@@ -74,8 +71,7 @@ const ViewCartela = () => {
       return;
     }
     try {
-      const token = localStorage.getItem("token");
-      await apiService.markBonusInactive(storeHouseId, userId, token);
+      await apiService.markBonusInactive(storeHouseId, userId);
       toast.success("Bonus has been marked as inactive");
     } catch (error) {
       toast.error(error.message || "Failed to mark bonus as inactive");
@@ -112,10 +108,7 @@ const ViewCartela = () => {
       if (!userId) return;
       setIsLoading(true);
       try {
-        const data = await apiService.fetchCardIds(
-          userId,
-          localStorage.getItem("token"),
-        );
+        const data = await apiService.fetchCardIds(userId);
         setCardIds(data.sort((a, b) => parseInt(a) - parseInt(b)));
       } catch (error) {
         toast.error(error.message || "Failed to fetch card IDs");
@@ -130,11 +123,7 @@ const ViewCartela = () => {
     if (!userId) return;
     setIsLoading(true);
     try {
-      const data = await apiService.fetchCartelaData(
-        cardId,
-        userId,
-        localStorage.getItem("token"),
-      );
+      const data = await apiService.fetchCartelaData(cardId, userId);
       const rawData = {};
       Object.keys(data).forEach((row) => {
         Object.assign(rawData, data[row]);
@@ -173,10 +162,7 @@ const ViewCartela = () => {
     const fetchCardIds = async () => {
       if (!userId) return;
       try {
-        const data = await apiService.fetchCardIds(
-          userId,
-          localStorage.getItem("token"),
-        );
+        const data = await apiService.fetchCardIds(userId);
         setCardIds(data.sort((a, b) => parseInt(a) - parseInt(b)));
         localStorage.removeItem("cachedCardIds");
       } catch (error) {

@@ -30,10 +30,9 @@ const EditCartelaModal = ({
     const value = updatedBingoCard[key];
     if (!validateInput(key, value)) {
       toast.error(
-        `Invalid value for ${key.toUpperCase()}: must be between ${
-          validateInput(key, 0)
-            ? validateInput(key, 0).join(" and ")
-            : "valid range"
+        `Invalid value for ${key.toUpperCase()}: must be between ${validateInput(key, 0)
+          ? validateInput(key, 0).join(" and ")
+          : "valid range"
         }`,
       );
       setInvalidFields((prev) => ({ ...prev, [key]: true }));
@@ -82,23 +81,16 @@ const EditCartelaModal = ({
         continue;
       if (!validateInput(key, updatedBingoCard[key])) {
         toast.error(
-          `Invalid value for ${key.toUpperCase()}: must be between ${
-            validateInput(key, 0)
-              ? validateInput(key, 0).join(" and ")
-              : "valid range"
+          `Invalid value for ${key.toUpperCase()}: must be between ${validateInput(key, 0)
+            ? validateInput(key, 0).join(" and ")
+            : "valid range"
           }`,
         );
         return;
       }
     }
     try {
-      const token = localStorage.getItem("token");
-      await apiService.updateBingoCard(
-        userId,
-        selectedCard,
-        updatedBingoCard,
-        token,
-      );
+      await apiService.updateBingoCard(userId, selectedCard, updatedBingoCard);
       toast.success("Bingo card updated successfully");
       onClose();
     } catch (error) {
@@ -110,8 +102,7 @@ const EditCartelaModal = ({
     if (!window.confirm("Are you sure you want to delete this Bingo card?"))
       return;
     try {
-      const token = localStorage.getItem("token");
-      await apiService.deleteBingoCard(userId, cardId, token);
+      await apiService.deleteBingoCard(userId, cardId);
       toast.success("Cartela deleted successfully!");
       localStorage.removeItem("cachedCardIds");
       onClose();
@@ -165,13 +156,12 @@ const EditCartelaModal = ({
                         onFocus={(e) => handleFocus(key, e)}
                         onKeyDown={(e) => handleKeyDown(key, e)}
                         ref={(el) => (inputRefs.current[key] = el)}
-                        className={`font-semibold rounded-lg p-2 text-center w-10 sm:w-12 h-10 sm:h-12 text-sm sm:text-base border-2 bg-white shadow-sm ${
-                          value === 0
+                        className={`font-semibold rounded-lg p-2 text-center w-10 sm:w-12 h-10 sm:h-12 text-sm sm:text-base border-2 bg-white shadow-sm ${value === 0
                             ? "bg-red-200 text-gray-900 cursor-not-allowed border-red-300"
                             : invalidFields[key]
                               ? "bg-red-100 text-gray-900 border-red-500"
                               : "text-gray-900 border-gray-300 focus:border-blue-500 focus:outline-none"
-                        }`}
+                          }`}
                         disabled={value === 0}
                         aria-label={`Enter number for ${letter}${rowIndex + 1}`}
                       />
@@ -190,13 +180,12 @@ const EditCartelaModal = ({
               !bingoCardData ||
               Object.keys(invalidFields).length > 0
             }
-            className={`flex-1 bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105 ${
-              isLoading ||
-              !bingoCardData ||
-              Object.keys(invalidFields).length > 0
+            className={`flex-1 bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105 ${isLoading ||
+                !bingoCardData ||
+                Object.keys(invalidFields).length > 0
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-blue-700"
-            }`}
+              }`}
             aria-label="Submit changes"
           >
             አስተካክል
@@ -204,9 +193,8 @@ const EditCartelaModal = ({
           <button
             onClick={() => handleDelete(selectedCard)}
             disabled={isLoading}
-            className={`flex-1 bg-red-600 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105 ${
-              isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-700"
-            }`}
+            className={`flex-1 bg-red-600 text-white font-bold py-2 px-4 rounded-full transition transform hover:scale-105 ${isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-700"
+              }`}
             aria-label="Delete cartela"
           >
             አጥፋ
