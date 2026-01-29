@@ -12,6 +12,7 @@ import {
 import api from "../utils/api";
 import handleBulkSubmission from "../services/cardsInsert";
 import useUserStore from "../stores/userStore";
+import config from "../constants/config";
 
 const MemoizedTextField = React.memo(TextField);
 
@@ -284,7 +285,7 @@ const RegisterUser = () => {
               }}
               InputLabelProps={{ style: { color: "#cccccc" } }}
             />
-            {role === "super_admin" && (
+            {role === "super_admin" &&config.gameMode=="online"&& (
               <FormControlLabel
                 control={
                   <Checkbox

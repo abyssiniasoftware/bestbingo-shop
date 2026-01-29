@@ -40,7 +40,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
+import config from "../constants/config";
 // Register Chart.js components
 ChartJS.register(
   ArcElement,
@@ -409,7 +409,7 @@ const RechargeHistory = React.memo(() => {
           >
             Recharge History
           </Typography>
-          <Button
+          {config.gameMode=="online"&&(<Button
             variant="contained"
             onClick={() => {
               setModalMode("create");
@@ -425,7 +425,7 @@ const RechargeHistory = React.memo(() => {
             aria-label="Open recharge house modal"
           >
             Recharge House
-          </Button>
+          </Button>)}
         </Box>
 
         <Box

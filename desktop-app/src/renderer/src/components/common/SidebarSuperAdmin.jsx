@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import config from "../../constants/config";
 import {
   FiMenu,
   FiX,
@@ -69,27 +70,20 @@ const SidebarSuperAdmin = ({ setActiveTab }) => {
             <FiUsers />
             <span>Users List</span>
           </li>
-          {/* <li
-            className="flex items-center space-x-2 hover:bg-gray-900 px-3 py-2 rounded transition-all cursor-pointer"
-            onClick={() => handleTabClick("register-house")}
-          >
-            <FaBuilding />
-            <span>Register House</span>
-          </li> */}
-          <li
+          {config.gameMode=="online"&&(<li
             className="flex items-center space-x-2 hover:bg-gray-900 px-3 py-2 rounded transition-all cursor-pointer"
             onClick={() => handleTabClick("agent-list")} // New link
           >
             <FaUserTag />
             <span>Agent List</span>
-          </li>
-          <li
+          </li>)}
+          {config.gameMode=="online"&&(<li
             className="flex items-center space-x-2 hover:bg-gray-900 px-3 py-2 rounded transition-all cursor-pointer"
             onClick={() => handleTabClick("recharge-history-agent")}
           >
             <PublishedWithChangesIcon />
             <span>Recharge History (Agent)</span>
-          </li>
+          </li>)}
           <li
             className="flex items-center space-x-2 hover:bg-gray-900 px-3 py-2 rounded transition-all cursor-pointer"
             onClick={() => handleTabClick("recharge-house")}
