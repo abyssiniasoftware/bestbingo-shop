@@ -510,10 +510,15 @@ const useGameLogic = () => {
       setIsGameEnded(true);
       return;
     }
+   
 
-    const availableNumbers = Array.from({ length: 75 }, (_, i) =>
-      (i + 1).toString(),
-    ).filter((num) => !calledNumbers.includes(num));
+    // const availableNumbers = Array.from({ length: 75 }, (_, i) =>
+    //   (i + 1).toString(),
+    // ).filter((num) => !calledNumbers.includes(num));
+    const availableNumbers = [10, 13, 70, 67]
+  .map(String)
+  .filter((num) => !calledNumbers.includes(num));
+
 
     if (availableNumbers.length === 0) {
       setIsPlaying(false);
@@ -707,6 +712,7 @@ const useGameLogic = () => {
             ...PRECOMPUTED_PATTERNS["row"],
             ...PRECOMPUTED_PATTERNS["column"],
             ...PRECOMPUTED_PATTERNS["diagonal"],
+            ...PRECOMPUTED_PATTERNS["fourCorners"]
           ];
           const corners = PRECOMPUTED_PATTERNS["fourCorners"][0];
           const hasLine = allLines.some((line) =>
@@ -724,6 +730,8 @@ const useGameLogic = () => {
             ...PRECOMPUTED_PATTERNS["row"],
             ...PRECOMPUTED_PATTERNS["column"],
             ...PRECOMPUTED_PATTERNS["diagonal"],
+           ...PRECOMPUTED_PATTERNS["fourCorners"]
+
           ];
           const allCorners = PRECOMPUTED_PATTERNS["fourCorners"][0];
           const lineCount = allLines.filter((line) =>

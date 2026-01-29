@@ -44,6 +44,7 @@ const WinnerDialog = ({
   setLockedCards,
   calledNumbers,
   BINGO_PATTERNS,
+  playBlockedAudio,
 }) => {
   const theme = useTheme();
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down("xs"));
@@ -190,6 +191,7 @@ const WinnerDialog = ({
   const handleKickPlayer = () => {
     if (!lockedCards.includes(cardIdInput)) {
       setLockedCards((prev) => {
+        if(playBlockedAudio)playBlockedAudio();
         const updatedLockedCards = [...prev, cardIdInput];
         localStorage.setItem("lockedCards", JSON.stringify(updatedLockedCards));
         return updatedLockedCards;

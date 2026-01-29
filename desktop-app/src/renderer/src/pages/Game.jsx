@@ -74,6 +74,7 @@ const Game = () => {
     blowerZoomBall,
     playWinnerAudio,
     playLoseAudio,
+    playBlockedAudio,
   } = useGameLogic(stake, players, winAmount);
 
 
@@ -213,6 +214,7 @@ const Game = () => {
         onNewGameClick={() => setOpenNewGameConfirm(true)}
         playWinnerAudio={playWinnerAudio}
         playLoseAudio={playLoseAudio}
+        playBlockedAudio={playBlockedAudio}
       />
     </Box>
   );
