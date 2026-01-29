@@ -35,7 +35,6 @@ const RegisterUser = () => {
   useEffect(() => {
     const fetchHouses = async () => {
       try {
-        const token = localStorage.getItem("token");
         const res = await api.get(`/api/house/`);
 
         if (res.data && Array.isArray(res.data.house)) {
@@ -63,13 +62,6 @@ const RegisterUser = () => {
     setError("");
     setSuccess("");
     setMessage("");
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("Missing auth token! Please login or check localStorage.");
-      setLoading(false);
-      return;
-    }
 
     try {
       const response = await api.post(`/api/auth/register`, formData);

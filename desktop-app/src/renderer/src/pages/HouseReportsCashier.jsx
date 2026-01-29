@@ -47,7 +47,6 @@ const HouseReportsCashier = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [showTopFilters, setShowTopFilters] = useState(false);
   const [showBottomFilters, setShowBottomFilters] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
@@ -56,11 +55,6 @@ const HouseReportsCashier = () => {
     const fetchHouseStats = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("Authentication token not found. Please log in.");
-        }
-
         const params = {};
         if (filters.dateRange.start && filters.dateRange.end) {
           params.startDate = filters.dateRange.start.toISOString().slice(0, 10);

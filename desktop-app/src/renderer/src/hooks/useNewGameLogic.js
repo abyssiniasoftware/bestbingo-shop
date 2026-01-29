@@ -75,17 +75,16 @@ const useNewGameLogic = ({
   const location = useLocation();
   const gameId = location.state?.gameId;
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
 
   // Fetch cut amount from backend on mount
   useEffect(() => {
     const fetchInitialData = async () => {
-      if (!userId || !token) return;
+      if (!userId) return;
       try {
         setIsLoading(true);
         const [cutResp, gameResp] = await Promise.all([
-          apiService.getCutAmountSetting(userId, token),
-          apiService.fetchGameDetails(userId, token).catch(() => null),
+          apiService.getCutAmountSetting(userId),
+          apiService.fetchGameDetails(userId).catch(() => null),
         ]);
 
         setCutAmount(cutResp.cutAmount || 35);
@@ -105,18 +104,17 @@ const useNewGameLogic = ({
       }
     };
     fetchInitialData();
-  }, [userId, token]);
+  }, [userId]);
 
   // Update cut amount on backend when changed
   useEffect(() => {
     const updateCutAmount = async () => {
-      if (!userId || !token) return;
+      if (!userId) return;
       try {
         setIsLoading(true);
         const response = await apiService.updateCutAmountSetting(
           userId,
           cutAmount,
-          token,
         );
         if (response.cutAmount !== cutAmount) {
           setCutAmount(response.cutAmount); // Sync with backend response
@@ -129,7 +127,7 @@ const useNewGameLogic = ({
 
         // Fetch current value from backend to ensure consistency
         try {
-          const response = await apiService.getCutAmountSetting(userId, token);
+          const response = await apiService.getCutAmountSetting(userId);
           setCutAmount(response.cutAmount || 35);
         } catch (fetchError) {
           console.error(
@@ -146,7 +144,7 @@ const useNewGameLogic = ({
     if (cutAmount >= 0 && cutAmount <= 100) {
       updateCutAmount();
     }
-  }, [cutAmount, userId, token]);
+  }, [cutAmount, userId]);
 
   // Persist state to localStorage
   useEffect(() => {
@@ -271,7 +269,6 @@ const useNewGameLogic = ({
 
       const response = await apiService.createGame(
         payload,
-        localStorage.getItem("token"),
       );
       localStorage.removeItem("lockedCards");
       localStorage.removeItem("calledNumbers");
@@ -324,11 +321,10 @@ const useNewGameLogic = ({
     try {
       setIsLoading(true);
       localStorage.removeItem("cachedCardIds"); // Clear cache
-      const token = localStorage.getItem("token");
-      if (!userId || !token) {
+      if (!userId) {
         throw new Error("User not authenticated");
       }
-      const data = await apiService.fetchCardIds(userId, token);
+      const data = await apiService.fetchCardIds(userId);
       const sortedData = data.sort((a, b) => parseInt(a) - parseInt(b));
       setCardIds(sortedData); // Update cardIds in game store
       localStorage.setItem("cachedCardIds", JSON.stringify(sortedData)); // Re-cache
@@ -342,11 +338,8 @@ const useNewGameLogic = ({
   const handleRefreshCutAmount = async () => {
     try {
       setIsLoading(true);
-      const token = localStorage.getItem("token");
-      if (!userId || !token) {
-        throw new Error("User not authenticated");
-      }
-      const response = await apiService.getCutAmountSetting(userId, token);
+
+      const response = await apiService.getCutAmountSetting(userId);
       setCutAmount(response.cutAmount || 35);
       toast.success("Cut amount refreshed successfully");
     } catch (error) {

@@ -33,7 +33,6 @@ const AgentBonusList = () => {
     const fetchBonuses = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
         const response = await api.get(`/api/game/agent-bonuses`);
         setBonuses(response.data.bonuses || []);
         setError(null);

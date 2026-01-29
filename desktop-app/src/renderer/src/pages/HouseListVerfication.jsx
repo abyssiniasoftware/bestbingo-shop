@@ -40,7 +40,6 @@ const HouseList = () => {
   const [verificationMessage, setVerificationMessage] = useState("");
   const [isVerified, setIsVerified] = useState(false);
 
-  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -62,7 +61,7 @@ const HouseList = () => {
     };
 
     fetchHouses();
-  }, [token]);
+  }, []);
 
   // Generate verification code when recharge modal opens
   useEffect(() => {

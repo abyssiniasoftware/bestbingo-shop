@@ -37,16 +37,13 @@ const AddCartela = () => {
   const { user, userId, setUser } = useUserStore();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      api
-        .get(`/api/me`)
-        .then((response) => response.json())
-        .then((userData) => {
-          setUser({ id: userData.id, username: userData.username });
-        })
-        .catch((error) => { });
-    }
+    api
+      .get(`/api/me`)
+      .then((response) => {
+        const userData = response.data;
+        setUser({ id: userData.id, username: userData.username });
+      })
+      .catch(() => { });
   }, [setUser]);
 
   const handleChange = (e) => {
@@ -57,17 +54,14 @@ const AddCartela = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
 
-      const response = await api.post(`/api/bingo-card/create`, {
+      await api.post(`/api/bingo-card/create`, {
         ...cartelaData,
         userId,
       });
-      if (!response.ok) throw new Error("Failed to create cartela");
-      await response.json();
       toast.success("Bingo card created successfully!");
       setCartelaData(initialCartelaData);
-    } catch (error) {
+    } catch {
       toast.error("Error creating bingo card.");
     }
   };

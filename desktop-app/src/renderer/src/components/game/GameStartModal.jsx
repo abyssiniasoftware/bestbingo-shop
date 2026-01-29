@@ -135,7 +135,7 @@ const GameStartModal = ({
           className="game-modal-body"
           sx={{ padding: "20px", textAlign: "center" }}
         >
-         
+
 
           {/* Message */}
           <Typography sx={{ mb: 2, color: "#333" }}>

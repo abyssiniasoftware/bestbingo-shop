@@ -44,13 +44,16 @@ const useUserStore = create((set) => ({
   setError: (error) => set({ error }),
   clearUser: () =>
     set(() => {
-      // Clear localStorage
+      // Clear storage
       localStorage.removeItem("userId");
       localStorage.removeItem("role");
       localStorage.removeItem("houseId");
       localStorage.removeItem("token");
       localStorage.removeItem("enableDynamicBonus");
       localStorage.removeItem("tokenExpiration");
+
+      // Also clear localStorage for safety in case some legacy data exists
+      localStorage.clear();
       return {
         user: null,
         userId: null,

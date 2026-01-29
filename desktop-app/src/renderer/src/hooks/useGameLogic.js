@@ -245,14 +245,13 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
   // Fetch game details
   useEffect(() => {
     const fetchGameDetails = async () => {
-      const token = localStorage.getItem("token");
-      if (!token || !userId) {
-        // toast.error('Authentication token or user ID missing');
+      if (!userId) {
+        // toast.error('Authentication user ID missing');
         navigate("/login");
         return;
       }
       try {
-        const details = await apiService.fetchGameDetails(userId, token);
+        const details = await apiService.fetchGameDetails(userId);
         setGameDetails(details);
         // Also update the store so Game.jsx can access it via gameData
         useGameStore.getState().setGameData({ ...useGameStore.getState().gameData, game: details });
@@ -266,9 +265,8 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
 
   useEffect(() => {
     const fetchCashierSettings = async () => {
-      const token = localStorage.getItem("token");
       try {
-        const response = await apiService.fetchUserDetails(userId, token);
+        const response = await apiService.fetchUserDetails(userId);
 
         setEnableDynamicBonus(response.enableDynamicBonus || false);
       } catch (error) { }
@@ -279,9 +277,8 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
   useEffect(() => {
     const fetchDynamicBonus = async () => {
       if (!gameDetails?.houseId) return;
-      const token = localStorage.getItem("token");
       try {
-        const response = await apiService.fetchActiveDynamicBonus(token);
+        const response = await apiService.fetchActiveDynamicBonus();
         setDynamicBonus(Number(response.bonusAmount) || 0);
       } catch (error) { }
     };
@@ -329,20 +326,13 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
         navigate("/dashboard");
         return;
       }
-      const token = localStorage.getItem("token");
-      if (!token) {
-        // toast.error('Authentication token missing');
-        navigate("/login");
-        setIsLoading(false);
-        return;
-      }
+
       try {
         const cardNumbersMap = {};
         const fetchPromises = gameData.cartela.map(async (cardId) => {
           const numbers = await apiService.fetchCardNumbers(
             cardId,
             userId,
-            token,
           );
           cardNumbersMap[cardId] = numbers;
           cardDataCache.current[cardId] = { numbers };
@@ -636,9 +626,8 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
       return;
     }
 
-    const token = localStorage.getItem("token");
-    if (!token || !userId) {
-      toast.error("User ID or token missing");
+    if (!userId) {
+      toast.error("User ID  missing");
       return;
     }
 
@@ -659,8 +648,8 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
 
       if (!data || !numbers) {
         [data, numbers] = await Promise.all([
-          apiService.fetchCartelaData(cardIdInput, userId, token),
-          apiService.fetchCardNumbers(cardIdInput, userId, token),
+          apiService.fetchCartelaData(cardIdInput, userId),
+          apiService.fetchCardNumbers(cardIdInput, userId),
         ]);
         cardDataCache.current[cardIdInput] = { cartelaData: data, numbers };
       }
@@ -797,7 +786,6 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
               gameDetails.houseId,
               gameDetails.gameId,
               cardIdInput,
-              token,
             );
             setGameDetails((prev) => ({
               ...prev,
@@ -840,7 +828,6 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
                     gameDetails.gameId,
                     gameDetails.houseId,
                     dynamicBonus,
-                    token,
                   );
                   setBonusAwarded(true);
                   setBonusAmountGiven(bonusResponse.bonus.bonusAmount);
@@ -859,7 +846,6 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
                   //   gameDetails.gameId,
                   //   gameDetails.houseId,
                   //   bonusAmount,
-                  //   token
                   // );
                   setBonusAwarded(true);
                   setBonusAmountGiven(bonusAmount);
@@ -888,7 +874,6 @@ const useGameLogic = (stake, players, winAmount, passedVoiceOption) => {
                       gameDetails.gameId,
                       gameDetails.houseId,
                       bonusAmount,
-                      token,
                     );
                     setBonusAwarded(true);
                     setBonusAmountGiven(bonusAmount);

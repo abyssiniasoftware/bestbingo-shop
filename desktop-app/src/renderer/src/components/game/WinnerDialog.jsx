@@ -317,7 +317,7 @@ const WinnerDialog = ({
                   const value = cartelaData[row]?.[cell] ?? "N/A";
                   return (
                     <Box key={cell} sx={getCellStyle(cell, value)}>
-                      {cell === "n3" ? "free" : value}
+                      {cell === "n3" ? "FREE" : value}
                     </Box>
                   );
                 }),

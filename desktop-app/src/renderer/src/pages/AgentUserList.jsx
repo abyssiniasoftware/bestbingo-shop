@@ -37,7 +37,6 @@ const AgentUserList = () => {
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const token = localStorage.getItem("token");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")); // <600px
   const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400)); // <400px
@@ -59,7 +58,7 @@ const AgentUserList = () => {
     };
 
     fetchUsers();
-  }, [token]);
+  }, []);
 
   const handleSearch = (e) => setSearchTerm(e.target.value.toLowerCase());
 

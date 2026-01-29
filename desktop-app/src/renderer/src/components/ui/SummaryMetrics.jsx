@@ -14,10 +14,7 @@ const SummaryMetrics = ({ filters, stats }) => {
       try {
         setLoadingPayment(true);
         const response = await api.get(`/api/payment`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        const data = response.data;
         if (data.status === "success") {
           setPaymentData({
             kidusamount: parseFloat(data.kidusamount) || 0,

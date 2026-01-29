@@ -12,10 +12,8 @@ const History = ({ userId }) => {
       if (!userId) return;
       try {
         const response = await api.get(`/api/game/${userId}/last-winners`);
-        if (!response.ok) throw new Error("Failed to fetch winners");
-        const data = await response.json();
-        setWinners(data);
-      } catch (err) {
+        setWinners(response.data);
+      } catch {
         setError("Error fetching winners");
         toast.error("Failed to load winners");
       } finally {

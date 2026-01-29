@@ -38,11 +38,6 @@ const Reports = () => {
     const fetchDailyStats = async () => {
       setIsLoading(true);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          throw new Error("Authentication token not found. Please log in");
-        }
-
         const response = await api.get(`/api/stats/daily`, {
           params: { date: selectedDate },
         });
@@ -441,7 +436,7 @@ const Reports = () => {
                     />
                     <input
                       type="number"
-                      placeholder="ከፍተኛ"
+                      placeholder="Max"
                       value={filters.prize.max}
                       onChange={(e) => handleFilterChange(e, "prize", "max")}
                       className="w-full p-2 bg-gray-700 rounded text-white placeholder-gray-400"

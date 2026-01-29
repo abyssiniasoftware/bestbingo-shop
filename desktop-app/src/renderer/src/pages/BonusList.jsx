@@ -50,7 +50,6 @@ const BonusList = () => {
     const fetchBonuses = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token");
         const response = await api.get(`/api/game/bonuses`);
         setBonuses(response.data.bonuses || []);
         setError(null);
@@ -70,8 +69,7 @@ const BonusList = () => {
   const fetchCashiers = async (search = "") => {
     try {
       setModalLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await apiService.getCashiers(token, { search });
+      const response = await apiService.getCashiers( { search });
       setCashiers(response.users || []);
     } catch (err) {
       toast.error(err.message || "Failed to fetch cashiers");
@@ -125,9 +123,8 @@ const BonusList = () => {
   const handleToggleBonus = async (cashierId, currentStatus) => {
     try {
       setModalLoading(true);
-      const token = localStorage.getItem("token");
       const newStatus = !currentStatus;
-      await apiService.updateDynamicBonus(cashierId, newStatus, token);
+      await apiService.updateDynamicBonus(cashierId, newStatus);
       setCashiers((prev) =>
         prev.map((cashier) =>
           cashier._id === cashierId

@@ -92,12 +92,10 @@ const EditCartelaModal = ({
       }
     }
     try {
-      const token = localStorage.getItem("token");
       await apiService.updateBingoCard(
         userId,
         selectedCard,
         updatedBingoCard,
-        token,
       );
       toast.success("Bingo card updated successfully");
       onClose();
@@ -110,8 +108,7 @@ const EditCartelaModal = ({
     if (!window.confirm("Are you sure you want to delete this Bingo card?"))
       return;
     try {
-      const token = localStorage.getItem("token");
-      await apiService.deleteBingoCard(userId, cardId, token);
+      await apiService.deleteBingoCard(userId, cardId);
       toast.success("Cartela deleted successfully!");
       localStorage.removeItem("cachedCardIds");
       onClose();

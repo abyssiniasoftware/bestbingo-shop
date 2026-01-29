@@ -226,7 +226,9 @@ const NewGame = () => {
 
       {/* Main Content Area */}
       <Box sx={{ margin: "20px auto", padding: "0 20px" }}>
-        {/* <LowBalanceAlert onStatusChange={setIsBalanceLow} /> */}
+        {/**
+         * <LowBalanceAlert onStatusChange={setIsBalanceLow} />
+         */}
 
         <Box sx={{
           backgroundColor: "#fff",

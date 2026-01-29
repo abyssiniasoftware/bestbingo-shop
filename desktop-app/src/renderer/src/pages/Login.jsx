@@ -87,6 +87,7 @@ const Login = () => {
     } catch (err) {
       clearUser();
       localStorage.clear();
+      localStorage.clear();
       const msg = err.message || "Unexpected error";
       toast.error(msg);
       setErrorMessage(msg);

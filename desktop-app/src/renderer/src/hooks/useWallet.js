@@ -11,9 +11,7 @@ const useWallet = () => {
   const fetchWalletData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await apiService.fetchWalletData(
-        localStorage.getItem("token"),
-      );
+      const data = await apiService.fetchWalletData();
       setWalletData(data);
       if (data && (data.package !== undefined || data.packageBalance !== undefined || data.balance !== undefined)) {
         setWalletBalance(data.package ?? data.packageBalance ?? data.balance ?? 0);
