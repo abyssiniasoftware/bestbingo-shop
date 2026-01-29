@@ -8,7 +8,7 @@ const api = axios.create({
 
 /* ================= REQUEST INTERCEPTOR ================= */
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   // Do NOT attach token or check expiration for login
   if (config.url.includes("/api/auth/login")) {
@@ -37,7 +37,7 @@ api.interceptors.response.use(
 
     // ⛔ DO NOT redirect during login
     if (status === 401 && !url.includes("/api/auth/login")) {
-      localStorage.clear();
+      sessionStorage.clear();
       window.location.href = "/login";
     }
 

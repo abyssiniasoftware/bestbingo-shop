@@ -8,8 +8,8 @@
  * @returns {boolean} True if token is valid, false otherwise
  */
 export const isTokenValid = () => {
-    const token = localStorage.getItem("token");
-    const expiration = localStorage.getItem("tokenExpiration");
+    const token = sessionStorage.getItem("token");
+    const expiration = sessionStorage.getItem("tokenExpiration");
 
     if (!token || !expiration) {
         return false;
@@ -23,7 +23,7 @@ export const isTokenValid = () => {
  * @returns {number} Milliseconds until expiration, or 0 if expired/missing
  */
 export const getTokenRemainingTime = () => {
-    const expiration = localStorage.getItem("tokenExpiration");
+    const expiration = sessionStorage.getItem("tokenExpiration");
     if (!expiration) return 0;
 
     const remaining = parseInt(expiration, 10) - Date.now();
@@ -31,16 +31,16 @@ export const getTokenRemainingTime = () => {
 };
 
 /**
- * Clear all authentication data from localStorage
+ * Clear all authentication data from sessionStorage
  * This is the centralized cleanup function - use this instead of manually removing items
  */
 export const clearAuthData = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("tokenExpiration");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-    localStorage.removeItem("houseId");
-    localStorage.removeItem("enableDynamicBonus");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("tokenExpiration");
+    sessionStorage.removeItem("userId");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("houseId");
+    sessionStorage.removeItem("enableDynamicBonus");
 };
 
 /**
@@ -48,7 +48,7 @@ export const clearAuthData = () => {
  * @returns {Object} Headers object with auth token if valid
  */
 export const getAuthHeaders = () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!token || !isTokenValid()) {
         return {};
     }

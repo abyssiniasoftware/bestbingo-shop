@@ -8,8 +8,8 @@ const RedirectToDashboard = () => {
 
   useEffect(() => {
     // Check token and expiration
-    const token = localStorage.getItem("token");
-    const tokenExpiration = localStorage.getItem("tokenExpiration");
+    const token = sessionStorage.getItem("token");
+    const tokenExpiration = sessionStorage.getItem("tokenExpiration");
 
     // If no token or token is expired, clear user data and redirect to login
     if (
@@ -17,7 +17,7 @@ const RedirectToDashboard = () => {
       !tokenExpiration ||
       new Date().getTime() > parseInt(tokenExpiration)
     ) {
-      clearUser(); // Clear user data from store and localStorage
+      clearUser(); // Clear user data from store and sessionStorage
       navigate("/login", { replace: true });
       return;
     }

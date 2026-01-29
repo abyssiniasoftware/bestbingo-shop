@@ -1,14 +1,14 @@
-import React from "react";
+// components/ui/RechargeModal.jsx
 import {
-  Alert,
-  Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   TextField,
+  Button,
+  CircularProgress,
   Typography,
+  Alert,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -16,23 +16,24 @@ import {
 const RechargeModal = ({
   open,
   onClose,
-  houseName,
-  rechargeMessage,
-  rechargeError,
-  verificationMessage,
-  verificationCode,
-  onVerificationChange,
-  rechargeAmount,
-  onRechargeAmountChange,
-  superAdminCommission,
-  onCommissionChange,
   onSubmit,
   loading,
+  amount,
+  onAmountChange,
+  commission,
+  onCommissionChange,
+  message,
+  error,
+  houseName,
+  gameMode = "online",
+  verificationCode,
+  onVerificationChange,
+  verificationMessage,
   isVerified,
 }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
-  const isVerySmallScreen = useMediaQuery(theme.breakpoints.down(400));
+  const isOffline = gameMode === "offline";
 
   return (
     <Dialog
@@ -40,14 +41,14 @@ const RechargeModal = ({
       onClose={onClose}
       maxWidth={isSmallScreen ? "xs" : "sm"}
       fullWidth
-      fullScreen={false}
       sx={{
         "& .MuiDialog-paper": {
           backgroundColor: "rgba(255, 255, 255, 0.1)",
           backdropFilter: "blur(10px)",
           border: "1px solid rgba(255, 255, 255, 0.2)",
           boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
-          borderRadius: isVerySmallScreen ? 0 : 2,
+          borderRadius: 2,
+          m: { xs: 1, sm: 2 },
           color: "#ffffff",
         },
       }}
@@ -61,37 +62,38 @@ const RechargeModal = ({
       >
         Recharge House
       </DialogTitle>
-
       <DialogContent sx={{ p: { xs: 1, sm: 2 } }}>
-        {rechargeMessage && (
+        {message && (
           <Alert
-            severity={rechargeError ? "error" : "success"}
+            severity={error ? "error" : "success"}
             sx={{
               mb: { xs: 1, sm: 2 },
-              backgroundColor: rechargeError
+              backgroundColor: error
                 ? "rgba(255, 82, 82, 0.2)"
                 : "rgba(76, 175, 80, 0.2)",
-              color: rechargeError ? "#ffcccc" : "#ccffcc",
+              color: error ? "#ffcccc" : "#ccffcc",
               backdropFilter: "blur(5px)",
               fontSize: { xs: "0.75rem", sm: "0.875rem" },
             }}
           >
-            {rechargeMessage}
+            {message}
           </Alert>
         )}
-
         <Typography
           variant="body2"
           mb={{ xs: 1, sm: 2 }}
-          sx={{ color: "#cccccc", fontSize: { xs: "0.75rem", sm: "0.875rem" } }}
+          sx={{
+            color: "#cccccc",
+            fontSize: { xs: "0.75rem", sm: "0.875rem" },
+          }}
         >
           Recharge for: <strong>{houseName || "Unknown House"}</strong>
         </Typography>
 
-        {verificationMessage && (
+        {isOffline && verificationMessage && (
           <Typography
             variant="body2"
-            mb={{ xs: 1, sm: 2 }}
+            mb={{ xs: 1, sm: 1 }}
             sx={{
               color: "#ffffff",
               fontSize: { xs: "0.75rem", sm: "0.875rem" },
@@ -101,50 +103,49 @@ const RechargeModal = ({
           </Typography>
         )}
 
-        <TextField
-          fullWidth
-          label="Verification Code"
-          type="number"
-          value={verificationCode}
-          onChange={onVerificationChange}
-          sx={{ mb: { xs: 1, sm: 2 }, ...inputStyles }}
-          InputLabelProps={{ style: { color: "#cccccc" } }}
-        />
+        {isOffline && (
+          <TextField
+            fullWidth
+            label="Verification Code"
+            type="number"
+            value={verificationCode}
+            onChange={(e) => onVerificationChange(e.target.value)}
+            sx={textFieldSx}
+          />
+        )}
 
         <TextField
           fullWidth
           label="Amount"
           type="number"
-          value={rechargeAmount}
-          onChange={onRechargeAmountChange}
-          sx={{ mb: { xs: 1, sm: 2 }, ...inputStyles }}
-          InputLabelProps={{ style: { color: "#cccccc" } }}
+          value={amount}
+          onChange={(e) => onAmountChange(e.target.value)}
+          sx={textFieldSx}
           inputProps={{ min: 1 }}
         />
-
         <TextField
           fullWidth
-          label="Commission"
+          label="Commission (%)"
           type="number"
-          value={superAdminCommission}
-          onChange={onCommissionChange}
-          sx={inputStyles}
-          InputLabelProps={{ style: { color: "#cccccc" } }}
-          inputProps={{ min: 1 }}
+          value={commission}
+          onChange={(e) => onCommissionChange(e.target.value)}
+          sx={textFieldSx}
+          inputProps={{ min: 0 }}
         />
       </DialogContent>
-
       <DialogActions sx={{ p: { xs: 1, sm: 2 } }}>
-        <Button onClick={onClose} sx={buttonStyles("light")}>
+        <Button onClick={onClose} sx={buttonSx}>
           Cancel
         </Button>
         <Button
           variant="contained"
           onClick={onSubmit}
           disabled={
-            loading || !rechargeAmount || !verificationCode || !isVerified
+            loading || 
+            !amount || 
+            (isOffline && (!verificationCode || !isVerified))
           }
-          sx={buttonStyles("dark")}
+          sx={buttonSx}
         >
           {loading ? (
             <CircularProgress size={16} color="inherit" />
@@ -157,7 +158,8 @@ const RechargeModal = ({
   );
 };
 
-const inputStyles = {
+const textFieldSx = {
+  mt: 1,
   "& .MuiInputBase-root": {
     backgroundColor: "rgba(255, 255, 255, 0.05)",
     color: "#ffffff",
@@ -176,16 +178,13 @@ const inputStyles = {
   },
 };
 
-const buttonStyles = (mode) => ({
+const buttonSx = {
   color: "#ffffff",
-  backgroundColor:
-    mode === "dark" ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.05)",
-  "&:hover": {
-    backgroundColor:
-      mode === "dark" ? "rgba(255, 255, 255, 0.3)" : "rgba(255, 255, 255, 0.1)",
-  },
+  backgroundColor: "rgba(255, 255, 255, 0.05)",
+  "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.1)" },
   fontSize: { xs: "0.7rem", sm: "0.75rem" },
   padding: { xs: "2px 6px", sm: "4px 8px" },
-});
+};
 
 export default RechargeModal;
+

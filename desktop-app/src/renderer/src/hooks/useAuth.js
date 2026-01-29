@@ -10,7 +10,7 @@ const useAuth = () => {
   const { user, setUser, clearUser } = useUserStore();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     // Use centralized token validation
     if (token && isTokenValid()) {

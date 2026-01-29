@@ -5,8 +5,8 @@ import { isTokenValid } from "../../services/authService";
 import useUserStore from "../../stores/userStore";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  const token = sessionStorage.getItem("token");
+  const role = sessionStorage.getItem("role");
   const location = useLocation();
   const { clearUser } = useUserStore();
 
