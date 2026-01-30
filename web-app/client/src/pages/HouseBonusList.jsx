@@ -16,7 +16,7 @@ const HouseBonusList = () => {
     const fetchBonuses = async () => {
       setLoading(true);
       try {
-        const houseId = localStorage.getItem("houseId");
+        const houseId = sessionStorage.getItem("houseId");
         if (!houseId) {
           throw new Error("House ID not found in local storage");
         }

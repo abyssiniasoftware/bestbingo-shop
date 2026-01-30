@@ -64,7 +64,7 @@ const useNewGameLogic = ({
   const navigate = useNavigate();
   const location = useLocation();
   const gameId = location.state?.gameId;
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   // Fetch cut amount from backend on mount
   useEffect(() => {
@@ -240,8 +240,8 @@ const useNewGameLogic = ({
     setIsLoading(true);
     try {
       let payload = {
-        houseId: localStorage.getItem("houseId"),
-        userId: localStorage.getItem("userId"),
+        houseId: sessionStorage.getItem("houseId"),
+        userId: sessionStorage.getItem("userId"),
         stakeAmount: betAmount,
         numberOfPlayers: cartela.length,
         cutAmountPercent: cutAmount,

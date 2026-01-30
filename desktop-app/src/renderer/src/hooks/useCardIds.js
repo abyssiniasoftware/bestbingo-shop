@@ -6,7 +6,7 @@ const useCardIds = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   const fetchCardIds = useCallback(async () => {
     // Check cache first

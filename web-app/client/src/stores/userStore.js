@@ -22,6 +22,7 @@ const useUserStore = create((set, get) => ({
     set({ isAuthenticated: valid });
     return valid;
   },
+  
   // Initialize from sessionStorage on app start
   initializeFromStorage: () => {
     const token = sessionStorage.getItem("token");
