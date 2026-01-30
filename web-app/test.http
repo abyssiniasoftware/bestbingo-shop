@@ -1,0 +1,22 @@
+### login
+POST https://bestbingobackend.katbingo.net/localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "SUPERADMIN",
+    "password": "ADE13@BESTBNG"
+}
+
+
+### register admin
+POST https://bestbingobackend.katbingo.net/localhost:5000/api/auth/register/admin
+Content-Type: application/json
+
+{
+    "username": "SUPERADMIN",
+    "password": "ADE13@BESTBNG",
+    "role": "super_admin",
+    "fullname": "Admin User",
+    "address": "Unknown",
+    "phone": "0900000000"
+}

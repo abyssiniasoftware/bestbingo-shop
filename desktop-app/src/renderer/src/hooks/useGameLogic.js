@@ -512,12 +512,12 @@ const useGameLogic = () => {
     }
    
 
-    // const availableNumbers = Array.from({ length: 75 }, (_, i) =>
-    //   (i + 1).toString(),
-    // ).filter((num) => !calledNumbers.includes(num));
-    const availableNumbers = [10, 13, 70, 67]
-  .map(String)
-  .filter((num) => !calledNumbers.includes(num));
+    const availableNumbers = Array.from({ length: 75 }, (_, i) =>
+      (i + 1).toString(),
+    ).filter((num) => !calledNumbers.includes(num));
+  //   const availableNumbers = [10, 13, 70, 67]
+  // .map(String)
+  // .filter((num) => !calledNumbers.includes(num));
 
 
     if (availableNumbers.length === 0) {
